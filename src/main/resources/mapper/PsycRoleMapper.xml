@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lby.psychology.mapper.PsycRoleMapper">
+  <resultMap id="BaseResultMap" type="com.lby.psychology.model.pojo.PsycRole">
+    <id column="role_id" jdbcType="INTEGER" property="roleId" />
+    <result column="role_code" jdbcType="VARCHAR" property="roleCode" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    role_id, role_code, remark
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from psyc_role
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </select>
+    <select id="selectPsycRoleListByUserId" resultType="com.lby.psychology.model.pojo.PsycRole">
+      select
+        role_id, role_code, remark,role_status
+      from psyc_role
+      where role_id in (select ur.role_id from psyc_user_role_rlt ur where ur.user_id = #{userId})
+    </select>
+    <select id="selectDefaultRoleList" resultType="com.lby.psychology.model.pojo.PsycRole">
+      select
+        role_id, role_code, remark,role_status
+      from psyc_role
+      where role_status = 1
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from psyc_role
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="role_id" keyProperty="roleId" parameterType="com.lby.psychology.model.pojo.PsycRole" useGeneratedKeys="true">
+    insert into psyc_role (role_code, remark)
+    values (#{roleCode,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" keyColumn="role_id" keyProperty="roleId" parameterType="com.lby.psychology.model.pojo.PsycRole" useGeneratedKeys="true">
+    insert into psyc_role
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="roleCode != null">
+        role_code,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="roleCode != null">
+        #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertRoleUserRlt">
+    insert into psyc_user_role_rlt(user_id, role_id,remakr)
+    values
+    <foreach collection="list" item="item" index="index" open="(" close=")">
+        #{item.userId,jdbcType=BIGINT},#{item.roleId,jdbcType=INTEGER},#{item.remark,jdbcType=VARCHAR}
+    </foreach>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycRole">
+    update psyc_role
+    <set>
+      <if test="roleCode != null">
+        role_code = #{roleCode,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lby.psychology.model.pojo.PsycRole">
+    update psyc_role
+    set role_code = #{roleCode,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where role_id = #{roleId,jdbcType=INTEGER}
+  </update>
+</mapper>

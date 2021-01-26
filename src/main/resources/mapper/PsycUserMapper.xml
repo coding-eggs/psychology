@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lby.psychology.mapper.PsycUserMapper">
+  <resultMap id="BaseResultMap" type="com.lby.psychology.model.pojo.PsycUser">
+    <id column="user_id" jdbcType="BIGINT" property="userId" />
+    <result column="auth_type" jdbcType="INTEGER" property="authType" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="qq_nickname" jdbcType="VARCHAR" property="qqNickname" />
+    <result column="qq_open_id" jdbcType="VARCHAR" property="qqOpenId" />
+    <result column="birth_date" jdbcType="TIMESTAMP" property="birthDate" />
+    <result column="sex" jdbcType="SMALLINT" property="sex" />
+    <result column="figure_url" jdbcType="VARCHAR" property="figureUrl" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="user_status" jdbcType="SMALLINT" property="userStatus" />
+    <result column="last_password_rest_date" jdbcType="TIMESTAMP" property="lastPasswordRestDate" />
+    <result column="last_user_login_date" jdbcType="TIMESTAMP" property="lastUserLoginDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    user_id, auth_type, username, `password`, email, qq_nickname, qq_open_id, birth_date,
+    sex, figure_url, create_date, update_date, phone, user_status, last_password_rest_date,
+    last_user_login_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from psyc_user
+    where user_id = #{userId,jdbcType=BIGINT}
+  </select>
+    <select id="selectPsycUserByEmail" resultType="com.lby.psychology.model.security.SecurityPsycUser">
+        select
+          user_id, auth_type, username, `password`, email, qq_nickname, qq_open_id, birth_date,
+          sex, figure_url, create_date, update_date, phone, user_status, last_password_rest_date,
+          last_user_login_date
+        from psyc_user
+        where email = #{email}
+
+    </select>
+    <select id="selectCountByOpenId" resultType="java.lang.Integer">
+      select count(*)
+      from psyc_user
+      where qq_open_id = #{openId}
+    </select>
+  <select id="selectUserByOpenId" resultType="com.lby.psychology.model.security.SecurityPsycUser">
+    select
+      user_id, auth_type, username, `password`, email, qq_nickname, qq_open_id, birth_date,
+      sex, figure_url, create_date, update_date, phone, user_status, last_password_rest_date,
+      last_user_login_date
+    from psyc_user
+    where qq_open_id = #{openId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from psyc_user
+    where user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="user_id" keyProperty="userId" parameterType="com.lby.psychology.model.pojo.PsycUser" useGeneratedKeys="true">
+    insert into psyc_user (auth_type, username, `password`,
+      email, qq_nickname, qq_open_id,
+      birth_date, sex, figure_url,
+      create_date, update_date, phone,
+      user_status, last_password_rest_date, last_user_login_date
+      )
+    values (#{authType,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+      #{email,jdbcType=VARCHAR}, #{qqNickname,jdbcType=VARCHAR}, #{qqOpenId,jdbcType=VARCHAR},
+      #{birthDate,jdbcType=TIMESTAMP}, #{sex,jdbcType=SMALLINT}, #{figureUrl,jdbcType=VARCHAR},
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{phone,jdbcType=VARCHAR},
+      #{userStatus,jdbcType=SMALLINT}, #{lastPasswordRestDate,jdbcType=TIMESTAMP}, #{lastUserLoginDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="user_id" keyProperty="userId" parameterType="com.lby.psychology.model.pojo.PsycUser" useGeneratedKeys="true">
+    insert into psyc_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="authType != null">
+        auth_type,
+      </if>
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        `password`,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="qqNickname != null">
+        qq_nickname,
+      </if>
+      <if test="qqOpenId != null">
+        qq_open_id,
+      </if>
+      <if test="birthDate != null">
+        birth_date,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="figureUrl != null">
+        figure_url,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="userStatus != null">
+        user_status,
+      </if>
+      <if test="lastPasswordRestDate != null">
+        last_password_rest_date,
+      </if>
+      <if test="lastUserLoginDate != null">
+        last_user_login_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="authType != null">
+        #{authType,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="qqNickname != null">
+        #{qqNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="qqOpenId != null">
+        #{qqOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="birthDate != null">
+        #{birthDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=SMALLINT},
+      </if>
+      <if test="figureUrl != null">
+        #{figureUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="userStatus != null">
+        #{userStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="lastPasswordRestDate != null">
+        #{lastPasswordRestDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUserLoginDate != null">
+        #{lastUserLoginDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertPsycUserQQLogin">
+    insert into psyc_user
+        (
+          auth_type,
+          username,
+          qq_nickname,
+          qq_open_id,
+          sex,
+          figure_url
+          )
+    value
+        (
+        #{authType,jdbcType=INTEGER},
+        #{qqNickname,jdbcType=VARCHAR},
+        #{qqNickname,jdbcType=VARCHAR},
+        #{qqOpenId,jdbcType=VARCHAR},
+        #{sex,jdbcType=SMALLINT},
+        #{figureUrl,jdbcType=VARCHAR}
+          )
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycUser">
+    update psyc_user
+    <set>
+      <if test="authType != null">
+        auth_type = #{authType,jdbcType=INTEGER},
+      </if>
+      <if test="username != null">
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        `password` = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="qqNickname != null">
+        qq_nickname = #{qqNickname,jdbcType=VARCHAR},
+      </if>
+      <if test="qqOpenId != null">
+        qq_open_id = #{qqOpenId,jdbcType=VARCHAR},
+      </if>
+      <if test="birthDate != null">
+        birth_date = #{birthDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=SMALLINT},
+      </if>
+      <if test="figureUrl != null">
+        figure_url = #{figureUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="userStatus != null">
+        user_status = #{userStatus,jdbcType=SMALLINT},
+      </if>
+      <if test="lastPasswordRestDate != null">
+        last_password_rest_date = #{lastPasswordRestDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUserLoginDate != null">
+        last_user_login_date = #{lastUserLoginDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lby.psychology.model.pojo.PsycUser">
+    update psyc_user
+    set auth_type = #{authType,jdbcType=INTEGER},
+      username = #{username,jdbcType=VARCHAR},
+      `password` = #{password,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      qq_nickname = #{qqNickname,jdbcType=VARCHAR},
+      qq_open_id = #{qqOpenId,jdbcType=VARCHAR},
+      birth_date = #{birthDate,jdbcType=TIMESTAMP},
+      sex = #{sex,jdbcType=SMALLINT},
+      figure_url = #{figureUrl,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      phone = #{phone,jdbcType=VARCHAR},
+      user_status = #{userStatus,jdbcType=SMALLINT},
+      last_password_rest_date = #{lastPasswordRestDate,jdbcType=TIMESTAMP},
+      last_user_login_date = #{lastUserLoginDate,jdbcType=TIMESTAMP}
+    where user_id = #{userId,jdbcType=BIGINT}
+  </update>
+  <update id="updatePsycUserQQLogin">
+    update psyc_user
+    set figure_url = #{figureUrl,jdbcType=VARCHAR},
+        sex = #{sex,jdbcType=SMALLINT},
+        last_user_login_date = #{lastUserLoginDate,jdbcType=TIMESTAMP},
+        qq_nickname = #{qqNickname,jdbcType=VARCHAR},
+        username = ( CASE WHEN LENGTH( username ) > 0 THEN username ELSE #{qqNickname,jdbcType=VARCHAR} END ),
+        auth_type = #{authType,jdbcType=INTEGER}
+    where qq_open_id = #{qqOpenId,jdbcType=VARCHAR}
+
+  </update>
+</mapper>

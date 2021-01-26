@@ -1,0 +1,23 @@
+server:
+  port: 9527
+knife4j:
+  enable: true
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://120.53.234.127:1234/psychology?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
+    username: bingyue
+    password: bingyue
+  security:
+    remember:
+      # 两周
+      timeout: "1209600"
+mybatis:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  type-aliases-package: com.lby.psychology.model
+  configuration:
+    map-underscore-to-camel-case: true
+logging:
+  level:
+    root: info
+

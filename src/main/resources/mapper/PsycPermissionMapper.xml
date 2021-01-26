@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lby.psychology.mapper.PsycPermissionMapper">
+  <resultMap id="BaseResultMap" type="com.lby.psychology.model.pojo.PsycPermission">
+    <id column="permission_id" jdbcType="INTEGER" property="permissionId" />
+    <result column="permission_url" jdbcType="VARCHAR" property="permissionUrl" />
+    <result column="permission_type" jdbcType="SMALLINT" property="permissionType" />
+    <result column="auth_type" jdbcType="SMALLINT" property="authType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    permission_id, permission_url, permission_type, auth_type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from psyc_permission
+    where permission_id = #{permissionId,jdbcType=INTEGER}
+  </select>
+  <select id="selectRolePermission" resultType="com.lby.psychology.model.security.SecurityRolePermission">
+    select
+        p.permission_url,
+        r.role_code
+    from psyc_role r left join psyc_role_permission_rlt rl on r.role_id = rl.role_id
+    left join psyc_permission p on rl.permission_id = p.permission_id
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from psyc_permission
+    where permission_id = #{permissionId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="permission_id" keyProperty="permissionId" parameterType="com.lby.psychology.model.pojo.PsycPermission" useGeneratedKeys="true">
+    insert into psyc_permission (permission_url, permission_type, auth_type
+      )
+    values (#{permissionUrl,jdbcType=VARCHAR}, #{permissionType,jdbcType=SMALLINT}, #{authType,jdbcType=SMALLINT}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="permission_id" keyProperty="permissionId" parameterType="com.lby.psychology.model.pojo.PsycPermission" useGeneratedKeys="true">
+    insert into psyc_permission
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="permissionUrl != null">
+        permission_url,
+      </if>
+      <if test="permissionType != null">
+        permission_type,
+      </if>
+      <if test="authType != null">
+        auth_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="permissionUrl != null">
+        #{permissionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionType != null">
+        #{permissionType,jdbcType=SMALLINT},
+      </if>
+      <if test="authType != null">
+        #{authType,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycPermission">
+    update psyc_permission
+    <set>
+      <if test="permissionUrl != null">
+        permission_url = #{permissionUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionType != null">
+        permission_type = #{permissionType,jdbcType=SMALLINT},
+      </if>
+      <if test="authType != null">
+        auth_type = #{authType,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where permission_id = #{permissionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lby.psychology.model.pojo.PsycPermission">
+    update psyc_permission
+    set permission_url = #{permissionUrl,jdbcType=VARCHAR},
+      permission_type = #{permissionType,jdbcType=SMALLINT},
+      auth_type = #{authType,jdbcType=SMALLINT}
+    where permission_id = #{permissionId,jdbcType=INTEGER}
+  </update>
+</mapper>
