@@ -27,6 +27,21 @@
       from psyc_role
       where role_status = 1
     </select>
+    <select id="selectRolePermission" resultType="com.lby.psychology.model.vo.RolePermissionVo">
+      SELECT
+        r.role_id,
+        r.role_code,
+        p.permission_id,
+        p.permission_url,
+        p.permission_type
+      FROM
+        psyc_role r
+          LEFT JOIN psyc_role_permission_rlt rpl ON r.role_id = rpl.role_id
+          LEFT JOIN psyc_permission p ON rpl.permission_id = p.permission_id
+      WHERE
+        r.role_id IN ( <foreach collection="list" item="item" index="index" > #{item}</foreach> )
+        AND p.permission_type = 20
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from psyc_role
     where role_id = #{roleId,jdbcType=INTEGER}
@@ -57,8 +72,8 @@
   <insert id="insertRoleUserRlt">
     insert into psyc_user_role_rlt(user_id, role_id,remakr)
     values
-    <foreach collection="list" item="item" index="index" open="(" close=")">
-        #{item.userId,jdbcType=BIGINT},#{item.roleId,jdbcType=INTEGER},#{item.remark,jdbcType=VARCHAR}
+    <foreach collection="list" item="item" index="index">
+    (#{item.userId,jdbcType=BIGINT},#{item.roleId,jdbcType=INTEGER},#{item.remark,jdbcType=VARCHAR})
     </foreach>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycRole">

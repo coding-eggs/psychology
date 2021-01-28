@@ -1,10 +1,8 @@
 package com.lby.psychology.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lby.psychology.model.QQAccessToken;
 import com.lby.psychology.model.QQOpenId;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;

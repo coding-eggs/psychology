@@ -2,6 +2,7 @@ package com.lby.psychology.mapper;
 
 import com.lby.psychology.model.pojo.PsycRole;
 import com.lby.psychology.model.pojo.PsycUserRoleRlt;
+import com.lby.psychology.model.vo.RolePermissionVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -28,4 +29,6 @@ public interface PsycRoleMapper {
     List<PsycRole> selectDefaultRoleList();
 
     int insertRoleUserRlt(List<PsycUserRoleRlt> list);
+
+    List<RolePermissionVo> selectRolePermission(List<Integer> list);
 }

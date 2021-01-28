@@ -35,4 +35,7 @@ public interface PsycUserMapper {
 
     //根据openid查询用户信息
     SecurityPsycUser selectUserByOpenId(String openId);
+
+    //更新最后登录时间
+    int updateLastLoginDate(Long userId);
 }

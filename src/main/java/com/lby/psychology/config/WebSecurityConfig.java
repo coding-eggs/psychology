@@ -1,13 +1,18 @@
 package com.lby.psychology.config;
 
+import com.lby.psychology.config.handler.LoginSuccessHandler;
+import com.lby.psychology.config.handler.RequestAccessDeniedHandler;
+import com.lby.psychology.config.handler.UserSessionInformationExpiredStrategy;
 import com.lby.psychology.mapper.PsycRoleMapper;
 import com.lby.psychology.mapper.PsycUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -35,6 +40,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private UserDetailsService securityUserDetailsService;
+
+    @Autowired
+    private LoginSuccessHandler loginSuccessHandler;
+
+    @Autowired
+    private RequestAccessDeniedHandler requestAccessDeniedHandler;
+
+    @Autowired
+    private UserSessionInformationExpiredStrategy userSessionInformationExpiredStrategy;
+
     /**
     * 记住我功能会将token存储在数据库，自动
     * @author myk
@@ -50,6 +67,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return jdbcTokenRepository;
     }
 
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(securityUserDetailsService).passwordEncoder(passwordEncoder());
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -68,15 +89,36 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/assets/**","/login.html").permitAll()
                 .antMatchers("/doc.html","/swagger-resources","/v2/api-docs","/swagger-ui.html","/swagger-resources/configuration/ui","/swagger-resources/configuration/security","/webjars/**").permitAll()
                 .anyRequest()
-                .access("@securityAuthorityDecision.hasPermission(request,authentication)")
-                .and()
+                .access("@securityAuthorityDecision.hasPermission(request,authentication)");
+        http
                 .addFilterAt(qqAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
                 .loginPage("/login.html")
-                .and()
+                .loginProcessingUrl("/user/login")
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .successHandler(loginSuccessHandler);
+        http
+                .logout()
+                .logoutUrl("/user/logout");
+
+        http
                 .rememberMe()
+                .rememberMeParameter("rememberMe")
+                .rememberMeCookieName("rememberMe")
                 .tokenRepository(persistentTokenRepository())
                 .tokenValiditySeconds(rememberTime);
+        http
+                .exceptionHandling()
+                .accessDeniedHandler(requestAccessDeniedHandler);
+
+        http.sessionManagement()
+                .sessionFixation()
+                .changeSessionId()
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false)
+                .expiredSessionStrategy(userSessionInformationExpiredStrategy);
+
     }
 
     private QQAuthenticationFilter qqAuthenticationFilter() {

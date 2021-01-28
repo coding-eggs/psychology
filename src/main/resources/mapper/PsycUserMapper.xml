@@ -268,4 +268,9 @@
     where qq_open_id = #{qqOpenId,jdbcType=VARCHAR}
 
   </update>
+    <update id="updateLastLoginDate">
+      update psyc_user
+      set last_user_login_date = now()
+      where user_id = #{userId}
+    </update>
 </mapper>

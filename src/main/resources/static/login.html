@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-		<title>Kanakku - Bootstrap Admin HTML Template</title>
+		<title>Psychology Manage System</title>
 
 		<!-- Favicon -->
 		<link rel="shortcut icon" href="assets/img/favicon.png">
@@ -17,6 +17,11 @@
 
 		<!-- Main CSS -->
 		<link rel="stylesheet" href="assets/css/style.css">
+		<!-- vue -->
+		<script src="assets/js/vue.js"></script>
+		<script src="assets/js/axios.js"></script>
+		<script src="assets/js/qs.js"></script>
+		<script src="assets/util/localStorageUtil.js"></script>
 
 		<!--[if lt IE 9]>
 			<script src="assets/js/html5shiv.min.js"></script>
@@ -24,9 +29,9 @@
 		<![endif]-->
 	</head>
 	<body>
-
 		<!-- Main Wrapper -->
-		<div class="main-wrapper login-body">
+		<div class="main-wrapper login-body" id="login-vue">
+
 			<div class="login-wrapper">
 				<div class="container">
 
@@ -36,13 +41,29 @@
 						<div class="login-right">
 							<div class="login-right-wrap">
 								<h1><strong>登录</strong></h1>
-								<form action="index.html">
+								<form ref="loginForm"  autoComplete="on">
 									<div class="form-group">
-										<input type="email" class="form-control" placeholder="用户名或邮箱">
+										<input type="email"
+											   name="email"
+											   class="form-control"
+											   placeholder="邮箱"
+											   required="true"
+											   v-model="loginForm.email"
+											   v-on:keyup="checkEmail"
+											   ref="emailinput"
+											   autoComplete="on">
 									</div>
 									<div class="form-group">
 										<div class="pass-group">
-											<input type="password" class="form-control pass-input" placeholder="密码">
+											<input type="password"
+												   class="form-control pass-input"
+												   placeholder="密码"
+												   name="password"
+												   v-model="loginForm.password"
+												   autoComplete="on"
+												   v-on:keyup="checkPassword"
+												   ref="passwordinput"
+											>
 											<span class="fas fa-eye toggle-password"></span>
 										</div>
 									</div>
@@ -50,7 +71,7 @@
 										<div class="row">
 											<div class="col-6">
 												<div class="custom-control custom-checkbox">
-													<input type="checkbox" class="custom-control-input" id="cb1">
+													<input type="checkbox" class="custom-control-input" id="cb1" v-model="loginForm.rememberMe">
 													<label class="custom-control-label" for="cb1">记住我</label>
 												</div>
 											</div>
@@ -59,7 +80,7 @@
 											</div>
 										</div>
 									</div>
-									<button class="btn btn-lg btn-block btn-primary" type="submit">登录</button>
+									<button class="btn btn-lg btn-block btn-primary" type="button" v-on:click="login" >登录</button>
 									<div class="login-or">
 										<span class="or-line"></span>
 										<span class="span-or">or</span>
@@ -95,4 +116,78 @@
 		<script src="assets/js/script.js"></script>
 
 	</body>
+
+	<script>
+		let storage = new Storage();
+		const login = new Vue({
+			el: "#login-vue",
+			data(){
+				return{
+					loginForm: {
+						email: "",
+						password: "",
+						rememberMe: ""
+					},
+					loading: false,
+				}
+			},
+			methods:{
+
+				login(){
+					if(!this.beforeLoginCheck()){
+						return;
+					}
+					axios({
+						method: 'post',
+						url: '/user/login',
+						data: Qs.stringify({
+							email: this.loginForm.email,
+							password: this.loginForm.password,
+							rememberMe: this.loginForm.rememberMe
+						}),
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded'
+						},
+					}).then(response => {
+						const data = response.data;
+						storage.setItem({
+							name: "routeList",
+							value: data.data.routeList
+						});
+						window.location.href=data.data.requestURI;
+					})
+				},
+				beforeLoginCheck(){
+					let result = true;
+					const rule = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+					if(!rule.test(this.loginForm.email)){
+						this.$refs.emailinput.placeholder = "请输入格式正确的邮箱！"
+						this.$refs.emailinput.style.border = '1px solid red';
+						result = false;
+					}
+					if(this.loginForm.password.length < 6) {
+						this.$refs.passwordinput.placeholder = "密码长度不能小于6位"
+						this.$refs.passwordinput.style.border = '1px solid red';
+						result = false;
+					}
+					return result;
+				},
+				checkEmail(){
+					var rule = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+					if(!rule.test(this.loginForm.email)) {
+						this.$refs.emailinput.style.border = '1px solid red';
+					}else{
+						this.$refs.emailinput.style.border= '1px solid #dee2e6';
+					}
+				},
+				checkPassword(){
+					if(this.loginForm.password.length < 6) {
+						this.$refs.passwordinput.style.border = '1px solid red';
+					}else{
+						this.$refs.passwordinput.style.border= '1px solid #dee2e6';
+					}
+				}
+			}
+		})
+	</script>
 </html>
