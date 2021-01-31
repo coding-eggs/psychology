@@ -3,11 +3,12 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-		<title>Kanakku - Bootstrap Admin HTML Template</title>
+		<title>Psychology Manage System</title>
+
 
 		<!-- Favicon -->
 		<link rel="shortcut icon" href="assets/img/favicon.png">
-
+		<link rel="stylesheet" href="assets/css/element.css">
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
@@ -18,11 +19,16 @@
 		<!-- Main CSS -->
 		<link rel="stylesheet" href="assets/css/style.css">
 
+
+
 		<script src="assets/js/vue.js"></script>
+
 		<script src="assets/js/axios.js"></script>
 		<script src="assets/js/qs.js"></script>
-		<script src="assets/util/user.js"> </script>
 		<script src="assets/util/localStorageUtil.js"></script>
+
+		<script src="assets/js/element.js"></script>
+
 
 		<!--[if lt IE 9]>
 			<script src="assets/js/html5shiv.min.js"></script>
@@ -175,10 +181,10 @@
 					<li class="nav-item dropdown has-arrow main-drop">
 						<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
 							<span class="user-img">
-								<img src="assets/img/profiles/avatar-01.jpg" ref="userimg" alt="">
+								<img :src="userinfo.figureUrl" alt="">
 								<span class="status online"></span>
 							</span>
-							<span>Admin</span>
+							<span v-html="userinfo.username"></span>
 						</a>
 						<div class="dropdown-menu">
 							<a class="dropdown-item" href="profile.html"><i data-feather="user" class="mr-1"></i> 个人中心</a>
@@ -825,8 +831,8 @@
 				</div>
 			</div>
 			<!-- /Page Wrapper -->
-
 		</div>
+
 		<!-- /Main Wrapper -->
 
 		<!-- jQuery -->
@@ -848,24 +854,26 @@
 
 		<!-- Custom JS -->
 		<script src="assets/js/script.js"></script>
-
+		<script src="assets/util/request.js"></script>
 	</body>
 <script>
-	var app = new Vue({
+	var index = new Vue({
 		el: '#app',
 		data: {
-			message: 'Hello Vue!'
+			userinfo: ''
+		},
+		methods:{
+			getUserInfo() {
+				service.get("/user/getUserInfo").then(res=>{
+					this.userinfo = res.data;
+				})
+			}
+		},
+		mounted() {
+			intThisPoint(this);
+			this.getUserInfo();
 		}
 	})
 
-	this.app.$nextTick(function (){
-		axios({
-			method: "get",
-			url: "/user/getUserInfo"
-		}).then(response=>{
-			this.$refs.userimg.src = response.data.data.figureUrl
-			console.log(response.data.data.figureUrl)
-		})
-	})
 </script>
 </html>

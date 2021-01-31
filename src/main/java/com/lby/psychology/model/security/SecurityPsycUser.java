@@ -3,6 +3,8 @@ package com.lby.psychology.model.security;
 import com.lby.psychology.model.enums.EnumUserStatus;
 import com.lby.psychology.model.pojo.PsycRole;
 import com.lby.psychology.model.pojo.PsycUser;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +17,7 @@ import java.util.List;
 public class SecurityPsycUser extends PsycUser implements UserDetails, Serializable {
 
 
+    @ApiModelProperty(value = "角色列表")
     private List<PsycRole> authorities;
 
 

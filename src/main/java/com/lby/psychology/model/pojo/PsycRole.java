@@ -1,16 +1,15 @@
 package com.lby.psychology.model.pojo;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.io.Serializable;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
+
+import java.io.Serializable;
 
 /**
  * psyc_role
  * @author
  */
-@ApiModel(value="com.lby.psychology.model.pojo.PsycRole")
 @Data
 public class PsycRole implements GrantedAuthority,Serializable {
     /**

@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel("com.lby.psychology.model.vo.RolePermissionVo")
 public class RolePermissionVo {
 
     /**

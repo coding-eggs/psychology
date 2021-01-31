@@ -8,6 +8,8 @@
 		<!-- Favicon -->
 		<link rel="shortcut icon" href="assets/img/favicon.png">
 
+
+		<link rel="stylesheet" href="assets/css/element.css">
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
@@ -20,8 +22,11 @@
 		<!-- vue -->
 		<script src="assets/js/vue.js"></script>
 		<script src="assets/js/axios.js"></script>
+		<script src="assets/js/element.js"></script>
 		<script src="assets/js/qs.js"></script>
 		<script src="assets/util/localStorageUtil.js"></script>
+
+
 
 		<!--[if lt IE 9]>
 			<script src="assets/js/html5shiv.min.js"></script>
@@ -115,10 +120,14 @@
 		<!-- Custom JS -->
 		<script src="assets/js/script.js"></script>
 
+	<script src="assets/util/request.js"></script>
+
 	</body>
 
-	<script>
+	<script type="module">
+
 		let storage = new Storage();
+
 		const login = new Vue({
 			el: "#login-vue",
 			data(){
@@ -126,18 +135,17 @@
 					loginForm: {
 						email: "",
 						password: "",
-						rememberMe: ""
+						rememberMe: "",
 					},
 					loading: false,
 				}
 			},
 			methods:{
-
 				login(){
 					if(!this.beforeLoginCheck()){
 						return;
 					}
-					axios({
+					service({
 						method: 'post',
 						url: '/user/login',
 						data: Qs.stringify({
@@ -152,9 +160,9 @@
 						const data = response.data;
 						storage.setItem({
 							name: "routeList",
-							value: data.data.routeList
+							value: data.routeList
 						});
-						window.location.href=data.data.requestURI;
+						window.location.href=data.requestURI;
 					})
 				},
 				beforeLoginCheck(){
@@ -187,7 +195,11 @@
 						this.$refs.passwordinput.style.border= '1px solid #dee2e6';
 					}
 				}
+			},
+			mounted(){
+				intThisPoint(this)
 			}
 		})
+
 	</script>
 </html>

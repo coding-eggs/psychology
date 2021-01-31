@@ -1,15 +1,14 @@
 package com.lby.psychology.model.pojo;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.io.Serializable;
 import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * psyc_permission
- * @author 
+ * @author
  */
-@ApiModel(value="com.lby.psychology.model.pojo.PsycPermission")
 @Data
 public class PsycPermission implements Serializable {
     /**
