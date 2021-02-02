@@ -1,4 +1,4 @@
-var thispoint;
+let thispoint;
 
 function intThisPoint(point){
     thispoint = point;

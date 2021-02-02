@@ -5,17 +5,18 @@ Version      : 1.0
 更多精品后台模板：Http://www.bootstrapmb.com
 */
 
-(function($) {
-    "use strict";
-	
+$(function(){
+	// 开始写 jQuery 代码...
+	"use strict";
+
 	// Variables declarations
-	
+
 	var $wrapper = $('.main-wrapper');
 	var $pageWrapper = $('.page-wrapper');
 	var $slimScrolls = $('.slimscroll');
-	
+
 	feather.replace();
-		
+
 	// Sidebar
 	var Sidemenu = function () {
 		this.$menuItem = $('#sidebar-menu a');
@@ -39,10 +40,10 @@ Version      : 1.0
 		});
 		$('#sidebar-menu ul li.submenu a.active').parents('li:last').children('a:first').addClass('active').trigger('click');
 	}
-	
+
 	// Sidebar Initiate
 	init();
-	
+
 	// Mobile menu sidebar overlay
 	$('body').append('<div class="sidebar-overlay"></div>');
 	$(document).on('click', '#mobile_btn', function () {
@@ -51,20 +52,20 @@ Version      : 1.0
 		$('html').addClass('menu-opened');
 		return false;
 	});
-	
+
 	// Sidebar overlay
 	$(".sidebar-overlay").on("click", function () {
 		$wrapper.removeClass('slide-nav');
 		$(".sidebar-overlay").removeClass("opened");
 		$('html').removeClass('menu-opened');
 	});
-	
+
 	// Page Content Height
 	if ($('.page-wrapper').length > 0) {
 		var height = $(window).height();
 		$(".page-wrapper").css("min-height", height);
 	}
-	
+
 	// Page Content Height Resize
 	$(window).resize(function () {
 		if ($('.page-wrapper').length > 0) {
@@ -72,7 +73,7 @@ Version      : 1.0
 			$(".page-wrapper").css("min-height", height);
 		}
 	});
-	
+
 	// Select 2
 	if ($('.select').length > 0) {
 		$('.select').select2({
@@ -80,9 +81,9 @@ Version      : 1.0
 			width: '100%'
 		});
 	}
-	
+
 	// Datetimepicker
-	
+
 	if($('.datetimepicker').length > 0 ){
 		$('.datetimepicker').datetimepicker({
 			format: 'DD-MM-YYYY',
@@ -94,19 +95,19 @@ Version      : 1.0
 			}
 		});
 	}
-	
+
 	// Tooltip
 	if ($('[data-toggle="tooltip"]').length > 0) {
 		$('[data-toggle="tooltip"]').tooltip();
 	}
-	
+
 	// Datatable
 	if ($('.datatable').length > 0) {
 		$('.datatable').DataTable({
 			"bFilter": false,
 		});
 	}
-	
+
 	// Sidebar Slimscroll
 	if ($slimScrolls.length > 0) {
 		$slimScrolls.slimScroll({
@@ -128,9 +129,9 @@ Version      : 1.0
 			$('.sidebar .slimScrollDiv').height(rHeight);
 		});
 	}
-	
+
 	// Password Show
-	
+
 	if($('.toggle-password').length > 0) {
 		$(document).on('click', '.toggle-password', function() {
 			$(this).toggleClass("fa-eye fa-eye-slash");
@@ -144,7 +145,7 @@ Version      : 1.0
 	}
 
 	// Check all email
-	
+
 	$(document).on('click', '#check_all', function() {
 		$('.checkmail').click();
 		return false;
@@ -160,13 +161,13 @@ Version      : 1.0
 			});
 		});
 	}
-	
+
 	// Mail important
-	
+
 	$(document).on('click', '.mail-important', function() {
 		$(this).find('i.fa').toggleClass('fa-star').toggleClass('fa-star-o');
 	});
-	
+
 	// Small Sidebar
 	$(document).on('click', '#toggle_btn', function () {
 		if ($('body').hasClass('mini-sidebar')) {
@@ -182,7 +183,7 @@ Version      : 1.0
 		}, 300);
 		return false;
 	});
-	
+
 	$(document).on('mouseover', function (e) {
 		e.stopPropagation();
 		if ($('body').hasClass('mini-sidebar') && $('#toggle_btn').is(':visible')) {
@@ -197,18 +198,18 @@ Version      : 1.0
 			return false;
 		}
 	});
-	
+
 	$(document).on('click', '#filter_search', function() {
 		$('#filter_inputs').slideToggle("slow");
 	});
-	
+
 	// Chat
 
 	var chatAppTarget = $('.chat-window');
 	(function() {
 		if ($(window).width() > 991)
 			chatAppTarget.removeClass('chat-slide');
-		
+
 		$(document).on("click",".chat-window .chat-users-list a.media",function () {
 			if ($(window).width() <= 991) {
 				chatAppTarget.addClass('chat-slide');
@@ -218,9 +219,10 @@ Version      : 1.0
 		$(document).on("click","#back_user_list",function () {
 			if ($(window).width() <= 991) {
 				chatAppTarget.removeClass('chat-slide');
-			}	
+			}
 			return false;
 		});
 	})();
-	
-})(jQuery);
+
+});
+
