@@ -8,6 +8,26 @@ spring:
     url: jdbc:mysql://120.53.234.127:1234/psychology?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
     username: bingyue
     password: bingyue
+  redis:
+    port: 1235
+    host: 120.53.234.127
+    password: lby123456
+  mail:
+    host: smtp.qq.com
+    port: 465
+    protocol: smtp
+    username: 2665151959@qq.com
+    password: kclrhjpacblididg
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+        debug: true
+    test-connection: true
+    valicode:
+      expired: 60
+
   security:
     remember:
       # 两周

@@ -8,6 +8,7 @@
 		<!-- Favicon -->
 		<link rel="shortcut icon" href="assets/img/favicon.png">
 
+		<link rel="stylesheet" href="assets/css/element.css">
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
@@ -17,6 +18,10 @@
 
 		<!-- Main CSS -->
 		<link rel="stylesheet" href="assets/css/style.css">
+		<script src="assets/js/vue.js"></script>
+		<script src="assets/js/axios.js"></script>
+		<script src="assets/js/element.js"></script>
+		<script src="assets/util/request.js"></script>
 
 		<!--[if lt IE 9]>
 			<script src="assets/js/html5shiv.min.js"></script>
@@ -26,7 +31,7 @@
 	<body>
 
 		<!-- Main Wrapper -->
-		<div class="main-wrapper login-body">
+		<div class="main-wrapper login-body" id="reg">
 
 			<div class="login-wrapper">
 				<div class="container">
@@ -40,23 +45,43 @@
 								<!-- Form -->
 								<form action="login.html">
 									<div class="form-group">
-										<label class="form-control-label">姓名</label>
-										<input class="form-control" type="text">
+										<input class="form-control"
+											   type="text"
+											   v-model="username"
+											   placeholder="姓名"
+											   v-on:keyup="checkUsername"
+											   ref="usernameinput"
+										>
 									</div>
 									<div class="form-group">
-										<label class="form-control-label">邮箱</label>
-										<input class="form-control" type="text">
+										<input class="form-control"
+											   type="email"
+											   v-model="email"
+											   placeholder="邮箱"
+											   v-on:keyup="checkEmail"
+											   ref="emailinput"
+										>
 									</div>
 									<div class="form-group">
-										<label class="form-control-label">密码</label>
-										<input class="form-control" type="text">
+										<input class="form-control"
+											   type="password"
+											   v-model="password"
+											   placeholder="密码"
+											   v-on:keyup="checkPassword"
+											   ref="passwordinput"
+										>
 									</div>
 									<div class="form-group">
-										<label class="form-control-label">确认密码</label>
-										<input class="form-control" type="text">
+										<input class="form-control"
+											   type="password"
+											   v-model="configPassword"
+											   placeholder="确认密码"
+											   v-on:keyup="checkConfirmPassword"
+											   ref="confirmPasswordinput"
+										>
 									</div>
 									<div class="form-group mb-0">
-										<button class="btn btn-lg btn-block btn-primary" type="submit">注册</button>
+										<button class="btn btn-lg btn-block btn-primary" type="submit" v-on:click="registered">注册</button>
 									</div>
 								</form>
 								<!-- /Form -->
@@ -95,4 +120,67 @@
 		<script src="assets/js/script.js"></script>
 
 	</body>
+
+<script>
+	var reg = new Vue({
+		el: '#reg',
+		data: {
+			username: "",
+			email:"",
+			password:"",
+			configPassword:""
+		},
+		methods:{
+			registered(){
+				if(!this.checkUsername()&&!this.checkEmail()&&!this.checkPassword()&&!this.checkConfirmPassword()){
+					return;
+				}
+				service({
+
+
+				})
+
+			},
+
+			checkUsername(){
+				if(this.username.trim().length===0){
+					this.$refs.usernameinput.placeholder = "用户名不能为空"
+					this.$refs.usernameinput.style.border = '1px solid red';
+				}else{
+					this.$refs.usernameinput.style.border= '1px solid #dee2e6';
+				}
+			},
+			checkEmail(){
+				var rule = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+				if(!rule.test(this.loginForm.email)) {
+					this.$refs.emailinput.placeholder = "请输入格式正确的邮箱"
+					this.$refs.emailinput.style.border = '1px solid red';
+				}else{
+					this.$refs.emailinput.style.border= '1px solid #dee2e6';
+				}
+			},
+			checkPassword(){
+				if(this.loginForm.password.length < 6) {
+					this.$refs.passwordinput.placeholder = "密码长度不能小于6位"
+					this.$refs.passwordinput.style.border = '1px solid red';
+				}else{
+					this.$refs.passwordinput.style.border= '1px solid #dee2e6';
+				}
+			},
+			checkConfirmPassword(){
+				if(!this.password.trim()===this.configPassword.trim()){
+					this.$refs.configPasswordinput.placeholder = "两次密码不相同，请检查重新输入"
+					this.$refs.configPasswordinput.style.border = '1px solid red';
+				}else{
+					this.$refs.configPasswordinput.style.border= '1px solid #dee2e6';
+				}
+			}
+
+
+		},
+		mounted() {
+			intThisPoint(this);
+		}
+	})
+</script>
 </html>

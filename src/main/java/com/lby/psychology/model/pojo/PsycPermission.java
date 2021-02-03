@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 /**
  * psyc_permission
- * @author
+ * @author myk
  */
 @Data
 public class PsycPermission implements Serializable {
@@ -34,6 +34,19 @@ public class PsycPermission implements Serializable {
      */
     @ApiModelProperty(value="认证级别0 匿名 1 登录")
     private Short authType;
+
+    @ApiModelProperty(value = "页面展示名")
+    private String pageName;
+
+    @ApiModelProperty(value = "页面优先级")
+    private Integer priority;
+
+    @ApiModelProperty(value = "父级页面id")
+    private Integer parentPageId;
+
+    @ApiModelProperty(value = "备注")
+    private String remark;
+
 
     private static final long serialVersionUID = 1L;
 }

@@ -142,7 +142,7 @@
 			},
 			methods:{
 				login(){
-					if(!this.beforeLoginCheck()){
+					if(!this.checkEmail() && !this.checkPassword()){
 						return;
 					}
 					service({
@@ -165,34 +165,26 @@
 						window.location.href=data.requestURI;
 					})
 				},
-				beforeLoginCheck(){
-					let result = true;
-					const rule = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-					if(!rule.test(this.loginForm.email)){
-						this.$refs.emailinput.placeholder = "请输入格式正确的邮箱！"
-						this.$refs.emailinput.style.border = '1px solid red';
-						result = false;
-					}
-					if(this.loginForm.password.length < 6) {
-						this.$refs.passwordinput.placeholder = "密码长度不能小于6位"
-						this.$refs.passwordinput.style.border = '1px solid red';
-						result = false;
-					}
-					return result;
-				},
+
 				checkEmail(){
 					var rule = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 					if(!rule.test(this.loginForm.email)) {
+						this.$refs.emailinput.placeholder = "请输入格式正确的邮箱"
 						this.$refs.emailinput.style.border = '1px solid red';
+						return false;
 					}else{
 						this.$refs.emailinput.style.border= '1px solid #dee2e6';
+						return true
 					}
 				},
 				checkPassword(){
 					if(this.loginForm.password.length < 6) {
+						this.$refs.passwordinput.placeholder = "密码长度不能小于6位"
 						this.$refs.passwordinput.style.border = '1px solid red';
+						return false;
 					}else{
 						this.$refs.passwordinput.style.border= '1px solid #dee2e6';
+						return true
 					}
 				}
 			},
