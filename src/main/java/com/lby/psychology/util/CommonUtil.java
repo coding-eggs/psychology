@@ -19,13 +19,12 @@ public class CommonUtil {
         return (int)((Math.random()*9+1)*100000);
     }
 
-    public boolean sendMailCheckCode(String toUser,String code){
+    public void sendMailCheckCode(String toUser, String code){
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setSubject("Psychology Manage System 请求验证码 ");
+        message.setSubject("Psychology Manage System 请求验证码: "+code);
         message.setFrom(from);
         message.setTo(toUser);
         message.setText(code);
         javaMailSender.send(message);
-        return true;
     }
 }

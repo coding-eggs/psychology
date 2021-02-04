@@ -2,6 +2,7 @@ package com.lby.psychology.mapper;
 
 import com.lby.psychology.model.pojo.PsycUser;
 import com.lby.psychology.model.security.SecurityPsycUser;
+import com.lby.psychology.model.vo.RegisteredUserVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -38,4 +39,10 @@ public interface PsycUserMapper {
 
     //更新最后登录时间
     int updateLastLoginDate(Long userId);
+
+    //查询该邮箱是否存在
+    int selectEmailCount(@Param("email") String email);
+
+    //插入新用户
+    int insertPsycUser(RegisteredUserVo registeredUserVo);
 }

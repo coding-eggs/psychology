@@ -16,17 +16,18 @@ spring:
     host: smtp.qq.com
     port: 465
     protocol: smtp
-    username: 2665151959@qq.com
-    password: kclrhjpacblididg
+    username: 526518441@qq.com
+#    password: kclrhjpacblididg
     properties:
       mail:
         smtp:
           socketFactory:
             class: javax.net.ssl.SSLSocketFactory
         debug: true
-    test-connection: true
+    test-connection: false
     valicode:
-      expired: 60
+      expired: 300
+    password: mmabrxnycmzabgjg
 
   security:
     remember:

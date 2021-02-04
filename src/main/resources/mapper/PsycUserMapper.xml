@@ -52,7 +52,10 @@
     from psyc_user
     where qq_open_id = #{openId}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <select id="selectEmailCount" resultType="java.lang.Integer">
+      select count(*) from psyc_user where email = #{email}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from psyc_user
     where user_id = #{userId,jdbcType=BIGINT}
   </delete>
@@ -186,6 +189,10 @@
         #{sex,jdbcType=SMALLINT},
         #{figureUrl,jdbcType=VARCHAR}
           )
+  </insert>
+  <insert id="insertPsycUser" useGeneratedKeys="true" keyProperty="userId">
+    insert into psyc_user(username, password, email)
+    value (#{username},#{password},#{email})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycUser">
     update psyc_user

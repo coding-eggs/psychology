@@ -14,6 +14,7 @@ public class PsycPermission implements Serializable {
     /**
      * 权限id
      */
+
     @ApiModelProperty(value="权限id")
     private Integer permissionId;
 

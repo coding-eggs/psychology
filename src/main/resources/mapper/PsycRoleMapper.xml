@@ -41,7 +41,6 @@
       WHERE
         r.role_id IN ( <foreach collection="list" item="item" index="index" > #{item}</foreach> )
         AND p.permission_type = 20
-      order by pro
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from psyc_role

@@ -43,7 +43,7 @@
 								<h1><strong>注册</strong></h1>
 
 								<!-- Form -->
-								<form action="login.html">
+								<form >
 									<div class="form-group">
 										<input class="form-control"
 											   type="text"
@@ -74,14 +74,28 @@
 									<div class="form-group">
 										<input class="form-control"
 											   type="password"
-											   v-model="configPassword"
+											   v-model="confirmPassword"
 											   placeholder="确认密码"
 											   v-on:keyup="checkConfirmPassword"
 											   ref="confirmPasswordinput"
 										>
 									</div>
+									<div class="form-group input-group mb-3">
+										<input class="form-control"
+											   type="password"
+											   v-model="code"
+											   placeholder="验证邮箱"
+											   aria-label="验证邮箱" aria-describedby="basic-addon2"
+											   ref="codeinput"
+											   v-on:keyup="checkCode"
+										>
+										<div class="input-group-append">
+											<button class="btn btn-outline-secondary" v-show="codeShow" type="button" v-on:click="getEmailCode">发送验证码</button>
+											<button class="btn btn-outline-secondary" v-show="!codeShow" type="button" disabled="disabled" v-on:click="getEmailCode">{{count}}s后重试</button>
+										</div>
+									</div>
 									<div class="form-group mb-0">
-										<button class="btn btn-lg btn-block btn-primary" type="submit" v-on:click="registered">注册</button>
+										<button class="btn btn-lg btn-block btn-primary" type="button" v-on:click="registered">注册</button>
 									</div>
 								</form>
 								<!-- /Form -->
@@ -93,7 +107,7 @@
 								<!-- Social Login -->
 								<div class="social-login">
 									<span>其他方式注册</span>
-									<a href="#" class="tencent"><img src="assets/img/qq-logo.jpg" alt="qq login"></a>
+									<a href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101583722&redirect_uri=http://ailuoli.cn:9527/qqlogin/success" class="tencent"><img src="assets/img/qq-logo.jpg" alt="qq login"></a>
 								</div>
 								<!-- /Social Login -->
 								<div class="text-center dont-have">已经有账户 ? <a href="login.html">登录</a></div>
@@ -128,54 +142,147 @@
 			username: "",
 			email:"",
 			password:"",
-			configPassword:""
+			confirmPassword:"",
+			code:"",
+			codeShow:true,
+			count:"",
+			timer: null
 		},
 		methods:{
 			registered(){
-				if(!this.checkUsername()&&!this.checkEmail()&&!this.checkPassword()&&!this.checkConfirmPassword()){
-					return;
+				if(this.checkAll()){
+					service({
+						method: 'post',
+						url: '/user/email/registered',
+						data:{
+							username: this.username,
+							email: this.email,
+							password: this.password,
+							code: this.code
+						}
+					}).then(response=>{
+						if(response.data){
+							thispoint.$confirm('您的账号注册成功！是否跳转到登录页？', '注册成功', {
+								confirmButtonText: '是',
+								cancelButtonText: '否',
+								type: 'success ',
+								center: true
+							}).then(() => {
+								window.location.href="/login.html"
+							}).catch(()=>{
+								thispoint.$message({
+									type: 'info',
+									message: '取消跳转登录'
+								})
+							})
+						}
+					})
+				}else {
+					this.$message({message:"请填写正确得数据",type:"error"})
 				}
-				service({
-
-
-				})
-
+			},
+			checkAll(){
+				var result = false;
+				if(this.checkUsername()&&this.checkEmail()&&this.checkPassword()&&this.checkConfirmPassword()&&this.checkCode()) {
+					result = true;
+				}
+				return result;
+			},
+			//校验所有但是不包括验证码
+			checkAllNullCode(){
+				var result = false;
+				if(this.checkUsername()&&this.checkEmail()&&this.checkPassword()&&this.checkConfirmPassword()){
+					result = true
+				}
+				return result;
 			},
 
 			checkUsername(){
 				if(this.username.trim().length===0){
 					this.$refs.usernameinput.placeholder = "用户名不能为空"
 					this.$refs.usernameinput.style.border = '1px solid red';
+					return false;
 				}else{
 					this.$refs.usernameinput.style.border= '1px solid #dee2e6';
+					return true;
 				}
 			},
 			checkEmail(){
 				var rule = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-				if(!rule.test(this.loginForm.email)) {
+				if(!rule.test(this.email)) {
 					this.$refs.emailinput.placeholder = "请输入格式正确的邮箱"
 					this.$refs.emailinput.style.border = '1px solid red';
+					return false;
 				}else{
 					this.$refs.emailinput.style.border= '1px solid #dee2e6';
+					return true;
 				}
 			},
 			checkPassword(){
-				if(this.loginForm.password.length < 6) {
+				if(this.password.length < 6) {
 					this.$refs.passwordinput.placeholder = "密码长度不能小于6位"
 					this.$refs.passwordinput.style.border = '1px solid red';
+					return false;
 				}else{
 					this.$refs.passwordinput.style.border= '1px solid #dee2e6';
+					return true;
 				}
 			},
 			checkConfirmPassword(){
-				if(!this.password.trim()===this.configPassword.trim()){
-					this.$refs.configPasswordinput.placeholder = "两次密码不相同，请检查重新输入"
-					this.$refs.configPasswordinput.style.border = '1px solid red';
+				if(!(this.password.trim()===this.confirmPassword.trim()) || this.confirmPassword.trim().length === 0){
+					this.$refs.confirmPasswordinput.placeholder = "两次密码必须相同，且不能为空，请检查重新输入"
+					this.$refs.confirmPasswordinput.style.border = '1px solid red';
+					return false;
 				}else{
-					this.$refs.configPasswordinput.style.border= '1px solid #dee2e6';
+					this.$refs.confirmPasswordinput.style.border= '1px solid #dee2e6';
+					return true;
+				}
+			},
+			checkCode(){
+				if(this.code.trim().length===0){
+					this.$refs.codeinput.placeholder = "验证码不能为空"
+					this.$refs.codeinput.style.border = '1px solid red';
+					return false;
+				}else{
+					this.$refs.codeinput.style.border= '1px solid #dee2e6';
+					return true;
+				}
+			},
+			getEmailCode() {
+				if(this.checkAllNullCode()){
+					service({
+						method: 'post',
+						url: '/user/email/check',
+						data:{
+							username: this.username,
+							email: this.email,
+							password: this.password
+						}
+					}).then(response=>{
+						if(response.data){
+							this.$message({message:"验证码已发送,请您查看邮箱",type: "success"})
+							//点击获取验证码
+							const TIME_COUNT = 60;  //倒计时60秒
+							if (!this.timer) {
+								this.count = TIME_COUNT;
+								this.codeShow = false;
+								this.timer = setInterval(() => {
+									if (this.count > 0 && this.count <= TIME_COUNT) {
+										this.count--;
+									} else {
+										this.codeShow = true;
+										clearInterval(this.timer);
+										this.timer = null;
+									}
+								}, 1000);
+							}
+						}
+					})
+
+				}else{
+					this.$message({message:"请填写正确得数据",type:"error"})
 				}
 			}
-
 
 		},
 		mounted() {
