@@ -1,5 +1,6 @@
 package com.lby.psychology.config;
 
+import com.lby.psychology.config.handler.LoginFailureHandler;
 import com.lby.psychology.config.handler.LoginSuccessHandler;
 import com.lby.psychology.config.handler.RequestAccessDeniedHandler;
 import com.lby.psychology.config.handler.UserSessionInformationExpiredStrategy;
@@ -45,6 +46,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private LoginSuccessHandler loginSuccessHandler;
+
+    @Autowired
+    private LoginFailureHandler loginFailureHandler;
 
     @Autowired
     private RequestAccessDeniedHandler requestAccessDeniedHandler;
@@ -98,10 +102,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginProcessingUrl("/user/login")
                 .usernameParameter("email")
                 .passwordParameter("password")
-                .successHandler(loginSuccessHandler);
+                .successHandler(loginSuccessHandler)
+                .failureHandler(loginFailureHandler);
         http
                 .logout()
-                .logoutUrl("/user/logout");
+                .logoutUrl("/user/logout")
+                .logoutSuccessUrl("/login.html");
 
         http
                 .rememberMe()

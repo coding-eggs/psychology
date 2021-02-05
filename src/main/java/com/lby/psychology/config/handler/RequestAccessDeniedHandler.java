@@ -30,6 +30,5 @@ public class RequestAccessDeniedHandler implements AccessDeniedHandler {
         responseData.setCode(EnumResponseType.NON_AUTH_ENTRY_POINT.getCode());
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         httpServletResponse.getWriter().write(objectMapper.writeValueAsString(responseData));
-
     }
 }

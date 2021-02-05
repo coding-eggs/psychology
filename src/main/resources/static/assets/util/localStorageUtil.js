@@ -1,5 +1,5 @@
 class Storage{
-    constructor(name){
+    constructor(){
         this.name = 'storage';
     }
     //设置缓存

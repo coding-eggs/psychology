@@ -3,7 +3,6 @@ package com.lby.psychology.service.impl;
 import com.lby.psychology.config.PsycException;
 import com.lby.psychology.mapper.PsycRoleMapper;
 import com.lby.psychology.mapper.PsycUserMapper;
-import com.lby.psychology.model.ResponseData;
 import com.lby.psychology.model.enums.EnumRedisPre;
 import com.lby.psychology.model.enums.EnumResponseType;
 import com.lby.psychology.model.pojo.PsycRole;
