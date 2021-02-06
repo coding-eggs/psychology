@@ -88,7 +88,6 @@ public class QQAuthenticationFilter extends AbstractAuthenticationProcessingFilt
 
         UsernamePasswordAuthenticationToken authenticationToken = null;
         if(!ObjectUtils.isEmpty(qqAccessToken)){
-
             //获取openId
             QQOpenId qqOpenId = restTemplate.getForObject(String.format(OPENID_URL,qqAccessToken.getAccess_token(),FMT), QQOpenId.class);
 

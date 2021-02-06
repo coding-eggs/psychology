@@ -67,3 +67,6 @@ class Storage{
         localStorage.clear();
     }
 }
+
+
+

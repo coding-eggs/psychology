@@ -8,26 +8,35 @@ import com.lby.psychology.mapper.PsycRoleMapper;
 import com.lby.psychology.mapper.PsycUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.Resource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
+import java.security.KeyPair;
 
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${spring.security.remember.timeout}")
     private Integer rememberTime;
+
+
+    @Autowired
+    private ApplicationContext context;
+
+    @Autowired
+    private PsycPasswordEncoder passwordEncoder;
 
     @Autowired
     private DataSource dataSource;
@@ -73,14 +82,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(securityUserDetailsService).passwordEncoder(passwordEncoder());
+        auth.userDetailsService(securityUserDetailsService).passwordEncoder(passwordEncoder);
     }
-
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-
 
 
     @Override
@@ -90,7 +93,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .cors().disable()
                 .authorizeRequests()
-                .antMatchers("/test/hello","/user/email/check","/user/email/registered").permitAll()
+                .antMatchers("/test/hello","/user/email/check","/user/email/registered","/user/publicKey").permitAll()
                 .antMatchers("/assets/**","/login.html","/register.html").permitAll()
                 .antMatchers("/doc.html","/swagger-resources","/v2/api-docs","/swagger-ui.html","/swagger-resources/configuration/ui","/swagger-resources/configuration/security","/webjars/**").permitAll()
                 .anyRequest()
@@ -134,7 +137,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return authenticationFilter;
     }
 
-    public static void main(String[] args) {
-        System.out.println(new BCryptPasswordEncoder().encode("123456"));
+    @Bean
+    public KeyPair keyPair(){
+        Resource keyStore = this.context.getResource("classpath:coding.keystore");
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(keyStore, "coding".toCharArray());
+        return keyStoreKeyFactory.getKeyPair("coding.keystore","coding".toCharArray());
     }
+
+
 }

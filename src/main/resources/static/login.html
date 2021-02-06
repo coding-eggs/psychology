@@ -26,6 +26,7 @@
 		<script src="assets/js/qs.js"></script>
 		<script src="assets/util/localStorageUtil.js" ></script>
 		<script src="assets/util/request.js" ></script>
+		<script src="assets/util/jsencrypt.js"></script>
 
 
 		<!--[if lt IE 9]>
@@ -125,7 +126,6 @@
 	</body>
 
 	<script>
-
 		let storage = new Storage();
 
 		const login = new Vue({
@@ -136,6 +136,7 @@
 						email: "",
 						password: "",
 						rememberMe: "",
+						publicKey:""
 					},
 					loading: false,
 				}
@@ -145,12 +146,17 @@
 					if(!this.checkEmail() && !this.checkPassword()){
 						return;
 					}
+					let encrypt = new JSEncrypt()
+					//请求公钥
+					encrypt.setPublicKey(this.loginForm.publicKey)
 					service({
 						method: 'post',
 						url: '/user/login',
+						async: false,
 						data: Qs.stringify({
 							email: this.loginForm.email,
-							password: this.loginForm.password,
+							// password: this.loginForm.password,
+							password: encrypt.encrypt(this.loginForm.password),
 							rememberMe: this.loginForm.rememberMe
 						}),
 						headers: {
@@ -186,7 +192,20 @@
 						this.$refs.passwordinput.style.border= '1px solid #dee2e6';
 						return true
 					}
-				}
+				},
+
+			},
+			created(){
+				service({
+					method: 'get',
+					url: '/user/publicKey',
+				}).then(response=>{
+					this.loginForm.publicKey = response.data;
+					storage.setItem({
+						name: "publicKey",
+						value: response.data
+					})
+				})
 			},
 			mounted(){
 				intThisPoint(this)

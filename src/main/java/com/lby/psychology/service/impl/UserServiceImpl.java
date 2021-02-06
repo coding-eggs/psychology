@@ -1,6 +1,7 @@
 package com.lby.psychology.service.impl;
 
 import com.lby.psychology.config.PsycException;
+import com.lby.psychology.config.PsycPasswordEncoder;
 import com.lby.psychology.mapper.PsycRoleMapper;
 import com.lby.psychology.mapper.PsycUserMapper;
 import com.lby.psychology.model.enums.EnumRedisPre;
@@ -32,7 +33,7 @@ public class UserServiceImpl implements IUserService {
     private PsycRoleMapper roleMapper;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private PsycPasswordEncoder passwordEncoder;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -66,9 +67,8 @@ public class UserServiceImpl implements IUserService {
         if(!StringUtils.isEmpty(registeredUserVo.getCode()) &&!registeredUserVo.getCode().equals(code)){
             throw new PsycException(EnumResponseType.VALID_CODE_NOT_SAME);
         }
-        //加密密码
-        registeredUserVo.setPassword(passwordEncoder.encode(registeredUserVo.getPassword()));
-
+        //将秘密进行非对称解密，然后加密保存
+        registeredUserVo.setPassword(passwordEncoder.encode(passwordEncoder.decodeByRSA(registeredUserVo.getPassword())));
         result = userMapper.insertPsycUser(registeredUserVo) > 0;
         List<PsycUserRoleRlt> psycUserRoleRltList = new ArrayList<>();
         for(PsycRole role : authorityList){

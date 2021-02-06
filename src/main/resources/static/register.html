@@ -22,6 +22,8 @@
 		<script src="assets/js/axios.js"></script>
 		<script src="assets/js/element.js"></script>
 		<script src="assets/util/request.js"></script>
+		<script src="assets/util/jsencrypt.js"></script>
+		<script src="assets/util/localStorageUtil.js"></script>
 
 		<!--[if lt IE 9]>
 			<script src="assets/js/html5shiv.min.js"></script>
@@ -136,6 +138,11 @@
 	</body>
 
 <script>
+
+	let storage = new Storage();
+	let encrypt = new JSEncrypt()
+	//请求公钥
+	encrypt.setPublicKey(storage.getItem("publicKey"))
 	var reg = new Vue({
 		el: '#reg',
 		data: {
@@ -150,6 +157,7 @@
 		},
 		methods:{
 			registered(){
+
 				if(this.checkAll()){
 					service({
 						method: 'post',
@@ -157,7 +165,7 @@
 						data:{
 							username: this.username,
 							email: this.email,
-							password: this.password,
+							password: encrypt.encrypt(this.password),
 							code: this.code
 						}
 					}).then(response=>{
@@ -256,7 +264,7 @@
 						data:{
 							username: this.username,
 							email: this.email,
-							password: this.password
+							password: encrypt.encrypt(this.password)
 						}
 					}).then(response=>{
 						if(response.data){
