@@ -30,5 +30,5 @@ public interface PsycRoleMapper {
 
     int insertRoleUserRlt(List<PsycUserRoleRlt> list);
 
-    List<RolePermissionVo> selectRolePermission(List<Integer> list);
+    List<RolePermissionVo> selectRolePermission(@Param("list") List<Integer> list,@Param("permissionType") Integer permissionType);
 }

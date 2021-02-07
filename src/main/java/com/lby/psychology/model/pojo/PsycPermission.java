@@ -42,8 +42,15 @@ public class PsycPermission implements Serializable {
     @ApiModelProperty(value = "页面优先级")
     private Integer priority;
 
-    @ApiModelProperty(value = "父级页面id")
-    private Integer parentPageId;
+    @ApiModelProperty(value = "页面组code")
+    private String groupCode;
+
+    @ApiModelProperty(value = "页面组描述")
+    private String groupName;
+
+    @ApiModelProperty(value = "图标class")
+    private String dataFeather;
+
 
     @ApiModelProperty(value = "备注")
     private String remark;

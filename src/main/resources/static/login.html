@@ -152,7 +152,6 @@
 					service({
 						method: 'post',
 						url: '/user/login',
-						async: false,
 						data: Qs.stringify({
 							email: this.loginForm.email,
 							// password: this.loginForm.password,
@@ -165,8 +164,8 @@
 					}).then(response => {
 						const data = response.data;
 						storage.setItem({
-							name: "routeList",
-							value: data.routeList
+							name: "routeMap",
+							value: data.routeMap
 						});
 						window.location.href=data.requestURI;
 					})

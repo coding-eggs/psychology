@@ -33,14 +33,21 @@
         r.role_code,
         p.permission_id,
         p.permission_url,
-        p.permission_type
+        p.permission_type,
+        p.page_name,
+        p.group_code,
+        p.group_name,
+        p.data_feather,
+        p.priority
       FROM
         psyc_role r
           LEFT JOIN psyc_role_permission_rlt rpl ON r.role_id = rpl.role_id
           LEFT JOIN psyc_permission p ON rpl.permission_id = p.permission_id
       WHERE
         r.role_id IN ( <foreach collection="list" item="item" index="index" > #{item}</foreach> )
-        AND p.permission_type = 20
+        AND p.permission_type = #{permissionType}
+        AND group_code != ''
+        ORDER BY p.priority
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from psyc_role

@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lby.psychology.mapper.PsycRoleMapper;
 import com.lby.psychology.mapper.PsycUserMapper;
 import com.lby.psychology.model.ResponseData;
+import com.lby.psychology.model.enums.EnumPermissionType;
 import com.lby.psychology.model.pojo.PsycRole;
 import com.lby.psychology.model.security.SecurityPsycUser;
+import com.lby.psychology.model.vo.RolePermissionVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,9 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -55,17 +55,10 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         }else{
             map.put("requestURI",defaultSavedRequest.getRequestURI());
         }
-        map.put("isAdmin",false);
-
-        securityPsycUser.getAuthorities().forEach(e->{
-            if(e.getRoleCode().trim().toUpperCase(Locale.ROOT).equals("ADMIN")){
-                map.put("isAdmin",true);
-            }
-        });
-        //该用户的角色所有拥有的权限
-        if(!Boolean.parseBoolean(map.get("isAdmin").toString())){
-            map.put("routeList",roleMapper.selectRolePermission(securityPsycUser.getAuthorities().stream().map(PsycRole::getRoleId).collect(Collectors.toList())));
-        }
+        //获取该用户可访问得菜单权限
+        List<RolePermissionVo> permissionVoList = roleMapper.selectRolePermission(securityPsycUser.getAuthorities().stream().map(PsycRole::getRoleId).collect(Collectors.toList()), EnumPermissionType.PAGE.getId());
+        LinkedHashMap<String, List<RolePermissionVo>>  menuList =permissionVoList.stream().collect(Collectors.groupingBy(RolePermissionVo::getGroupName,LinkedHashMap::new,Collectors.toList()));
+        map.put("routeMap",menuList);
         ResponseData<Map<String,Object>> responseData = new ResponseData<>(map);
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         httpServletResponse.getWriter().write(objectMapper.writeValueAsString(responseData));
