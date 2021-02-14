@@ -102,11 +102,11 @@ $(function(){
 	}
 
 	// Datatable
-	if ($('.datatable').length > 0) {
-		$('.datatable').DataTable({
-			"bFilter": false,
-		});
-	}
+	// if ($('.datatable').length > 0) {
+	// 	$('.datatable').DataTable({
+	// 		"bFilter": false,
+	// 	});
+	// }
 
 	// Sidebar Slimscroll
 	if ($slimScrolls.length > 0) {

@@ -49,9 +49,9 @@
 									<div class="form-group">
 										<input class="form-control"
 											   type="text"
-											   v-model="username"
+											   v-model="nickname"
 											   placeholder="姓名"
-											   v-on:keyup="checkUsername"
+											   v-on:keyup="checkNickname"
 											   ref="usernameinput"
 										>
 									</div>
@@ -146,7 +146,7 @@
 	var reg = new Vue({
 		el: '#reg',
 		data: {
-			username: "",
+			nickname: "",
 			email:"",
 			password:"",
 			confirmPassword:"",
@@ -163,7 +163,7 @@
 						method: 'post',
 						url: '/user/email/registered',
 						data:{
-							username: this.username,
+							nickname: this.nickname,
 							email: this.email,
 							password: encrypt.encrypt(this.password),
 							code: this.code
@@ -191,7 +191,7 @@
 			},
 			checkAll(){
 				var result = false;
-				if(this.checkUsername()&&this.checkEmail()&&this.checkPassword()&&this.checkConfirmPassword()&&this.checkCode()) {
+				if(this.checkNickname()&&this.checkEmail()&&this.checkPassword()&&this.checkConfirmPassword()&&this.checkCode()) {
 					result = true;
 				}
 				return result;
@@ -199,15 +199,15 @@
 			//校验所有但是不包括验证码
 			checkAllNullCode(){
 				var result = false;
-				if(this.checkUsername()&&this.checkEmail()&&this.checkPassword()&&this.checkConfirmPassword()){
+				if(this.checkNickname()&&this.checkEmail()&&this.checkPassword()&&this.checkConfirmPassword()){
 					result = true
 				}
 				return result;
 			},
 
-			checkUsername(){
-				if(this.username.trim().length===0){
-					this.$refs.usernameinput.placeholder = "用户名不能为空"
+			checkNickname(){
+				if(this.nickname.trim().length===0){
+					this.$refs.usernameinput.placeholder = "昵称不能为空"
 					this.$refs.usernameinput.style.border = '1px solid red';
 					return false;
 				}else{
@@ -262,7 +262,7 @@
 						method: 'post',
 						url: '/user/email/check',
 						data:{
-							username: this.username,
+							nickname: this.nickname,
 							email: this.email,
 							password: encrypt.encrypt(this.password)
 						}

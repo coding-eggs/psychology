@@ -8,6 +8,12 @@ spring:
     url: jdbc:mysql://120.53.234.127:1234/psychology?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
     username: bingyue
     password: bingyue
+    hikari:
+      minimum-idle: 3
+      maximum-pool-size: 10
+      # 默认 800
+      max-lifetime: 30000
+      connection-test-query: SELECT 1
   redis:
     port: 1235
     host: 120.53.234.127
@@ -38,6 +44,11 @@ mybatis:
   type-aliases-package: com.lby.psychology.model
   configuration:
     map-underscore-to-camel-case: true
+pagehelper:
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+  auto-dialect: true
 logging:
   level:
     root: info

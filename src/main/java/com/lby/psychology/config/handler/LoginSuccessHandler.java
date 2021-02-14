@@ -21,6 +21,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,7 +47,8 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         SecurityPsycUser securityPsycUser = (SecurityPsycUser) authentication.getPrincipal();
         securityPsycUser.setPassword("");
         //更新用户最后登录时间
-        userMapper.updateLastLoginDate(securityPsycUser.getUserId());
+        userMapper.updateLastLoginDate(securityPsycUser.getUserId(),LocalDateTime.now());
+
 
         Map<String,Object> map = new HashMap<>();
         map.put("user",securityPsycUser);

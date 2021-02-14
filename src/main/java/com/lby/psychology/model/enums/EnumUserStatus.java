@@ -5,8 +5,8 @@ import lombok.Getter;
 @Getter
 public enum EnumUserStatus {
 
-    USER_UN_ENABLE((short)0,"未激活"),
-    USER_ENABLE((short)1,"已激活");
+    USER_UN_ENABLE((short)0,"冻结"),
+    USER_ENABLE((short)1,"正常");
 
     private Short id;
 

@@ -21,12 +21,14 @@ function initMenu(routeMap,activePage){
             )
         }else{
             var active = "submenu";
+            var liActive = "";
             var liHtml='';
             value.forEach(e=>{
-                liHtml = liHtml + '<li><a href='+e.permissionUrl+'>'+e.pageName+'</a></li>'
                 if(e.permissionUrl === activePage){
+                    liActive = 'active'
                     active = 'active'
                 }
+                liHtml = liHtml + '<li class='+liActive+'><a href='+e.permissionUrl+'>'+e.pageName+'</a></li>'
             })
             menuObj.append(
                 '<li class='+active+'>' +

@@ -16,4 +16,12 @@ public enum EnumAuthType {
         this.name = name;
     }
 
+    public static EnumAuthType getEnumById(int id) {
+        for(EnumAuthType e : EnumAuthType.values()) {
+            if (e.getId() == id)
+                return e;
+        }
+        return null;
+    }
+
 }

@@ -32,7 +32,7 @@
   </select>
     <select id="selectPsycUserByEmail" resultType="com.lby.psychology.model.security.SecurityPsycUser">
         select
-          user_id, auth_type, username, `password`, email, qq_nickname, qq_open_id, birth_date,
+          user_id, auth_type, username,nickname, `password`, email, qq_nickname, qq_open_id, birth_date,
           sex, figure_url, create_date, update_date, phone, user_status, last_password_rest_date,
           last_user_login_date
         from psyc_user
@@ -55,9 +55,89 @@
     <select id="selectEmailCount" resultType="java.lang.Integer">
       select count(*) from psyc_user where email = #{email}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <select id="selectPsycUser" resultType="com.lby.psychology.model.vo.PsycUserVo">
+      SELECT
+        u.user_id,
+        u.auth_type,
+        u.username,
+        u.nickname,
+        u.email,
+        u.qq_nickname,
+        u.birth_date,
+        u.sex,
+        u.figure_url,
+        u.create_date,
+        u.update_date,
+        u.phone,
+        u.user_status,
+        u.last_password_rest_date,
+        u.last_user_login_date,
+        GROUP_CONCAT( r.remark ) role_names
+      FROM
+        psyc_user u
+          LEFT JOIN psyc_user_role_rlt url ON u.user_id = url.user_id
+          LEFT JOIN psyc_role r ON url.role_id = r.role_id
+      where 1 = 1
+      <if test="nickname!=null and nickname!= ''">
+      and u.nickname like CONCAT(#{nickname},'%')
+      </if>
+      <if test="email!=null and email!=''">
+        and u.email like CONCAT(#{email},'%')
+      </if>
+      <if test="sex!=null">
+        and u.sex = #{sex}
+      </if>
+      <if test="userStatus!=null">
+        and u.user_status = #{userStatus}
+      </if>
+      <if test="startCreateDate != null ">
+        and UNIX_TIMESTAMP(u.create_date) <![CDATA[ >= ]]> UNIX_TIMESTAMP(#{startCreateDate})
+      </if>
+      <if test="endCreateDate != null ">
+        and UNIX_TIMESTAMP(u.create_date) <![CDATA[ < ]]> UNIX_TIMESTAMP(#{endCreateDate})
+      </if>
+      <if test="startLastUserLoginDate != null ">
+        and UNIX_TIMESTAMP(u.last_user_login_date) <![CDATA[ >= ]]> UNIX_TIMESTAMP(#{startLastUserLoginDate})
+      </if>
+      <if test="endLastUserLoginDate != null ">
+        and UNIX_TIMESTAMP(u.last_user_login_date) <![CDATA[ < ]]> UNIX_TIMESTAMP(#{endLastUserLoginDate})
+      </if>
+      GROUP BY
+        u.user_id
+    </select>
+  <select id="selectUserByUserId" resultType="com.lby.psychology.model.vo.PsycUserVo">
+    SELECT
+    u.user_id,
+    u.auth_type,
+    u.username,
+    u.nickname,
+    u.email,
+    u.qq_nickname,
+    u.birth_date,
+    u.sex,
+    u.figure_url,
+    u.create_date,
+    u.birth_date,
+    u.update_date,
+    u.phone,
+    u.user_status,
+    u.last_password_rest_date,
+    u.last_user_login_date,
+    GROUP_CONCAT( r.remark ) role_names
+    FROM
+    psyc_user u
+    LEFT JOIN psyc_user_role_rlt url ON u.user_id = url.user_id
+    LEFT JOIN psyc_role r ON url.role_id = r.role_id
+    where u.user_id = #{userId}
+    GROUP BY
+    u.user_id
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from psyc_user
     where user_id = #{userId,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteUserRole">
+    delete from psyc_user_role_rlt where user_id = #{userId}
   </delete>
   <insert id="insert" keyColumn="user_id" keyProperty="userId" parameterType="com.lby.psychology.model.pojo.PsycUser" useGeneratedKeys="true">
     insert into psyc_user (auth_type, username, `password`,
@@ -191,8 +271,8 @@
           )
   </insert>
   <insert id="insertPsycUser" useGeneratedKeys="true" keyProperty="userId">
-    insert into psyc_user(username, password, email)
-    value (#{username},#{password},#{email})
+    insert into psyc_user(username,nickname, password, email)
+    value (#{username},#{nickname},#{password},#{email})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycUser">
     update psyc_user
@@ -277,7 +357,7 @@
   </update>
     <update id="updateLastLoginDate">
       update psyc_user
-      set last_user_login_date = now()
+      set last_user_login_date = #{now}
       where user_id = #{userId}
     </update>
 </mapper>

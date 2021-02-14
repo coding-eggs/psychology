@@ -3967,3 +3967,14 @@ table.table-inbox tbody tr.checked {
 		display: none;
 	}
 }
+
+.user-a {
+	color: #000000;
+	text-decoration: none;
+}
+.user-a:hover {
+	font-size: 16px;
+	color: #000000;
+	text-decoration: none;
+
+}

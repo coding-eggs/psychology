@@ -13,9 +13,12 @@ public class RegisteredUserVo {
     @ApiModelProperty(value = "用户id")
     private Long userId;
 
-    @NotNull(message = "username 用户名不能为空")
     @ApiModelProperty(value = "用户名")
     private String username;
+
+    @NotNull(message = "nickname 昵称不能为空")
+    @ApiModelProperty(value = "昵称")
+    private String nickname;
 
     @NotNull(message = "邮箱不能为空")
     @Pattern(regexp = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$",message = "邮箱不符合格式")

@@ -1,13 +1,17 @@
 package com.lby.psychology.service.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.lby.psychology.config.PsycException;
 import com.lby.psychology.config.PsycPasswordEncoder;
 import com.lby.psychology.mapper.PsycRoleMapper;
 import com.lby.psychology.mapper.PsycUserMapper;
-import com.lby.psychology.model.enums.EnumRedisPre;
-import com.lby.psychology.model.enums.EnumResponseType;
+import com.lby.psychology.model.co.PsycUserCo;
+import com.lby.psychology.model.common.PageResult;
+import com.lby.psychology.model.enums.*;
 import com.lby.psychology.model.pojo.PsycRole;
 import com.lby.psychology.model.pojo.PsycUserRoleRlt;
+import com.lby.psychology.model.vo.PsycUserVo;
 import com.lby.psychology.model.vo.RegisteredUserVo;
 import com.lby.psychology.service.IUserService;
 import com.lby.psychology.util.CommonUtil;
@@ -21,6 +25,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -60,6 +65,8 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public boolean registeredPsycUser(RegisteredUserVo registeredUserVo) {
+        //用户名和邮箱相同
+        registeredUserVo.setUsername(registeredUserVo.getEmail());
         boolean result;
         //获取默认角色
         List<PsycRole> authorityList = roleMapper.selectDefaultRoleList();
@@ -80,5 +87,35 @@ public class UserServiceImpl implements IUserService {
         }
         roleMapper.insertRoleUserRlt(psycUserRoleRltList);
         return result;
+    }
+
+    @Override
+    public PageResult getUserList(PsycUserCo co) {
+        PageHelper.startPage(co.getPageNum(),co.getPageSize());
+        List<PsycUserVo> list = userMapper.selectPsycUser(co);
+        list.forEach(e->{
+            e.setSexName(Objects.requireNonNull(EnumSex.getEnumById(e.getSex())).getName());
+            e.setUserStatusName(Objects.requireNonNull(EnumUserStatus.getEnumById(e.getUserStatus())).getName());
+            e.setAuthName(Objects.requireNonNull(EnumAuthType.getEnumById(e.getAuthType())).getName());
+        });
+        PageInfo<PsycUserVo> pageInfo = new PageInfo<>(list);
+        return PageResult.getPageResult(pageInfo);
+    }
+
+    @Override
+    public boolean deleteUserByUserId(Long userId) {
+        if(userMapper.deleteByPrimaryKey(userId) > 0){
+          return  userMapper.deleteUserRole(userId) > 0;
+        }
+        return false;
+    }
+
+    @Override
+    public PsycUserVo getUserByUserId(Long userId) {
+        PsycUserVo e =  userMapper.selectUserByUserId(userId);
+        e.setSexName(Objects.requireNonNull(EnumSex.getEnumById(e.getSex())).getName());
+        e.setUserStatusName(Objects.requireNonNull(EnumUserStatus.getEnumById(e.getUserStatus())).getName());
+        e.setAuthName(Objects.requireNonNull(EnumAuthType.getEnumById(e.getAuthType())).getName());
+        return e;
     }
 }

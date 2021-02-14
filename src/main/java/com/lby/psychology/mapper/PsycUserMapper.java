@@ -1,11 +1,16 @@
 package com.lby.psychology.mapper;
 
+import com.lby.psychology.model.co.PsycUserCo;
 import com.lby.psychology.model.pojo.PsycUser;
 import com.lby.psychology.model.security.SecurityPsycUser;
+import com.lby.psychology.model.vo.PsycUserVo;
 import com.lby.psychology.model.vo.RegisteredUserVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 @Mapper
@@ -38,11 +43,18 @@ public interface PsycUserMapper {
     SecurityPsycUser selectUserByOpenId(String openId);
 
     //更新最后登录时间
-    int updateLastLoginDate(Long userId);
+    int updateLastLoginDate(@Param("userId") Long userId, @Param("now") LocalDateTime localDateTime);
 
     //查询该邮箱是否存在
     int selectEmailCount(@Param("email") String email);
 
     //插入新用户
     int insertPsycUser(RegisteredUserVo registeredUserVo);
+
+    //查询用户列表
+    List<PsycUserVo> selectPsycUser(PsycUserCo psycUserCo);
+
+    int deleteUserRole(Long userId);
+
+    PsycUserVo selectUserByUserId(Long userId);
 }
