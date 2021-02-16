@@ -5,7 +5,7 @@ import lombok.Getter;
 
 /**
 * 自定义异常处理
-* @author myk
+* @author lby
 */
 @Getter
 public class PsycException extends RuntimeException{

@@ -11,7 +11,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.codec.Base64;
 import org.springframework.validation.annotation.Validated;
@@ -85,9 +84,10 @@ public class UserController {
         return new ResponseData<>(userService.getUserByUserId(userId));
     }
 
-    @ApiOperation(value = "更新用户信息")
+
+    @ApiOperation(value = "/更新用户信息")
     @PostMapping(value = "/updateUser")
-    public ResponseData<Boolean> updateUser(@RequestBody PsycUserVo userVo){
+    public ResponseData<Boolean> updateUser(){
         return null;
     }
 

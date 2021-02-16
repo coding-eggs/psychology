@@ -4,6 +4,7 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
 		<title>Psychology Manage System</title>
+
 		<!-- Favicon -->
 		<link rel="shortcut icon" href="assets/img/favicon.png">
 
@@ -15,8 +16,8 @@
 		<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
 		<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
 
-		<!-- Select2 CSS -->
-		<link rel="stylesheet" href="assets/plugins/select2/css/select2.min.css">
+		<!-- Datatables CSS -->
+		<link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
 
 		<!-- Main CSS -->
 		<link rel="stylesheet" href="assets/css/style.css">
@@ -37,7 +38,7 @@
 	<body>
 
 		<!-- Main Wrapper -->
-		<div class="main-wrapper" id="editcustomer">
+		<div class="main-wrapper" id="judge">
 
 			<!-- Header -->
 			<div class="header">
@@ -90,7 +91,6 @@
 					</li>
 					<!-- /Flag -->
 
-
 					<!-- User Menu -->
 					<li class="nav-item dropdown has-arrow main-drop">
 						<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
@@ -131,83 +131,101 @@
 
 					<!-- Page Header -->
 					<div class="page-header">
-						<div class="row">
-							<div class="col-sm-12">
-								<h3 class="page-title">Customers</h3>
+						<div class="row align-items-center">
+							<div class="col">
+								<h3 class="page-title">测试/题库管理</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-									<li class="breadcrumb-item"><a href="customers.html">用户管理</a></li>
-									<li class="breadcrumb-item active">编辑用户</li>
+									<li class="breadcrumb-item"><a href="index.html">Dashboard</a>
+									</li>
+									<li class="breadcrumb-item active">评判规则管理</li>
 								</ul>
+							</div>
+							<div class="col-auto">
+								<a href="add-judge.html" class="btn btn-primary mr-1">
+									<i class="fas fa-plus"></i>
+								</a>
 							</div>
 						</div>
 					</div>
 					<!-- /Page Header -->
-					<div class="profile-cover">
-						<div class="profile-cover-wrap">
-							<img class="profile-cover-img" :src="basicUser.figureUrl" alt="Profile Cover">
-						</div>
+
+					<!-- Search Filter -->
+					<div>
+						<el-form :inline="true"  ref="form" :model="form">
+							<el-form-item label="起始分数">
+								<el-input v-model="form.startScore"></el-input>
+							</el-form-item>
+							<el-form-item label="结束分数">
+								<el-input v-model="form.endScore"></el-input>
+							</el-form-item>
+							<el-form-item>
+								<el-button type="primary" v-on:click="onSubmit">查询</el-button>
+							</el-form-item>
+						</el-form>
 					</div>
 
-
-					<div class="text-center mb-5">
-						<label class="avatar avatar-xxl profile-cover-avatar" for="avatar_upload">
-							<img class="avatar-img" :src="basicUser.figureUrl" alt="Profile Image">
-							<input type="file" id="avatar_upload">
-							<span class="avatar-edit">
-										<i data-feather="edit-2" class="avatar-uploader-icon shadow-soft"></i>
-									</span>
-						</label>
-						<h2>{{basicUser.nickname}}</h2>
-					</div>
-
+					<!-- /Search Filter -->
 
 					<div class="row">
-						<div class="col-md-12">
-							<div class="card">
+						<div class="col-sm-12">
+							<div class="card card-table">
 								<div class="card-body">
-									<h4 class="card-title">用户基本信息</h4>
-									<el-form ref="form" :model="basicUser" label-width="80px">
-										<div class="row">
-											<div class="col-md-6">
-												<el-form-item label="用户名">
-													<el-input v-model="basicUser.nickname"></el-input>
-												</el-form-item>
-												<el-form-item label="性别">
-													<el-select v-model="basicUser.sex" placeholder="请选择" clearable>
-														<el-option label="男" value="10"></el-option>
-														<el-option label="女" value="20"></el-option>
-													</el-select>
-												</el-form-item>
-												<el-form-item label="生日">
-													<el-col :span="11">
-														<el-date-picker type="date" placeholder="选择日期" ::default-value="basicUser.birthDate" v-model="basicUser.birthDate" style="width: 100%;"></el-date-picker>
-													</el-col>
-												</el-form-item>
-												<el-form-item label="状态">
-													<el-select v-model="basicUser.userStatus" placeholder="请选择" clearable>
-														<el-option label="正常" value="1"></el-option>
-														<el-option label="冻结" value="0"></el-option>
-													</el-select>
-												</el-form-item>
-<!--												<el-form-item>-->
-<!--													<el-button type="primary" @click="onSubmit">立即创建</el-button>-->
-<!--												</el-form-item>-->
-											</div>
-											<div class="col-md-6">
-												<el-form-item label="邮箱">
-													<el-input v-model="basicUser.email"></el-input>
-												</el-form-item>
-												<el-form-item>
-													<el-button type="primary" v-on:click="saveUser">保存</el-button>
-												</el-form-item>
-											</div>
+									<div class="table-responsive">
+										<el-table
+												:data="judgeList"
+												style="width: 100%">
+											<el-table-column fixed label="序号"
+															 width="50" align="center">
+												<template scope="scope"><span>{{scope.$index+(pageNum - 1) * pageSize + 1}} </span></template>
+											</el-table-column>
+											<el-table-column
+													prop="judgeName"
+													label="评判标准描述"
+													>
+											</el-table-column>
+											<el-table-column  label="分数范围" width="200px">
+												<template slot-scope="scope">
+													<span>{{scope.row.startScore}}</span><span> - </span>
+													<span>{{scope.row.endScore}}</span>
+												</template>
+											</el-table-column>
+
+											<el-table-column
+													fixed="right"
+													label="操作"
+													width="120">
+												<template slot-scope="scope">
+													<el-button
+															v-on:click="editRow(scope.row.judgeId)"
+															type="text"
+															size="small">
+														编辑
+													</el-button>
+													<el-button
+															v-on:click="removeRow(scope.row.judgeId)"
+															type="text"
+															size="small">
+														删除
+													</el-button>
+												</template>
+											</el-table-column>
+										</el-table>
+										<div class="block">
+											<el-pagination
+													@size-change="handleSizeChange"
+													@current-change="handleCurrentChange"
+													:current-page="pageNum"
+													:page-sizes="pageSizes"
+													:page-size="pageSize"
+													:page-count="9"
+													layout="total, sizes, prev, pager, next, jumper"
+													:total="totalSize">
+											</el-pagination>
 										</div>
-									</el-form>
+									</div>
 								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
 			</div>
@@ -229,33 +247,34 @@
 		<!-- Slimscroll JS -->
 		<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
-		<!-- Select2 JS -->
-		<script src="assets/plugins/select2/js/select2.min.js"></script>
+		<!-- Datatables JS -->
+		<script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
+		<script src="assets/plugins/datatables/datatables.min.js"></script>
 
 		<!-- Custom JS -->
 		<script src="assets/js/script.js"></script>
 
 	</body>
+
 <script>
 	let storage = new Storage();
-	var editcustomer = new Vue({
-		el: '#editcustomer',
+	var judge = new Vue({
+		el: '#judge',
 		data: {
 			//初始页
-			activePage: '/customers.html',
 			userinfo: '',
-			basicUser: {
-				nickname: '',
-				email: '',
-				sexName:'',
-				sex: null,
-				userStatus:null,
-				userStatusName:'',
-				birthDate:'',
-				figureUrl:'',
-
-
+			activePage: '/judge.html',
+			judgeList: [],
+			pageNum: 1,
+			totalSize: 0,
+			pageSize: 10,
+			pageSizes: [2,3,5,10,20,50,100],
+			form:{
+				dimension_name: '',
+				startScore: null,
+				endScore: null
 			}
+
 		},
 		methods: {
 
@@ -264,35 +283,79 @@
 					this.userinfo = res.data;
 				});
 			},
-			//初始化用户基本信息
-			initUserInfo(){
-				var userId = window.location.href.split("?")[1].split("=")[1];
-				if(userId!==undefined){
-					service.get("/user/getUserByUserId?userId="+userId).then(res=>{
-						this.basicUser.nickname = res.data.nickname
-						this.basicUser.email = res.data.email;
-						this.basicUser.sex = res.data.sex+'';
-						this.basicUser.userStatus = res.data.userStatus
-						this.basicUser.birthDate = res.data.birthDate;
-						this.basicUser.figureUrl = res.data.figureUrl
-						this.basicUser.userStatus = res.data.userStatus+''
-					})
+			async getJudgeList(pageNum, pageSize,isForm) {
+				var data = {
+					pageNum: pageNum,
+					pageSize: pageSize
+				};
+
+				if(isForm){
+					data = this.form;
+					data.pageNum = pageNum;
+					data.pageSize = pageSize
 				}
+				await service({
+					method: "post",
+					url: "/judge/getJudgeList",
+					data: data
+				}).then(res => {
+					this.judgeList = res.data.dataList
+					this.totalSize = res.data.totalSize
+				})
 			},
-			saveUser(){
-				// 将表单数据发送到后台保存
+			handleSizeChange(size) {
+				this.pageSize = size;
+				this.getJudgeList(this.pageNum,this.pageSize)
+			},
+			handleCurrentChange(currentPage) {
+				this.pageNum = currentPage
+				this.getJudgeList(this.pageNum,this.pageSize)
+			},
+			onSubmit(){
+				this.getJudgeList(this.pageNum,this.pageSize,true)
+			},
+
+			editRow(userId){
+				window.location.href="/edit-customer.html?userId="+userId
+			},
+			removeRow(userId,username){
+				this.$confirm('请您确定是否删除用户<span style="color: red">'+username+'</span>，删除后无法恢复！', '删除用户', {
+					confirmButtonText: '确认',
+					cancelButtonText: '取消',
+					dangerouslyUseHTMLString: true,
+					type: 'warning',
+					center: true
+				}).then(() => {
+					service.get("/user/deleteByUserId?userId="+userId).then(res=>{
+						if(res.data){
+							this.$message({message:"成功删除用户",type:"success"})
+							//刷新用户列表
+							this.getJudgeList(this.pageNum,this.pageSize)
+						}
+					})
+				}).catch(()=>{
+					thispoint.$message({
+						type: 'info',
+						message: '取消删除操作'
+					})
+				})
+
+
 			}
 
 		},
 		created(){
+			this.getJudgeList(this.pageNum,this.pageSize,false)
 		},
 		mounted() {
 			initMenu(storage.getItem("routeMap"),this.activePage)
 			intThisPoint(this);
 			this.getUserInfo();
-			this.initUserInfo();
 		},
 	})
+
+
+
 
 
 </script>

@@ -1,9 +1,7 @@
 package com.lby.psychology.model;
 
 import com.lby.psychology.model.enums.EnumResponseType;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 import lombok.Getter;
 
 @Getter

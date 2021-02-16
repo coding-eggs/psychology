@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lby.psychology.mapper.PsycQuestionJudgeMapper">
+  <resultMap id="BaseResultMap" type="com.lby.psychology.model.pojo.PsycQuestionJudge">
+    <id column="judge_id" jdbcType="INTEGER" property="judgeId" />
+    <result column="judge_name" jdbcType="VARCHAR" property="judgeName" />
+    <result column="start_score" jdbcType="INTEGER" property="startScore" />
+    <result column="end_score" jdbcType="INTEGER" property="endScore" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    judge_id, judge_name, start_score, end_score
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from psyc_question_judge
+    where judge_id = #{judgeId,jdbcType=INTEGER}
+  </select>
+    <select id="selectJudgeList" resultType="com.lby.psychology.model.pojo.PsycQuestionJudge">
+      select  judge_id, judge_name, start_score, end_score
+        from psyc_question_judge
+        where 1 = 1
+        <if test="startScore!=null">
+          and start_score <![CDATA[ >= ]]> #{startScore}
+        </if>
+        <if test="endScore!=null">
+          and end_score <![CDATA[ <= ]]> #{endScore}
+        </if>
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from psyc_question_judge
+    where judge_id = #{judgeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="judge_id" keyProperty="judgeId" parameterType="com.lby.psychology.model.pojo.PsycQuestionJudge" useGeneratedKeys="true">
+    insert into psyc_question_judge (judge_name, start_score, end_score
+      )
+    values (#{judgeName,jdbcType=VARCHAR}, #{startScore,jdbcType=INTEGER}, #{endScore,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="judge_id" keyProperty="judgeId" parameterType="com.lby.psychology.model.pojo.PsycQuestionJudge" useGeneratedKeys="true">
+    insert into psyc_question_judge
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="judgeName != null">
+        judge_name,
+      </if>
+      <if test="startScore != null">
+        start_score,
+      </if>
+      <if test="endScore != null">
+        end_score,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="judgeName != null">
+        #{judgeName,jdbcType=VARCHAR},
+      </if>
+      <if test="startScore != null">
+        #{startScore,jdbcType=INTEGER},
+      </if>
+      <if test="endScore != null">
+        #{endScore,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycQuestionJudge">
+    update psyc_question_judge
+    <set>
+      <if test="judgeName != null">
+        judge_name = #{judgeName,jdbcType=VARCHAR},
+      </if>
+      <if test="startScore != null">
+        start_score = #{startScore,jdbcType=INTEGER},
+      </if>
+      <if test="endScore != null">
+        end_score = #{endScore,jdbcType=INTEGER},
+      </if>
+    </set>
+    where judge_id = #{judgeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lby.psychology.model.pojo.PsycQuestionJudge">
+    update psyc_question_judge
+    set judge_name = #{judgeName,jdbcType=VARCHAR},
+      start_score = #{startScore,jdbcType=INTEGER},
+      end_score = #{endScore,jdbcType=INTEGER}
+    where judge_id = #{judgeId,jdbcType=INTEGER}
+  </update>
+</mapper>

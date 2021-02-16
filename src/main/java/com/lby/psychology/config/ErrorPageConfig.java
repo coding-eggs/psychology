@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 
 /**
 * 错误页面配置类
-* @author myk
+* @author lby
 */
 @Configuration
 public class ErrorPageConfig {
