@@ -38,7 +38,7 @@
 <body>
 
 <!-- Main Wrapper -->
-<div class="main-wrapper" id="addjudge">
+<div class="main-wrapper" id="editoption">
 
     <!-- Header -->
     <div class="header">
@@ -137,7 +137,7 @@
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Dashboard</a>
                             </li>
-                            <li class="breadcrumb-item active">新增评判规则</li>
+                            <li class="breadcrumb-item active">修改问题选项</li>
                         </ul>
                     </div>
                 </div>
@@ -146,20 +146,22 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <el-form ref="form" :model="form" label-width="80px">
-                        <el-form-item label="评判描述">
-                            <el-input type="textarea" v-model="form.judgeName" placeholder="评判描述"></el-input>
+                    <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+                        <el-form-item label="问题描述" >
+                            <el-input v-model="form.questionName" :disabled="true"></el-input>
                         </el-form-item>
-                        <el-form-item label="评分范围">
-                            <el-col :span="3">
-                                <el-input v-model="form.startScore" placeholder="起始分数"></el-input>
-                            </el-col>
-                            <el-col :span="3">
-                                <el-input v-model="form.endScore" placeholder="结束分数"></el-input>
-                            </el-col>
+
+                        <el-form-item label="选项编码" prop="optionCode" >
+                            <el-input v-model="form.optionCode" ></el-input>
+                        </el-form-item>
+                        <el-form-item label="选项描述" prop="optionName">
+                            <el-input v-model="form.optionName"></el-input>
+                        </el-form-item>
+                        <el-form-item label="选项分数" prop="optionScore">
+                            <el-input v-model.number="form.optionScore"></el-input>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" v-on:click="onSubmit">立即创建</el-button>
+                            <el-button type="primary" v-on:click="onSubmit">保存</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -195,16 +197,32 @@
 
 <script>
     let storage = new Storage();
-    var addjudge = new Vue({
-        el: '#addjudge',
+    var editoption = new Vue({
+        el: '#editoption',
         data: {
             //初始页
             userinfo: '',
-            activePage: '/judge.html',
+            activePage: '/options.html',
             form:{
-                judgeName:"",
-                startScore: null,
-                endScore:null,
+                optionId:null,
+                questionName:"",
+                optionCode: '',
+                optionName:'',
+                optionScore: null
+            },
+            rules:{
+                optionCode:[
+                    {required: true,message:"请输入选项编码,如： A,B,C",trigger: 'blur'},
+                    {min: 1,max: 5,message: '长度 1 到 5 个字符',trigger: 'blur'},
+                ],
+                optionName:[
+                    {required: true,message:"请输入选项描述",trigger: 'blur'},
+                    {min: 1,max: 100,message: '长度 1 到 100 个字符',trigger: 'blur'},
+                ],
+                optionScore:[
+                    {required: true,message:"请输入选项分数",trigger: 'blur'},
+                    {type:'number',min: 0,max: 999,message: '数字在 0 - 999 之间（只能输入数字）',trigger: 'blur'},
+                ]
             }
 
         },
@@ -217,13 +235,25 @@
             onSubmit(){
                 service({
                     method: 'post',
-                    url: '/judge/addJudge',
+                    url: '/option/updateOption',
                     data: this.form
                 }).then(res=>{
                     if(res.data){
-                        this.$message({message:"新增成功",type:"success"})
+                        this.$message({message:"保存成功",type:"success"})
                     }
                 })
+            },
+            initOptionInfo(){
+                var optionId = window.location.href.split("?")[1].split("=")[1];
+                if(optionId!==undefined){
+                    service.get("/option/getOptionInfo?optionId="+optionId).then(res=>{
+                        this.form.optionId = res.data.optionId
+                        this.form.questionName = res.data.questionName
+                        this.form.optionCode = res.data.optionCode
+                        this.form.optionName = res.data.optionName
+                        this.form.optionScore = res.data.optionScore
+                    })
+                }
             }
         },
         created(){
@@ -232,6 +262,7 @@
             initMenu(storage.getItem("routeMap"),this.activePage)
             intThisPoint(this);
             this.getUserInfo();
+            this.initOptionInfo();
         },
     })
 

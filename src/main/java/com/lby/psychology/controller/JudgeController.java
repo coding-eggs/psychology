@@ -9,10 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Api
 @Slf4j
@@ -33,6 +30,24 @@ public class JudgeController {
     @PostMapping(value = "/addJudge")
     public ResponseData<Boolean> addJudge(@RequestBody PsycQuestionJudge co){
         return new ResponseData<>(judgeService.addJudge(co));
+    }
+
+    @ApiOperation(value = "获取评判规则详情")
+    @GetMapping(value = "/getJudgeInfo")
+    public ResponseData<PsycQuestionJudge> getJudgeInfo(Integer judgeId){
+        return new ResponseData<>(judgeService.getJudgeInfo(judgeId));
+    }
+
+    @ApiOperation(value = "删除评判规则")
+    @GetMapping(value = "/deleteJudge")
+    public ResponseData<Boolean> deleteJudge(@RequestParam("judgeId") Integer judgeId){
+        return new ResponseData<Boolean>(judgeService.deleteJudge(judgeId));
+    }
+
+    @ApiOperation(value = "更新评判规则")
+    @PostMapping(value = "/updateJudge")
+    public ResponseData<Boolean> updateJudge(@RequestBody PsycQuestionJudge psycQuestionJudge){
+        return new ResponseData<>(judgeService.updateJudge(psycQuestionJudge));
     }
 
 }

@@ -27,4 +27,19 @@ public class JudgeServiceImpl implements IJudgeService {
     public boolean addJudge(PsycQuestionJudge judge) {
         return questionJudgeMapper.insert(judge) > 0;
     }
+
+    @Override
+    public boolean deleteJudge(Integer judgeId) {
+        return questionJudgeMapper.deleteByPrimaryKey(judgeId) > 0;
+    }
+
+    @Override
+    public boolean updateJudge(PsycQuestionJudge judge) {
+        return questionJudgeMapper.updateByPrimaryKeySelective(judge) > 0;
+    }
+
+    @Override
+    public PsycQuestionJudge getJudgeInfo(Integer judgeId) {
+        return questionJudgeMapper.selectByPrimaryKey(judgeId);
+    }
 }

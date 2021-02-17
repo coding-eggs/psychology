@@ -38,7 +38,7 @@
 	<body>
 
 		<!-- Main Wrapper -->
-		<div class="main-wrapper" id="judge">
+		<div class="main-wrapper" id="options">
 
 			<!-- Header -->
 			<div class="header">
@@ -137,11 +137,11 @@
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Dashboard</a>
 									</li>
-									<li class="breadcrumb-item active">评判规则管理</li>
+									<li class="breadcrumb-item active">试题选项管理</li>
 								</ul>
 							</div>
 							<div class="col-auto">
-								<a href="add-judge.html" class="btn btn-primary mr-1">
+								<a href="add-options.html" class="btn btn-primary mr-1">
 									<i class="fas fa-plus"></i>
 								</a>
 							</div>
@@ -152,11 +152,14 @@
 					<!-- Search Filter -->
 					<div>
 						<el-form :inline="true"  ref="form" :model="form">
-							<el-form-item label="起始分数">
-								<el-input v-model="form.startScore"></el-input>
+							<el-form-item label="所属问题">
+								<el-input v-model="form.questionName"></el-input>
 							</el-form-item>
-							<el-form-item label="结束分数">
-								<el-input v-model="form.endScore"></el-input>
+							<el-form-item label="选项编码">
+								<el-input v-model="form.optionCode"></el-input>
+							</el-form-item>
+							<el-form-item label="选项描述">
+								<el-input v-model="form.optionName"></el-input>
 							</el-form-item>
 							<el-form-item>
 								<el-button type="primary" v-on:click="onSubmit">查询</el-button>
@@ -172,38 +175,59 @@
 								<div class="card-body">
 									<div class="table-responsive">
 										<el-table
-												:data="judgeList"
+												:data="optionList"
 												style="width: 100%">
 											<el-table-column fixed label="序号"
 															 width="50" align="center">
 												<template scope="scope"><span>{{scope.$index+(pageNum - 1) * pageSize + 1}} </span></template>
 											</el-table-column>
 											<el-table-column
-													prop="judgeName"
-													label="评判标准描述"
+													prop="questionName"
+													label="所属问题"
 													>
 											</el-table-column>
-											<el-table-column  label="分数范围" width="200px">
-												<template slot-scope="scope">
-													<span>{{scope.row.startScore}}</span><span> - </span>
-													<span>{{scope.row.endScore}}</span>
-												</template>
+											<el-table-column
+													prop="optionCode"
+													label="选项编码"
+											>
 											</el-table-column>
+											<el-table-column
+													prop="optionName"
+													label="选项描述"
+											>
+											</el-table-column>
+
+											<el-table-column
+													prop="optionScore"
+													label="选项分数"
+											>
+											</el-table-column>
+											<el-table-column
+													prop="createDate"
+													label="创建时间"
+											>
+											</el-table-column>
+											<el-table-column
+													prop="updateDate"
+													label="更新时间"
+											>
+											</el-table-column>
+
 
 											<el-table-column
 													fixed="right"
 													label="操作"
-													width="120">
+													width="160">
 												<template slot-scope="scope">
 													<el-button
-															v-on:click="editRow(scope.row.judgeId)"
-															type="text"
+															v-on:click="editRow(scope.row.optionId)"
+															type="button"
 															size="small">
 														编辑
 													</el-button>
 													<el-button
-															v-on:click="removeRow(scope.row.judgeId)"
-															type="text"
+															v-on:click="removeRow(scope.row.optionId)"
+															type="button"
 															size="small">
 														删除
 													</el-button>
@@ -258,20 +282,21 @@
 
 <script>
 	let storage = new Storage();
-	var judge = new Vue({
-		el: '#judge',
+	var options = new Vue({
+		el: '#options',
 		data: {
 			//初始页
 			userinfo: '',
-			activePage: '/judge.html',
-			judgeList: [],
+			activePage: '/options.html',
+			optionList: [],
 			pageNum: 1,
 			totalSize: 0,
 			pageSize: 10,
 			pageSizes: [2,3,5,10,20,50,100],
 			form:{
-				startScore: null,
-				endScore: null
+				questionName: '',
+				optionCode: '',
+				optionName: ''
 			}
 
 		},
@@ -282,7 +307,7 @@
 					this.userinfo = res.data;
 				});
 			},
-			async getJudgeList(pageNum, pageSize,isForm) {
+			async getOptionsList(pageNum, pageSize,isForm) {
 				var data = {
 					pageNum: pageNum,
 					pageSize: pageSize
@@ -295,41 +320,41 @@
 				}
 				await service({
 					method: "post",
-					url: "/judge/getJudgeList",
+					url: "/option/getOptionPageList",
 					data: data
 				}).then(res => {
-					this.judgeList = res.data.dataList
+					this.optionList = res.data.dataList
 					this.totalSize = res.data.totalSize
 				})
 			},
 			handleSizeChange(size) {
 				this.pageSize = size;
-				this.getJudgeList(this.pageNum,this.pageSize)
+				this.getOptionsList(this.pageNum,this.pageSize)
 			},
 			handleCurrentChange(currentPage) {
 				this.pageNum = currentPage
-				this.getJudgeList(this.pageNum,this.pageSize)
+				this.getOptionsList(this.pageNum,this.pageSize)
 			},
 			onSubmit(){
-				this.getJudgeList(this.pageNum,this.pageSize,true)
+				this.getOptionsList(this.pageNum,this.pageSize,true)
 			},
 
-			editRow(judgeId){
-				window.location.href="/edit-judge.html?judgeId="+judgeId
+			editRow(optionId){
+				window.location.href="/edit-options.html?optionId="+optionId
 			},
-			removeRow(judgeId){
-				this.$confirm('请您确定是否要删除该评判，删除后无法恢复！', '删除评判规则', {
+			removeRow(optionId){
+				this.$confirm('请您确定是否要删除该选项，删除后无法恢复！', '删除问题选项', {
 					confirmButtonText: '确认',
 					cancelButtonText: '取消',
 					dangerouslyUseHTMLString: true,
 					type: 'warning',
 					center: true
 				}).then(() => {
-					service.get("/judge/deleteJudge?judgeId="+judgeId).then(res=>{
+					service.get("/option/deleteOption?optionId="+optionId).then(res=>{
 						if(res.data){
-							this.$message({message:"成功删除该评判规则",type:"success"})
+							this.$message({message:"成功删除该问题选项",type:"success"})
 							//刷新用户列表
-							this.getJudgeList(this.pageNum,this.pageSize)
+							this.getOptionsList(this.pageNum,this.pageSize,false)
 						}
 					})
 				}).catch(()=>{
@@ -339,10 +364,9 @@
 					})
 				})
 			}
-
 		},
 		created(){
-			this.getJudgeList(this.pageNum,this.pageSize,false)
+			this.getOptionsList(this.pageNum,this.pageSize,false)
 		},
 		mounted() {
 			initMenu(storage.getItem("routeMap"),this.activePage)

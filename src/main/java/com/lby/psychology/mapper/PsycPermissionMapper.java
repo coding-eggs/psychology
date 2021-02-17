@@ -10,6 +10,7 @@ import java.util.List;
 @Repository
 @Mapper
 public interface PsycPermissionMapper {
+
     int deleteByPrimaryKey(Integer permissionId);
 
     int insert(PsycPermission record);

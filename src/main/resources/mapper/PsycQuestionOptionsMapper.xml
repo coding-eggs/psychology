@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lby.psychology.mapper.PsycQuestionOptionsMapper">
+  <resultMap id="BaseResultMap" type="com.lby.psychology.model.pojo.PsycQuestionOptions">
+    <id column="option_id" jdbcType="INTEGER" property="optionId" />
+    <result column="question_id" jdbcType="INTEGER" property="questionId" />
+    <result column="option_code" jdbcType="VARCHAR" property="optionCode" />
+    <result column="option_score" jdbcType="INTEGER" property="optionScore" />
+    <result column="option_name" jdbcType="VARCHAR" property="optionName" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    option_id, question_id, option_code, option_score, option_name, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from psyc_question_options
+    where option_id = #{optionId,jdbcType=INTEGER}
+  </select>
+  <select id="selectOptionListPage" resultType="com.lby.psychology.model.vo.PsycQuestionOptionsVo">
+    select  qo.option_id, qo.question_id, qo.option_code, qo.option_score, qo.option_name, qo.create_date, qo.update_date
+    ,q.question_name
+    from psyc_question_options qo left join psyc_question q on qo.question_id = q.id
+    where 1 = 1
+    <if test="questionName!=null and questionName!= ''">
+      and  q.question_name= #{questionName}
+    </if>
+    <if test="optionCode!=null and optionCode!=''">
+      and qo.option_code = #{optionCode}
+    </if>
+    <if test="optionName!=null and optionName!=''">
+      and qo.option_name like CONCAT(#{optionName},'%')
+    </if>
+  </select>
+  <select id="selectOptionInfo" resultType="com.lby.psychology.model.vo.PsycQuestionOptionsVo">
+    select  qo.option_id, qo.question_id, qo.option_code, qo.option_score, qo.option_name, qo.create_date, qo.update_date
+    ,q.question_name
+    from psyc_question_options qo left join psyc_question q on qo.option_id = q.id
+    where option_id = #{optionId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from psyc_question_options
+    where option_id = #{optionId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="option_id" keyProperty="optionId" parameterType="com.lby.psychology.model.pojo.PsycQuestionOptions" useGeneratedKeys="true">
+    insert into psyc_question_options (question_id, option_code, option_score,
+      option_name, create_date, update_date
+      )
+    values (#{questionId,jdbcType=INTEGER}, #{optionCode,jdbcType=VARCHAR}, #{optionScore,jdbcType=INTEGER},
+      #{optionName,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="option_id" keyProperty="optionId" parameterType="com.lby.psychology.model.pojo.PsycQuestionOptions" useGeneratedKeys="true">
+    insert into psyc_question_options
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="questionId != null">
+        question_id,
+      </if>
+      <if test="optionCode != null">
+        option_code,
+      </if>
+      <if test="optionScore != null">
+        option_score,
+      </if>
+      <if test="optionName != null">
+        option_name,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="questionId != null">
+        #{questionId,jdbcType=INTEGER},
+      </if>
+      <if test="optionCode != null">
+        #{optionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="optionScore != null">
+        #{optionScore,jdbcType=INTEGER},
+      </if>
+      <if test="optionName != null">
+        #{optionName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertOption">
+    insert into psyc_question_options(question_id,option_code,option_score,option_name)
+    value (#{questionId},#{optionCode},#{optionScore},#{optionName})
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycQuestionOptions">
+    update psyc_question_options
+    <set>
+      <if test="questionId != null">
+        question_id = #{questionId,jdbcType=INTEGER},
+      </if>
+      <if test="optionCode != null">
+        option_code = #{optionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="optionScore != null">
+        option_score = #{optionScore,jdbcType=INTEGER},
+      </if>
+      <if test="optionName != null">
+        option_name = #{optionName,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where option_id = #{optionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lby.psychology.model.pojo.PsycQuestionOptions">
+    update psyc_question_options
+    set question_id = #{questionId,jdbcType=INTEGER},
+      option_code = #{optionCode,jdbcType=VARCHAR},
+      option_score = #{optionScore,jdbcType=INTEGER},
+      option_name = #{optionName,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where option_id = #{optionId,jdbcType=INTEGER}
+  </update>
+</mapper>

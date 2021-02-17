@@ -38,7 +38,7 @@
 <body>
 
 <!-- Main Wrapper -->
-<div class="main-wrapper" id="addjudge">
+<div class="main-wrapper" id="editjudge">
 
     <!-- Header -->
     <div class="header">
@@ -137,7 +137,7 @@
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Dashboard</a>
                             </li>
-                            <li class="breadcrumb-item active">新增评判规则</li>
+                            <li class="breadcrumb-item active">修改评判规则</li>
                         </ul>
                     </div>
                 </div>
@@ -159,7 +159,7 @@
                             </el-col>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" v-on:click="onSubmit">立即创建</el-button>
+                            <el-button type="primary" v-on:click="onSubmit">保存</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -195,13 +195,14 @@
 
 <script>
     let storage = new Storage();
-    var addjudge = new Vue({
-        el: '#addjudge',
+    var editjudge = new Vue({
+        el: '#editjudge',
         data: {
             //初始页
             userinfo: '',
             activePage: '/judge.html',
             form:{
+                judgeId:null,
                 judgeName:"",
                 startScore: null,
                 endScore:null,
@@ -217,13 +218,24 @@
             onSubmit(){
                 service({
                     method: 'post',
-                    url: '/judge/addJudge',
+                    url: '/judge/updateJudge',
                     data: this.form
                 }).then(res=>{
                     if(res.data){
-                        this.$message({message:"新增成功",type:"success"})
+                        this.$message({message:"保存成功",type:"success"})
                     }
                 })
+            },
+            initJudgeInfo(){
+                var judgeId = window.location.href.split("?")[1].split("=")[1];
+                if(judgeId!==undefined){
+                    service.get("/judge/getJudgeInfo?judgeId="+judgeId).then(res=>{
+                        this.form.judgeId = res.data.judgeId
+                        this.form.judgeName = res.data.judgeName
+                        this.form.startScore = res.data.startScore
+                        this.form.endScore = res.data.endScore
+                    })
+                }
             }
         },
         created(){
@@ -232,6 +244,7 @@
             initMenu(storage.getItem("routeMap"),this.activePage)
             intThisPoint(this);
             this.getUserInfo();
+            this.initJudgeInfo();
         },
     })
 

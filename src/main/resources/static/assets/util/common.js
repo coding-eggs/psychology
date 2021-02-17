@@ -29,6 +29,7 @@ function initMenu(routeMap,activePage){
                     active = 'active'
                 }
                 liHtml = liHtml + '<li class='+liActive+'><a href='+e.permissionUrl+'>'+e.pageName+'</a></li>'
+                liActive=''
             })
             menuObj.append(
                 '<li class='+active+'>' +
