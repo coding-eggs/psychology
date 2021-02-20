@@ -25,7 +25,7 @@
     from psyc_question_options qo left join psyc_question q on qo.question_id = q.id
     where 1 = 1
     <if test="questionName!=null and questionName!= ''">
-      and  q.question_name= #{questionName}
+      and  q.question_name like CONCAT(#{questionName},'%')
     </if>
     <if test="optionCode!=null and optionCode!=''">
       and qo.option_code = #{optionCode}
@@ -40,7 +40,11 @@
     from psyc_question_options qo left join psyc_question q on qo.option_id = q.id
     where option_id = #{optionId}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <select id="selectOptionByQuestionId" resultType="com.lby.psychology.model.pojo.PsycQuestionOptions">
+      select option_id, question_id, option_code, option_score, option_name, create_date, update_date
+      from psyc_question_options where question_id = #{questionId}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from psyc_question_options
     where option_id = #{optionId,jdbcType=INTEGER}
   </delete>

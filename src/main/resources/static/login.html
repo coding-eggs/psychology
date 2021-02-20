@@ -36,7 +36,7 @@
 	</head>
 	<body>
 		<!-- Main Wrapper -->
-		<div class="main-wrapper login-body" id="login-vue">
+		<div class="main-wrapper login-body" id="login-vue" >
 
 			<div class="login-wrapper">
 				<div class="container">
@@ -86,7 +86,7 @@
 											</div>
 										</div>
 									</div>
-									<button class="btn btn-lg btn-block btn-primary" type="button" v-on:click="login" >登录</button>
+									<button class="btn btn-lg btn-block btn-primary" type="button" v-on:click="login" v-loading.fullscreen.lock="fullscreenLoading" >登录</button>
 									<div class="login-or">
 										<span class="or-line"></span>
 										<span class="span-or">or</span>
@@ -138,7 +138,7 @@
 						rememberMe: "",
 						publicKey:""
 					},
-					loading: false,
+					fullscreenLoading: false
 				}
 			},
 			methods:{
@@ -149,6 +149,7 @@
 					let encrypt = new JSEncrypt()
 					//请求公钥
 					encrypt.setPublicKey(this.loginForm.publicKey)
+					this.fullscreenLoading = true;
 					service({
 						method: 'post',
 						url: '/user/login',
@@ -168,6 +169,8 @@
 							value: data.routeMap
 						});
 						window.location.href=data.requestURI;
+					}).finally(()=>{
+						this.fullscreenLoading = false
 					})
 				},
 

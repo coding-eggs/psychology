@@ -27,6 +27,11 @@
           and end_score <![CDATA[ <= ]]> #{endScore}
         </if>
     </select>
+    <select id="selectJudgeListByDimension" resultType="com.lby.psychology.model.pojo.PsycQuestionJudge">
+      SELECT  qj.judge_id, qj.judge_name, qj.start_score, qj.end_score
+      FROM psyc_dimension_judge_rlt djr inner join psyc_question_judge qj on djr.judge_id = qj.judge_id
+      WHERE djr.dimension_id = #{dimension}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from psyc_question_judge
     where judge_id = #{judgeId,jdbcType=INTEGER}

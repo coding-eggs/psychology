@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lby.psychology.mapper.PsycScaleMapper">
+  <resultMap id="BaseResultMap" type="com.lby.psychology.model.pojo.PsycScale">
+    <id column="scale_id" jdbcType="INTEGER" property="scaleId" />
+    <result column="scale_name" jdbcType="VARCHAR" property="scaleName" />
+    <result column="scale_type" jdbcType="INTEGER" property="scaleType" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    scale_id, scale_name, scale_type, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from psyc_scale
+    where scale_id = #{scaleId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from psyc_scale
+    where scale_id = #{scaleId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="scale_id" keyProperty="scaleId" parameterType="com.lby.psychology.model.pojo.PsycScale" useGeneratedKeys="true">
+    insert into psyc_scale (scale_name, scale_type, create_date, 
+      update_date)
+    values (#{scaleName,jdbcType=VARCHAR}, #{scaleType,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="scale_id" keyProperty="scaleId" parameterType="com.lby.psychology.model.pojo.PsycScale" useGeneratedKeys="true">
+    insert into psyc_scale
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="scaleName != null">
+        scale_name,
+      </if>
+      <if test="scaleType != null">
+        scale_type,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="scaleName != null">
+        #{scaleName,jdbcType=VARCHAR},
+      </if>
+      <if test="scaleType != null">
+        #{scaleType,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycScale">
+    update psyc_scale
+    <set>
+      <if test="scaleName != null">
+        scale_name = #{scaleName,jdbcType=VARCHAR},
+      </if>
+      <if test="scaleType != null">
+        scale_type = #{scaleType,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where scale_id = #{scaleId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lby.psychology.model.pojo.PsycScale">
+    update psyc_scale
+    set scale_name = #{scaleName,jdbcType=VARCHAR},
+      scale_type = #{scaleType,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where scale_id = #{scaleId,jdbcType=INTEGER}
+  </update>
+</mapper>

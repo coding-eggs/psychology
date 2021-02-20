@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lby.psychology.mapper.PsycQuestionDimensionMapper">
+  <resultMap id="BaseResultMap" type="com.lby.psychology.model.pojo.PsycQuestionDimension">
+    <id column="dimension_id" jdbcType="INTEGER" property="dimensionId" />
+    <result column="dimension_name" jdbcType="VARCHAR" property="dimensionName" />
+    <result column="dimension_code" jdbcType="VARCHAR" property="dimensionCode" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    dimension_id, dimension_name, dimension_code, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from psyc_question_dimension
+    where dimension_id = #{dimensionId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from psyc_question_dimension
+    where dimension_id = #{dimensionId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="dimension_id" keyProperty="dimensionId" parameterType="com.lby.psychology.model.pojo.PsycQuestionDimension" useGeneratedKeys="true">
+    insert into psyc_question_dimension (dimension_name, dimension_code, create_date, 
+      update_date)
+    values (#{dimensionName,jdbcType=VARCHAR}, #{dimensionCode,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" keyColumn="dimension_id" keyProperty="dimensionId" parameterType="com.lby.psychology.model.pojo.PsycQuestionDimension" useGeneratedKeys="true">
+    insert into psyc_question_dimension
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="dimensionName != null">
+        dimension_name,
+      </if>
+      <if test="dimensionCode != null">
+        dimension_code,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="dimensionName != null">
+        #{dimensionName,jdbcType=VARCHAR},
+      </if>
+      <if test="dimensionCode != null">
+        #{dimensionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycQuestionDimension">
+    update psyc_question_dimension
+    <set>
+      <if test="dimensionName != null">
+        dimension_name = #{dimensionName,jdbcType=VARCHAR},
+      </if>
+      <if test="dimensionCode != null">
+        dimension_code = #{dimensionCode,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where dimension_id = #{dimensionId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lby.psychology.model.pojo.PsycQuestionDimension">
+    update psyc_question_dimension
+    set dimension_name = #{dimensionName,jdbcType=VARCHAR},
+      dimension_code = #{dimensionCode,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where dimension_id = #{dimensionId,jdbcType=INTEGER}
+  </update>
+</mapper>

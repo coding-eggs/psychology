@@ -175,6 +175,7 @@
 								<div class="card-body">
 									<div class="table-responsive">
 										<el-table
+												v-loading="loading"
 												:data="optionList"
 												style="width: 100%">
 											<el-table-column fixed label="序号"
@@ -297,7 +298,8 @@
 				questionName: '',
 				optionCode: '',
 				optionName: ''
-			}
+			},
+			loading: false,
 
 		},
 		methods: {
@@ -318,6 +320,7 @@
 					data.pageNum = pageNum;
 					data.pageSize = pageSize
 				}
+				this.loading = true
 				await service({
 					method: "post",
 					url: "/option/getOptionPageList",
@@ -325,6 +328,8 @@
 				}).then(res => {
 					this.optionList = res.data.dataList
 					this.totalSize = res.data.totalSize
+				}).finally(()=>{
+					this.loading = false;
 				})
 			},
 			handleSizeChange(size) {

@@ -4,6 +4,7 @@ import com.lby.psychology.model.co.PsycOptionCo;
 import com.lby.psychology.model.pojo.PsycQuestionOptions;
 import com.lby.psychology.model.vo.PsycQuestionOptionsVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,7 +26,9 @@ public interface PsycQuestionOptionsMapper {
 
     List<PsycQuestionOptionsVo> selectOptionListPage(PsycOptionCo co);
 
-    PsycQuestionOptionsVo selectOptionInfo(Integer optionId);
+    PsycQuestionOptionsVo selectOptionInfo(@Param("optionId")Integer optionId);
+
+    List<PsycQuestionOptions> selectOptionByQuestionId(@Param("questionId") Integer questionId);
 
     int insertOption(PsycOptionCo options);
 }

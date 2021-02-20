@@ -38,7 +38,7 @@
 <body>
 
 <!-- Main Wrapper -->
-<div class="main-wrapper" id="addoption">
+<div class="main-wrapper" id="editscale">
 
     <!-- Header -->
     <div class="header">
@@ -137,7 +137,7 @@
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Dashboard</a>
                             </li>
-                            <li class="breadcrumb-item active">新增问题选项</li>
+                            <li class="breadcrumb-item active">编辑量表</li>
                         </ul>
                     </div>
                 </div>
@@ -146,45 +146,29 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <el-form ref="form"  :rules="rules" :model="form" label-width="80px">
-                        <el-form-item label="所属问题">
-                            <el-col :span="8">
-                                <el-autocomplete
-                                        popper-class="my-autocomplete"
-                                        v-model="keyword"
-                                        :fetch-suggestions="querySearch"
-                                        placeholder="请输入问题描述"
-                                        @select="handleSelect" clearable>
-                                    <i
-                                            class="el-icon-edit el-input__icon"
-                                            slot="suffix">
-                                    </i>
-                                    <template slot-scope="{ item }">
-                                        <div class="questionName">{{ item.questionName }}</div>
-                                        <span class="scaleTypeName">{{ item.scaleName }}</span>
-                                    </template>
-                                </el-autocomplete>
-                            </el-col>
+                    <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+                        <el-form-item label="量表类型" prop="scaleType">
+                            <el-select
+                                    v-model="form.scaleType"
+                                    @change="selectType"
+                                    filterable
+                                    remote
+                                    clearable
+                                    placeholder="请选择大类">
+                                <el-option
+                                        v-for="item in typeList"
+                                        :key="item.id"
+                                        :label="item.typeName"
+                                        :value="item.id">
+                                </el-option>
+                            </el-select>
                         </el-form-item>
-                        <el-form-item label="选项编码" prop="optionCode">
-                            <el-col :span="8">
-                                <el-input v-model="form.optionCode" placeholder="选项编码" clearable></el-input>
-                            </el-col>
-                        </el-form-item>
-
-                        <el-form-item label="选项描述" prop="optionName">
-                            <el-col :span="8">
-                                <el-input v-model="form.optionName" placeholder="选项描述" clearable></el-input>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="选项分数" prop="optionScore">
-                            <el-col :span="8">
-                                <el-input  v-model.number="form.optionScore" placeholder="选项分数" clearable></el-input>
-                            </el-col>
+                        <el-form-item label="量表描述" prop="scaleName">
+                            <el-input v-model="form.scaleName"></el-input>
                         </el-form-item>
 
                         <el-form-item>
-                            <el-button type="primary" v-on:click="onSubmit">立即创建</el-button>
+                            <el-button type="primary" v-on:click="onSubmit">保存</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -220,33 +204,23 @@
 
 <script>
     let storage = new Storage();
-    var addoption = new Vue({
-        el: '#addoption',
+    var editscale = new Vue({
+        el: '#editscale',
         data: {
             //初始页
             userinfo: '',
-            activePage: '/options.html',
-            keyword: "",
-            questionList: [],
+            activePage: '/scale.html',
+            typeList: [],
             form:{
-                questionId:"",
-                optionCode:"",
-                optionName:"",
-                optionScore: null,
+                scaleId: null,
+                scaleType: null,
+                scaleName: ''
             },
             rules:{
-                optionCode:[
-                    {required: true,message:"请输入选项编码,如： A,B,C",trigger: 'blur'},
-                    {min: 1,max: 5,message: '长度 1 到 5 个字符',trigger: 'blur'},
-                ],
-                optionName:[
-                    {required: true,message:"请输入选项描述",trigger: 'blur'},
+                scaleName:[
+                    {required: true,message:"请输入量表描述",trigger: 'blur'},
                     {min: 1,max: 100,message: '长度 1 到 100 个字符',trigger: 'blur'},
                 ],
-                optionScore:[
-                    {required: true,message:"请输入选项分数",trigger: 'blur'},
-                    {type:'number',min: 0,max: 999,message: '数字在 0 - 999 之间（只能输入数字）',trigger: 'blur'},
-                ]
             }
 
         },
@@ -261,39 +235,46 @@
                     if(valid){
                         service({
                             method: 'post',
-                            url: '/option/addOption',
+                            url: '/question/updateScale',
                             data: this.form
                         }).then(res=>{
                             if(res.data){
-                                this.$message({message:"新增成功",type:"success"})
+                                this.$message({message:"保存成功",type:"success"})
                             }
                         })
                     }else{
                         this.$message({message:"数据格式不正确",type:"error"})
                     }
                 }));
-            },
-            querySearch(keyword, cb) {
-                service.get("/question/getQuestionLikeSearch?keyword=" + keyword).then(res => {
-                    cb(res.data)
-                })
-            },
-            handleSelect(item) {
-                this.keyword = item.questionName;
-                this.form.questionId = item.id
-            },
-            loadQuestion(keyword) {
-                service.get("/question/getQuestionLikeSearch?keyword=" + keyword).then(res => {
-                    this.questionList = res.data
-                })
-            },
-        },
 
+            },
+            loadType(){
+                return [
+                    {"id":10,"typeName":"人际"},
+                    {"id":20,"typeName":"学习"},
+                    {"id":30,"typeName":"就业"},
+                    {"id":40,"typeName":"情感"}
+                ]
+            },
+            initScaleInfo(){
+                var scaleId = window.location.href.split("?")[1].split("=")[1];
+                if(scaleId!==undefined){
+                    service.get("/question/getScaleDetail?scaleId="+scaleId).then(res=>{
+                        this.form.scaleId = res.data.scaleId
+                        this.form.scaleType = res.data.scaleType
+                        this.form.scaleName = res.data.scaleName
+                    })
+                }
+            }
+        },
+        created(){
+        },
         mounted() {
+            this.typeList = this.loadType();
             initMenu(storage.getItem("routeMap"),this.activePage)
             intThisPoint(this);
             this.getUserInfo();
-            this.loadQuestion(this.keyword);
+            this.initScaleInfo();
         },
     })
 
