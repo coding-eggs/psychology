@@ -214,6 +214,9 @@
                                             prop="dimensionName"
                                             label="维度描述"
                                     >
+                                        <template scope="scope">
+                                            <a href="#" v-on:click="skipDetail(scope.row.dimensionId,scope.row.dimensionName)" class="user-a">{{scope.row.dimensionName}} </a>
+                                        </template>
                                     </el-table-column>
                                     <el-table-column
                                             prop="scaleName"
@@ -413,7 +416,12 @@
                     {"id":30,"typeName":"就业"},
                     {"id":40,"typeName":"情感"}
                 ]
-            }
+            },
+            skipDetail(id,name){
+                var url = "/dimension-detail.html?dimensionId="+id+"&dimensionName="+name
+                url=encodeURI(url);
+                window.location.href=url;
+            },
         },
         created(){
             this.getDimensionList(this.pageNum,this.pageSize,false)

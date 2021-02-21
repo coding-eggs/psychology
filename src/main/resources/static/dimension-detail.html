@@ -38,7 +38,7 @@
 	<body>
 
 		<!-- Main Wrapper -->
-		<div class="main-wrapper" id="scale">
+		<div class="main-wrapper" id="dimensiondetail">
 
 			<!-- Header -->
 			<div class="header">
@@ -137,102 +137,97 @@
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Dashboard</a>
 									</li>
-									<li class="breadcrumb-item active">量表管理</li>
+									<li class="breadcrumb-item active">维度详情({{this.dimensionName}})</li>
 								</ul>
-							</div>
-							<div class="col-auto">
-								<a href="add-scale.html" class="btn btn-primary mr-1">
-									<i class="fas fa-plus"></i>
-								</a>
 							</div>
 						</div>
 					</div>
 					<!-- /Page Header -->
 
-					<!-- Search Filter -->
-					<div>
-						<el-form :inline="true"  ref="form" :model="form">
-							<el-select
-									v-model="form.scaleType"
-									@change="selectType"
-									filterable
-									remote
-									clearable
-									placeholder="请选择大类">
-								<el-option
-										v-for="item in typeList"
-										:key="item.id"
-										:label="item.typeName"
-										:value="item.id">
-
-								</el-option>
-							</el-select>
-							<el-form-item>
-								<el-button type="primary" v-on:click="onSubmit">查询</el-button>
-							</el-form-item>
-						</el-form>
-					</div>
 
 					<!-- /Search Filter -->
 
 					<div class="row">
 						<div class="col-sm-12">
-							<div class="card card-table">
+							<div class="card card-table" style="background-color: #c1cfee">
 								<div class="card-body">
-									<div class="table-responsive">
-										<el-table
-												v-loading="loading"
-												:data="scaleList"
-												style="width: 100%">
-											<el-table-column fixed label="序号"
-															 width="50" align="center">
-												<template scope="scope"><span>{{scope.$index+(pageNum - 1) * pageSize + 1}} </span></template>
-											</el-table-column>
-											<el-table-column label="量表描述">
-												<template scope="scope">
-													<a href="#" v-on:click="skipDetail(scope.row.scaleId,scope.row.scaleName)" class="user-a">{{scope.row.scaleName}} </a>
+									<div class="table-responsive" >
+										<el-table v-loading="loading" :data="questionList" style="width: 100%" :header-cell-style="{background:'#eef1f6',color:'#606266'}">
+											<el-table-column type="expand">
+												<template slot-scope="props">
+													<el-table :data="props.row.optionList" border style="width: 100%" >
+														<el-table-column
+																type="index"
+																width="50">
+														</el-table-column>
+														<el-table-column
+																prop="optionCode"
+																label="选项编码"
+														>
+														</el-table-column>
+														<el-table-column
+																prop="optionName"
+																label="描述"
+														>
+														</el-table-column>
+														<el-table-column
+																prop="optionScore"
+																label="选项分数"
+														>
+														</el-table-column>
+													</el-table>
 												</template>
 											</el-table-column>
-
 											<el-table-column
-													prop="scaleTypeName"
-													label="所属大类"
+													type="index"
+													width="50">
+											</el-table-column>
+											<el-table-column
+													prop="questionName"
+													label="问题描述"
 											>
 											</el-table-column>
+<!--											<el-table-column-->
+<!--													prop="dimensionName"-->
+<!--													label="所属维度"-->
+<!--											>-->
+<!--											</el-table-column>-->
+<!--											<el-table-column-->
+<!--													prop="scaleTypeName"-->
+<!--													label="所属大类"-->
+<!--											>-->
+<!--											</el-table-column>-->
+<!--											<el-table-column-->
+<!--													prop="createDate"-->
+<!--													label="创建时间"-->
+<!--											>-->
+<!--											</el-table-column>-->
+<!--											<el-table-column-->
+<!--													prop="updateDate"-->
+<!--													label="更新时间"-->
+<!--											>-->
+<!--											</el-table-column>-->
 
 
+										</el-table>
+<!--										<h5 style="margin-left: 2%;margin-top: 1%"><strong>评判规则</strong></h5>-->
+										<el-table :data="judgeList" style="width: 100%" >
 											<el-table-column
-													fixed="right"
-													label="操作"
-													width="160">
+													type="index"
+													width="50">
+											</el-table-column>
+											<el-table-column
+													prop="judgeName"
+													label="评判描述"
+											>
+											</el-table-column>
+											<el-table-column  label="分数范围" width="200px">
 												<template slot-scope="scope">
-													<el-button
-															v-on:click="editRow(scope.row.scaleId)"
-															type="button"
-															size="small">
-														编辑
-													</el-button>
-													<el-button
-															v-on:click="removeRow(scope.row.scaleId)"
-															type="button"
-															size="small">
-														删除
-													</el-button>
+													<span>{{scope.row.startScore}}</span><span> - </span>
+													<span>{{scope.row.endScore}}</span>
 												</template>
 											</el-table-column>
 										</el-table>
-										<div class="block">
-											<el-pagination
-													@size-change="handleSizeChange"
-													@current-change="handleCurrentChange"
-													:current-page="pageNum"
-													:page-sizes="pageSizes"
-													:page-size="pageSize"
-													:page-count="9"
-													layout="total, sizes, prev, pager, next, jumper"
-													:total="totalSize">
-											</el-pagination>
-										</div>
 									</div>
 								</div>
 							</div>
@@ -270,23 +265,16 @@
 <script>
 	let storage = new Storage();
 
-	var scale = new Vue({
-		el: '#scale',
+	var dimensiondetail = new Vue({
+		el: '#dimensiondetail',
 		data: {
 			//初始页
 			userinfo: '',
-			activePage: '/scale.html',
-			scaleList: [],
-			pageNum: 1,
-			totalSize: 0,
-			pageSize: 10,
-			pageSizes: [2,3,5,10,20,50,100],
-			typeList:[],
-			form:{
-				scaleType: null,
-			},
+			dimensionName: '',
+			activePage: '/dimension.html',
+			questionList:[],
+			judgeList:[],
 			loading: false
-
 		},
 		methods: {
 			getUserInfo() {
@@ -294,93 +282,30 @@
 					this.userinfo = res.data;
 				});
 			},
-			async getQuestionList(pageNum, pageSize, isForm) {
-				var data = {
-					pageNum: pageNum,
-					pageSize: pageSize
-				};
+			async getQuestionDetail() {
+				// var scaleId = window.location.href.split("?")[1].split("&")[0].split("=")[1];
+				// this.scaleName = window.location.href.split("?")[1].split("&")[1].split("=")[1];
 
-				if(isForm){
-					data = this.form;
-					data.pageNum = pageNum;
-					data.pageSize = pageSize
-				}
+				var dimensionId = getParam("dimensionId");
+				this.dimensionName = getParam("dimensionName")
+
 				this.loading = true
 				await service({
-					method: "post",
-					url: "/question/getQuestionPageList",
-					data: data
+					method: "get",
+					url: "/dimension/getDimensionQuestionDetail?dimensionId="+dimensionId,
 				}).then(res => {
-					this.scaleList = res.data.dataList
-					this.totalSize = res.data.totalSize
+					this.questionList = res.data.detailList
+					this.judgeList = res.data.judgeList
 				}).finally(()=>{
 					this.loading = false
 				})
 			},
-			skipDetail(id,name){
-				var url = "/scale-detail.html?scaleId="+id+"&scaleName="+name
-				url=encodeURI(url);
-				window.location.href=url;
-			},
-			handleSizeChange(size) {
-				this.pageSize = size;
-				this.getQuestionList(this.pageNum,this.pageSize)
-			},
-			handleCurrentChange(currentPage) {
-				this.pageNum = currentPage
-				this.getQuestionList(this.pageNum,this.pageSize)
-			},
-			onSubmit(){
-				this.getQuestionList(this.pageNum,this.pageSize,true)
-			},
 
-			editRow(scaleId){
-				window.location.href="/edit-scale.html?scaleId="+scaleId
-			},
-			removeRow(judgeId){
-				this.$confirm('请您确定是否要删除该评判，删除后无法恢复！', '删除评判规则', {
-					confirmButtonText: '确认',
-					cancelButtonText: '取消',
-					dangerouslyUseHTMLString: true,
-					type: 'warning',
-					center: true
-				}).then(() => {
-					service.get("/question/deleteQuestion?judgeId="+judgeId).then(res=>{
-						if(res.data){
-							this.$message({message:"成功删除该评判规则",type:"success"})
-							//刷新用户列表
-							this.getQuestionList(this.pageNum,this.pageSize)
-						}
-					})
-				}).catch(()=>{
-					thispoint.$message({
-						type: 'info',
-						message: '取消删除操作'
-					})
-				})
-			},
-			selectType(val){
-				this.form.typeId = val;
-				this.form.scaleTypeId = '';
-				this.scaleTypeList =  this.typeList.filter(e=>{
-					return  e.id===val
-				})[0].scaleTypeList;
-			},
-
-			loadType(){
-				return [
-					{"id":10,"typeName":"人际"},
-					{"id":20,"typeName":"学习"},
-					{"id":30,"typeName":"就业"},
-					{"id":40,"typeName":"情感"}
-				]
-			}
 		},
 		created(){
-			this.getQuestionList(this.pageNum,this.pageSize,false)
+			this.getQuestionDetail(this.pageNum,this.pageSize,false)
 		},
 		mounted() {
-			this.typeList = this.loadType();
 			initMenu(storage.getItem("routeMap"),this.activePage)
 			intThisPoint(this);
 			this.getUserInfo();

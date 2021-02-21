@@ -137,7 +137,7 @@
 								<ul class="breadcrumb">
 									<li class="breadcrumb-item"><a href="index.html">Dashboard</a>
 									</li>
-									<li class="breadcrumb-item active">试题详情({{this.scaleName}})</li>
+									<li class="breadcrumb-item active">量表详情({{this.scaleName}})</li>
 								</ul>
 							</div>
 						</div>
@@ -188,31 +188,26 @@
 													label="问题描述"
 											>
 											</el-table-column>
-											<el-table-column
-													prop="scaleName"
-													label="所属量表"
-											>
-											</el-table-column>
-											<el-table-column
-													prop="dimensionName"
-													label="所属维度"
-											>
-											</el-table-column>
-											<el-table-column
-													prop="scaleTypeName"
-													label="所属大类"
-											>
-											</el-table-column>
-											<el-table-column
-													prop="createDate"
-													label="创建时间"
-											>
-											</el-table-column>
-											<el-table-column
-													prop="updateDate"
-													label="更新时间"
-											>
-											</el-table-column>
+<!--											<el-table-column-->
+<!--													prop="dimensionName"-->
+<!--													label="所属维度"-->
+<!--											>-->
+<!--											</el-table-column>-->
+<!--											<el-table-column-->
+<!--													prop="scaleTypeName"-->
+<!--													label="所属大类"-->
+<!--											>-->
+<!--											</el-table-column>-->
+<!--											<el-table-column-->
+<!--													prop="createDate"-->
+<!--													label="创建时间"-->
+<!--											>-->
+<!--											</el-table-column>-->
+<!--											<el-table-column-->
+<!--													prop="updateDate"-->
+<!--													label="更新时间"-->
+<!--											>-->
+<!--											</el-table-column>-->
 
 
 										</el-table>
@@ -271,13 +266,6 @@
 <script>
 	let storage = new Storage();
 
-	function getParam(name) {
-		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-		var r = window.location.search.substr(1).match(reg);
-		if (r != null)
-			return decodeURI(r[2]);   //对参数进行decodeURI解码
-		return null;
-	}
 	var scaledetail = new Vue({
 		el: '#scaledetail',
 		data: {

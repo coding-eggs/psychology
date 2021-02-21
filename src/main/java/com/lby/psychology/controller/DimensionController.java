@@ -1,11 +1,13 @@
 package com.lby.psychology.controller;
 
+import com.lby.psychology.mapper.PsycQuestionOptionsMapper;
 import com.lby.psychology.model.ResponseData;
 import com.lby.psychology.model.co.PsycDimensionCo;
 import com.lby.psychology.model.common.PageResult;
 import com.lby.psychology.model.pojo.PsycQuestionDimension;
 import com.lby.psychology.model.pojo.PsycScale;
 import com.lby.psychology.model.vo.PsycDimensionVo;
+import com.lby.psychology.model.vo.PsycQuestionDetailVo;
 import com.lby.psychology.service.IDimensionService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ public class DimensionController {
 
     @Autowired
     private IDimensionService dimensionService;
+
 
     @ApiOperation("分页查询维度列表")
     @PostMapping("/getDimensionPageList")
@@ -45,6 +48,13 @@ public class DimensionController {
     @GetMapping("/getDimensionDetail")
     public ResponseData<PsycDimensionVo> getDimensionDetail(Integer dimensionId){
         return new ResponseData<>(dimensionService.getDimensionDetail(dimensionId));
+    }
+
+
+    @ApiOperation("获取维度相关问题评判详情")
+    @GetMapping("/getDimensionQuestionDetail")
+    public ResponseData<PsycQuestionDetailVo> getDimensionQuestionDetail(Integer dimensionId){
+        return new ResponseData<>(dimensionService.getDimensionQuestionDetail(dimensionId));
     }
 
     @ApiOperation("获取维度下拉")

@@ -42,7 +42,6 @@
     <select id="selectQuestionDetail" resultType="com.lby.psychology.model.vo.PsycQuestionVo">
       SELECT
         pqd.scale_id,
-        ps.scale_name,
         ps.scale_type ,
         pq.id,
         pq.question_name,
