@@ -38,7 +38,7 @@
 <body>
 
 <!-- Main Wrapper -->
-<div class="main-wrapper" id="editjudge">
+<div class="main-wrapper" id="adddimension">
 
     <!-- Header -->
     <div class="header">
@@ -137,16 +137,21 @@
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Dashboard</a>
                             </li>
-                            <li class="breadcrumb-item active">修改评判规则</li>
+                            <li class="breadcrumb-item active">新增维度页</li>
                         </ul>
                     </div>
                 </div>
             </div>
             <!-- /Page Header -->
 
+            <!-- Search Filter -->
+
+
+            <!-- /Search Filter -->
+
             <div class="row">
                 <div class="col-sm-12">
-                    <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+                    <el-form ref="form" :rules="rules" :model="form">
                         <el-form-item label="量表大类" prop="scaleType">
                             <el-select
                                     v-model="form.scaleType"
@@ -181,31 +186,14 @@
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="所属维度" prop="dimensionId">
-                            <el-select
-                                    v-model="form.dimensionId"
-                                    filterable
-                                    remote
-                                    clearable
-                                    placeholder="请选择量表">
-                                <el-option
-                                        v-for="item in dimensionList"
-                                        :key="item.dimensionId"
-                                        :label="item.dimensionName"
-                                        :value="item.dimensionId">
-
-                                </el-option>
-                            </el-select>
-                        </el-form-item>
-                        <el-form-item label="评判描述">
-                            <el-input type="textarea" v-model="form.judgeName" placeholder="评判描述"></el-input>
-                        </el-form-item>
-                        <el-form-item label="评分范围">
-                            <el-col :span="3">
-                                <el-input v-model="form.startScore" placeholder="起始分数"></el-input>
+                        <el-form-item label="维度描述" prop="dimensionName">
+                            <el-col :span="8">
+                                <el-input v-model="form.dimensionName" placeholder="维度描述" clearable></el-input>
                             </el-col>
-                            <el-col :span="3">
-                                <el-input v-model="form.endScore" placeholder="结束分数"></el-input>
+                        </el-form-item>
+                        <el-form-item label="维度编码" prop="dimensionCode">
+                            <el-col :span="8">
+                                <el-input v-model="form.dimensionCode" placeholder="维度编码" clearable></el-input>
                             </el-col>
                         </el-form-item>
                         <el-form-item>
@@ -245,49 +233,38 @@
 
 <script>
     let storage = new Storage();
-    var editjudge = new Vue({
-        el: '#editjudge',
+
+    var adddimension = new Vue({
+        el: '#adddimension',
         data: {
             //初始页
             userinfo: '',
             typeList:[],
             scaleList:[],
-            dimensionList:[],
-            activePage: '/judge.html',
+            activePage: '/dimension.html',
             form:{
-                scaleType: null,
                 scaleId: null,
-                dimensionId: null,
-                judgeId:null,
-                judgeName:"",
-                startScore: null,
-                endScore:null,
+                dimensionName: "",
+                dimensionCode: "",
+                scaleType: null,
+                scaleName: ''
             },
             rules:{
-                judgeName:[
-                    {required: true,message:"请输评判描述",trigger: 'blur'},
-                    {min: 1,max: 400,message: '长度 1 到 400 个字符',trigger: 'blur'},
+                dimensionName:[
+                    {required: true,message:"请输维度描述",trigger: 'blur'},
+                    {min: 1,max: 100,message: '长度 1 到 100 个字符',trigger: 'blur'},
                 ],
-                startScore:[
-                    {required: true,message:"请输入分数",trigger: 'blur'},
-                    {type:'number',min: 0,max: 999,message: '数字在 0 - 999 之间（只能输入数字）',trigger: 'blur'},
-                ],
-                endScore:[
-                    {required: true,message:"请输入分数",trigger: 'blur'},
-                    {type:'number',min: 0,max: 999,message: '数字在 0 - 999 之间（只能输入数字）',trigger: 'blur'},
-                ],
-                dimensionId:[
-                    {required: true,message:"请选择维度",trigger: 'blur'},
+                dimensionCode:[
+                    {required: true,message:"请输入维度编码",trigger: 'blur'},
+                    {min: 1,max: 20,message: '长度 1 到 20 个字符',trigger: 'blur'},
                 ],
                 scaleType:[
                     {required: true,message:"请输选择大类",trigger: 'blur'},
                 ],
                 scaleId: [
                     {required: true,message:"请选择量表",trigger: 'blur'},
-
                 ]
             }
-
         },
         methods: {
             getUserInfo() {
@@ -300,56 +277,23 @@
                     if(valid){
                         service({
                             method: 'post',
-                            url: '/judge/updateJudge',
+                            url: '/dimension/addDimension',
                             data: this.form
                         }).then(res=>{
                             if(res.data){
-                                this.$message({message:"保存成功",type:"success"})
+                                this.$message({message:"新增成功",type:"success"})
                             }
                         })
                     }else{
                         this.$message({message:"数据格式不正确",type:"error"})
                     }
                 }));
-
-
-            },
-            initJudgeInfo(){
-                var judgeId = window.location.href.split("?")[1].split("=")[1];
-                if(judgeId!==undefined){
-                    service.get("/judge/getJudgeInfo?judgeId="+judgeId).then(res=>{
-
-                        this.form.judgeId = res.data.judgeId
-                        this.form.judgeName = res.data.judgeName
-                        this.form.startScore = res.data.startScore
-                        this.form.endScore = res.data.endScore
-                        this.selectType(res.data.scaleType)
-                        this.selectScale(res.data.scaleId);
-                        this.form.scaleId = res.data.scaleId
-                        this.form.scaleType = res.data.scaleType
-                        this.form.dimensionId = res.data.dimensionId
-                    })
-                }
             },
             selectType(val){
                 this.form.scaleType = val;
                 this.form.scaleId = null;
                 service("/question/getScaleListByType?scaleType="+val).then(res=>{
                     this.scaleList = res.data
-                })
-            },
-            selectScale(val){
-                this.form.scaleId = val;
-                this.form.dimensionId = null;
-                service({
-                    method: 'post',
-                    url: '/dimension/getDimensionListByScale',
-                    data:{
-                        scaleId: this.form.scaleId,
-                        scaleType: this.form.scaleType
-                    }
-                }).then(res=>{
-                    this.dimensionList = res.data
                 })
             },
             loadType(){
@@ -360,15 +304,15 @@
                     {"id":40,"typeName":"情感"}
                 ]
             }
+
         },
         created(){
         },
         mounted() {
-            this.typeList = this.loadType()
+            this.typeList = this.loadType();
             initMenu(storage.getItem("routeMap"),this.activePage)
             intThisPoint(this);
             this.getUserInfo();
-            this.initJudgeInfo();
         },
     })
 

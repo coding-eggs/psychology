@@ -6,15 +6,12 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class PsycJudgeCo extends PageBasic {
+public class PsycDimensionCo extends PageBasic {
 
     private Integer scaleId;
 
     private Integer scaleType;
 
-    private Integer dimensionId;
+    private String dimensionName;
 
-    private Integer startScore;
-
-    private Integer endScore;
 }

@@ -16,9 +16,10 @@
     from psyc_question_judge
     where judge_id = #{judgeId,jdbcType=INTEGER}
   </select>
-    <select id="selectJudgeList" resultType="com.lby.psychology.model.pojo.PsycQuestionJudge">
-      select  judge_id, judge_name, start_score, end_score
-        from psyc_question_judge
+    <select id="selectJudgeList" resultType="com.lby.psychology.model.vo.PsycJudgeVo">
+      select  qj.judge_id, judge_name, start_score, end_score,qd.dimension_id,qd.dimension_name
+        from psyc_question_judge qj left join psyc_dimension_judge_rlt pdjr on qj.judge_id = pdjr.judge_id
+        left join psyc_question_dimension qd on pdjr.dimension_id = qd.dimension_id
         where 1 = 1
         <if test="startScore!=null">
           and start_score <![CDATA[ >= ]]> #{startScore}
@@ -26,13 +27,23 @@
         <if test="endScore!=null">
           and end_score <![CDATA[ <= ]]> #{endScore}
         </if>
+        <if test="dimensionId!=null">
+          and qd.dimension_id = #{dimensionId}
+        </if>
     </select>
     <select id="selectJudgeListByDimension" resultType="com.lby.psychology.model.pojo.PsycQuestionJudge">
       SELECT  qj.judge_id, qj.judge_name, qj.start_score, qj.end_score
       FROM psyc_dimension_judge_rlt djr inner join psyc_question_judge qj on djr.judge_id = qj.judge_id
       WHERE djr.dimension_id = #{dimension}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <select id="selectJudgeInfo" resultType="com.lby.psychology.model.vo.PsycJudgeVo">
+    select  qj.judge_id, judge_name,s.scale_id,s.scale_type, start_score, end_score,qd.dimension_id,qd.dimension_name
+    from psyc_question_judge qj left join psyc_dimension_judge_rlt pdjr on qj.judge_id = pdjr.judge_id
+    left join psyc_question_dimension qd on pdjr.dimension_id = qd.dimension_id
+    left join psyc_scale s on  qd.scale_id = s.scale_id
+    where qj.judge_id = #{judgeId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from psyc_question_judge
     where judge_id = #{judgeId,jdbcType=INTEGER}
   </delete>
@@ -66,6 +77,10 @@
         #{endScore,jdbcType=INTEGER},
       </if>
     </trim>
+  </insert>
+  <insert id="insertDimensionJudgeRlt">
+    insert into psyc_dimension_judge_rlt(dimension_id, judge_id)
+    value (#{dimensionId},#{judgeId})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycQuestionJudge">
     update psyc_question_judge

@@ -61,4 +61,7 @@ public interface IQuestionService {
 
 
     boolean updateScale(PsycScale psycScale);
+
+
+    List<PsycScale> getScaleListByType(Integer scaleType);
 }

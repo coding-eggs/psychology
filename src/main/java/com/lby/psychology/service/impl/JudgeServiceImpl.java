@@ -6,9 +6,11 @@ import com.lby.psychology.mapper.PsycQuestionJudgeMapper;
 import com.lby.psychology.model.co.PsycJudgeCo;
 import com.lby.psychology.model.common.PageResult;
 import com.lby.psychology.model.pojo.PsycQuestionJudge;
+import com.lby.psychology.model.vo.PsycJudgeVo;
 import com.lby.psychology.service.IJudgeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class JudgeServiceImpl implements IJudgeService {
@@ -19,13 +21,15 @@ public class JudgeServiceImpl implements IJudgeService {
     @Override
     public PageResult getJudgeList(PsycJudgeCo psycJudgeCo) {
         PageHelper.startPage(psycJudgeCo.getPageNum(),psycJudgeCo.getPageSize());
-        PageInfo<PsycQuestionJudge> pageInfo = new PageInfo<>(questionJudgeMapper.selectJudgeList(psycJudgeCo));
+        PageInfo<PsycJudgeVo> pageInfo = new PageInfo<>(questionJudgeMapper.selectJudgeList(psycJudgeCo));
         return PageResult.getPageResult(pageInfo);
     }
 
     @Override
-    public boolean addJudge(PsycQuestionJudge judge) {
-        return questionJudgeMapper.insert(judge) > 0;
+    @Transactional
+    public boolean addJudge(PsycJudgeVo judge) {
+        questionJudgeMapper.insert(judge);
+        return questionJudgeMapper.insertDimensionJudgeRlt(judge) > 0;
     }
 
     @Override
@@ -39,7 +43,7 @@ public class JudgeServiceImpl implements IJudgeService {
     }
 
     @Override
-    public PsycQuestionJudge getJudgeInfo(Integer judgeId) {
-        return questionJudgeMapper.selectByPrimaryKey(judgeId);
+    public PsycJudgeVo getJudgeInfo(Integer judgeId) {
+        return questionJudgeMapper.selectJudgeInfo(judgeId);
     }
 }

@@ -12,19 +12,23 @@
     scale_id, scale_name, scale_type, create_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from psyc_scale
     where scale_id = #{scaleId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <select id="selectScaleListByType" resultType="com.lby.psychology.model.pojo.PsycScale">
+        select scale_id, scale_name, scale_type, create_date, update_date
+        from psyc_scale where scale_type = #{type}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from psyc_scale
     where scale_id = #{scaleId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyColumn="scale_id" keyProperty="scaleId" parameterType="com.lby.psychology.model.pojo.PsycScale" useGeneratedKeys="true">
-    insert into psyc_scale (scale_name, scale_type, create_date, 
+    insert into psyc_scale (scale_name, scale_type, create_date,
       update_date)
-    values (#{scaleName,jdbcType=VARCHAR}, #{scaleType,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, 
+    values (#{scaleName,jdbcType=VARCHAR}, #{scaleType,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP},
       #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="scale_id" keyProperty="scaleId" parameterType="com.lby.psychology.model.pojo.PsycScale" useGeneratedKeys="true">

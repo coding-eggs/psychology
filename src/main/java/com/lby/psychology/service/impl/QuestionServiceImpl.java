@@ -94,4 +94,9 @@ public class QuestionServiceImpl implements IQuestionService {
     public boolean updateScale(PsycScale psycScale) {
         return scaleMapper.updateByPrimaryKeySelective(psycScale) > 0;
     }
+
+    @Override
+    public List<PsycScale> getScaleListByType(Integer scaleType) {
+        return scaleMapper.selectScaleListByType(scaleType);
+    }
 }

@@ -57,5 +57,10 @@ public class QuestionController {
         return new ResponseData<>(questionService.updateScale(co));
     }
 
+    @ApiOperation("获取量表下拉")
+    @GetMapping("/getScaleListByType")
+    public ResponseData<List<PsycScale>> getScaleListByType(Integer scaleType){
+        return new ResponseData<>(questionService.getScaleListByType(scaleType));
+    }
 
 }

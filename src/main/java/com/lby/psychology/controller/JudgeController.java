@@ -4,6 +4,7 @@ import com.lby.psychology.model.ResponseData;
 import com.lby.psychology.model.co.PsycJudgeCo;
 import com.lby.psychology.model.common.PageResult;
 import com.lby.psychology.model.pojo.PsycQuestionJudge;
+import com.lby.psychology.model.vo.PsycJudgeVo;
 import com.lby.psychology.service.IJudgeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,13 +29,13 @@ public class JudgeController {
 
     @ApiOperation(value = "新增评判规则")
     @PostMapping(value = "/addJudge")
-    public ResponseData<Boolean> addJudge(@RequestBody PsycQuestionJudge co){
+    public ResponseData<Boolean> addJudge(@RequestBody PsycJudgeVo co){
         return new ResponseData<>(judgeService.addJudge(co));
     }
 
     @ApiOperation(value = "获取评判规则详情")
     @GetMapping(value = "/getJudgeInfo")
-    public ResponseData<PsycQuestionJudge> getJudgeInfo(Integer judgeId){
+    public ResponseData<PsycJudgeVo> getJudgeInfo(Integer judgeId){
         return new ResponseData<>(judgeService.getJudgeInfo(judgeId));
     }
 

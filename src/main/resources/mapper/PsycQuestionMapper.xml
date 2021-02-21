@@ -18,8 +18,9 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
     <select id="selectQuestionLikeSearch" resultType="com.lby.psychology.model.vo.PsycQuestionVo">
-      select pq.id, pq.question_name, pq.scale_id ,ps.scale_name,ps.scale_type
-             from psyc_question pq left join psyc_scale ps on  pq.scale_id = ps.scale_id
+      select pq.id, pq.question_name, ps.scale_id ,ps.scale_name,ps.scale_type
+      from psyc_question pq left join psyc_question_dimension qd on pq.dimension = qd.dimension_id
+      left join psyc_scale ps on  qd.scale_id = ps.scale_id
       where 1 = 1
       <if test="keyword!=null and keyword!=''">
         and question_name like CONCAT(#{keyword},'%')

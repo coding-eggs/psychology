@@ -26,6 +26,12 @@ public class PsycQuestionDimension implements Serializable {
     private String dimensionName;
 
     /**
+     * 量表id
+     */
+    @ApiModelProperty(value="量表id")
+    private Integer scaleId;
+
+    /**
      * 维度编码
      */
     @ApiModelProperty(value="维度编码")

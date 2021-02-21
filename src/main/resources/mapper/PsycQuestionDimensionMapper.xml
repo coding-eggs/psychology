@@ -4,34 +4,92 @@
   <resultMap id="BaseResultMap" type="com.lby.psychology.model.pojo.PsycQuestionDimension">
     <id column="dimension_id" jdbcType="INTEGER" property="dimensionId" />
     <result column="dimension_name" jdbcType="VARCHAR" property="dimensionName" />
+    <result column="scale_id" jdbcType="INTEGER" property="scaleId" />
     <result column="dimension_code" jdbcType="VARCHAR" property="dimensionCode" />
     <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
     <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
   </resultMap>
   <sql id="Base_Column_List">
-    dimension_id, dimension_name, dimension_code, create_date, update_date
+    dimension_id, dimension_name, scale_id, dimension_code, create_date, update_date
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from psyc_question_dimension
     where dimension_id = #{dimensionId,jdbcType=INTEGER}
+  </select>
+    <select id="selectDimensionPageList" resultType="com.lby.psychology.model.vo.PsycDimensionVo">
+      select
+             qd.dimension_id,
+             s.scale_name,
+             qd.dimension_name,
+             qd.scale_id,
+             s.scale_type,
+             qd.dimension_code,
+             qd.create_date,
+             qd.update_date
+      from psyc_question_dimension qd left join psyc_scale s on qd.scale_id = s.scale_id
+      where 1 = 1
+      <if test="scaleId!=null">
+        and s.scale_id =#{scaleId}
+      </if>
+      <if test="scaleType!=null">
+        and s.scale_type=#{scaleType}
+      </if>
+      <if test="dimensionName!=null and dimensionName!=''">
+        and qd.dimension_name like CONCAT(#{dimensionName},'%')
+      </if>
+    </select>
+  <select id="selectDimensionDetail" resultType="com.lby.psychology.model.vo.PsycDimensionVo">
+    select
+    qd.dimension_id,
+    s.scale_name,
+    qd.dimension_name,
+    qd.scale_id,
+    s.scale_type,
+    qd.dimension_code,
+    qd.create_date,
+    qd.update_date
+    from psyc_question_dimension qd left join psyc_scale s on qd.scale_id = s.scale_id
+    where dimension_id = #{dimensionId}
+  </select>
+  <select id="selectDimensionListByScale" resultType="com.lby.psychology.model.vo.PsycDimensionVo">
+    select
+      qd.dimension_id,
+      s.scale_name,
+      qd.dimension_name,
+      qd.scale_id,
+      s.scale_type,
+      qd.dimension_code,
+      qd.create_date,
+      qd.update_date
+      from psyc_question_dimension qd left join psyc_scale s on qd.scale_id = s.scale_id
+      where 1 = 1
+    <if test="scaleId!=null">
+      and s.scale_id =#{scaleId,jdbcType=INTEGER}
+    </if>
+    <if test="scaleType!=null">
+      and s.scale_type=#{scaleType,jdbcType=INTEGER}
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from psyc_question_dimension
     where dimension_id = #{dimensionId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" keyColumn="dimension_id" keyProperty="dimensionId" parameterType="com.lby.psychology.model.pojo.PsycQuestionDimension" useGeneratedKeys="true">
-    insert into psyc_question_dimension (dimension_name, dimension_code, create_date, 
-      update_date)
-    values (#{dimensionName,jdbcType=VARCHAR}, #{dimensionCode,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, 
-      #{updateDate,jdbcType=TIMESTAMP})
+    insert into psyc_question_dimension (dimension_name, scale_id, dimension_code,
+      create_date, update_date)
+    values (#{dimensionName,jdbcType=VARCHAR}, #{scaleId,jdbcType=INTEGER}, #{dimensionCode,jdbcType=VARCHAR},
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" keyColumn="dimension_id" keyProperty="dimensionId" parameterType="com.lby.psychology.model.pojo.PsycQuestionDimension" useGeneratedKeys="true">
     insert into psyc_question_dimension
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="dimensionName != null">
         dimension_name,
+      </if>
+      <if test="scaleId != null">
+        scale_id,
       </if>
       <if test="dimensionCode != null">
         dimension_code,
@@ -47,6 +105,9 @@
       <if test="dimensionName != null">
         #{dimensionName,jdbcType=VARCHAR},
       </if>
+      <if test="scaleId != null">
+        #{scaleId,jdbcType=INTEGER},
+      </if>
       <if test="dimensionCode != null">
         #{dimensionCode,jdbcType=VARCHAR},
       </if>
@@ -58,11 +119,18 @@
       </if>
     </trim>
   </insert>
+  <insert id="insertDimension">
+    insert into psyc_question_dimension(dimension_name, scale_id, dimension_code)
+    value (#{dimensionName},#{scaleId},#{dimensionCode})
+  </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycQuestionDimension">
     update psyc_question_dimension
     <set>
       <if test="dimensionName != null">
         dimension_name = #{dimensionName,jdbcType=VARCHAR},
+      </if>
+      <if test="scaleId != null">
+        scale_id = #{scaleId,jdbcType=INTEGER},
       </if>
       <if test="dimensionCode != null">
         dimension_code = #{dimensionCode,jdbcType=VARCHAR},
@@ -79,6 +147,7 @@
   <update id="updateByPrimaryKey" parameterType="com.lby.psychology.model.pojo.PsycQuestionDimension">
     update psyc_question_dimension
     set dimension_name = #{dimensionName,jdbcType=VARCHAR},
+      scale_id = #{scaleId,jdbcType=INTEGER},
       dimension_code = #{dimensionCode,jdbcType=VARCHAR},
       create_date = #{createDate,jdbcType=TIMESTAMP},
       update_date = #{updateDate,jdbcType=TIMESTAMP}

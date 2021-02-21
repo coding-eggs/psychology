@@ -1,10 +1,434 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Psychology Manage System</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="assets/img/favicon.png">
+
+    <link rel="stylesheet" href="assets/css/element.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+
+    <!-- Datatables CSS -->
+    <link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <script src="assets/js/vue.js"></script>
+    <script src="assets/js/axios.js"></script>
+    <script src="assets/util/localStorageUtil.js"></script>
+    <script src="assets/util/request.js"></script>
+    <script src="assets/util/common.js"></script>
+    <script src="assets/js/element.js"></script>
+
+
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.min.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
 </head>
 <body>
 
+<!-- Main Wrapper -->
+<div class="main-wrapper" id="dimension">
+
+    <!-- Header -->
+    <div class="header">
+
+        <!-- Logo -->
+        <div class="header-left">
+            <a href="index.html" class="logo">
+                <img src="assets/img/logo.png" alt="Logo">
+            </a>
+            <a href="index.html" class="logo logo-small">
+                <img src="assets/img/logo-small.png" alt="Logo" width="30" height="30">
+            </a>
+        </div>
+        <!-- /Logo -->
+
+        <!-- Sidebar Toggle -->
+        <a href="javascript:void(0);" id="toggle_btn">
+            <i class="fas fa-bars"></i>
+        </a>
+        <!-- /Sidebar Toggle -->
+
+        <!-- Search -->
+        <div class="top-nav-search">
+            <form>
+                <input type="text" class="form-control" placeholder="搜索">
+                <button class="btn" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+        <!-- /Search -->
+
+        <!-- Mobile Menu Toggle -->
+        <a class="mobile_btn" id="mobile_btn">
+            <i class="fas fa-bars"></i>
+        </a>
+        <!-- /Mobile Menu Toggle -->
+
+        <!-- Header Menu -->
+        <ul class="nav user-menu">
+
+            <!-- Flag -->
+            <li class="nav-item dropdown has-arrow flag-nav">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+                    <img src="assets/img/flags/zh.png" alt="" height="20"> <span>简体中文</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a href="javascript:void(0);" class="dropdown-item">
+                        <img src="assets/img/flags/zh.png" alt="" height="16"> 简体中文
+                    </a>
+                </div>
+            </li>
+            <!-- /Flag -->
+
+            <!-- User Menu -->
+            <li class="nav-item dropdown has-arrow main-drop">
+                <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+							<span class="user-img">
+								<img :src="userinfo.figureUrl==='' ? 'assets/img/logo-small.png': userinfo.figureUrl " alt="">
+								<span class="status online"></span>
+							</span>
+                    <span v-html="userinfo.nickname"></span>
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="profile.html"><i data-feather="user" class="mr-1"></i> 个人中心</a>
+                    <a class="dropdown-item" href="settings.html"><i data-feather="settings" class="mr-1"></i> 设置</a>
+                    <a class="dropdown-item" href="/user/logout"><i data-feather="log-out" class="mr-1"></i> 注销</a>
+                </div>
+            </li>
+            <!-- /User Menu -->
+
+        </ul>
+        <!-- /Header Menu -->
+
+    </div>
+    <!-- /Header -->
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-inner slimscroll">
+            <div id="sidebar-menu" class="sidebar-menu" >
+                <ul id="sidebarMenu">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /Sidebar -->
+
+    <!-- Page Wrapper -->
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h3 class="page-title">测试/题库管理</h3>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.html">Dashboard</a>
+                            </li>
+                            <li class="breadcrumb-item active">量表维度管理</li>
+                        </ul>
+                    </div>
+                    <div class="col-auto">
+                        <a href="add-dimension.html" class="btn btn-primary mr-1">
+                            <i class="fas fa-plus"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- /Page Header -->
+
+            <!-- Search Filter -->
+            <div>
+                <el-form :inline="true"  ref="form" :model="form">
+                    <el-form-item label="量表大类">
+                        <el-select
+                                v-model="form.scaleType"
+                                @change="selectType"
+                                filterable
+                                remote
+                                clearable
+                                placeholder="请选择大类">
+                            <el-option
+                                    v-for="item in typeList"
+                                    :key="item.id"
+                                    :label="item.typeName"
+                                    :value="item.id">
+
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="所属量表">
+                        <el-select
+                                v-model="form.scaleId"
+                                @change="selectScale"
+                                filterable
+                                remote
+                                clearable
+                                placeholder="请选择量表">
+                            <el-option
+                                    v-for="item in scaleList"
+                                    :key="item.scaleId"
+                                    :label="item.scaleName"
+                                    :value="item.scaleId">
+
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="维度描述">
+                        <el-input v-model="form.dimensionName"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" v-on:click="onSubmit">查询</el-button>
+                    </el-form-item>
+                </el-form>
+            </div>
+
+            <!-- /Search Filter -->
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="card card-table">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <el-table
+                                        v-loading="loading"
+                                        :data="dimensionList"
+                                        style="width: 100%">
+                                    <el-table-column fixed label="序号"
+                                                     width="50" align="center">
+                                        <template scope="scope"><span>{{scope.$index+(pageNum - 1) * pageSize + 1}} </span></template>
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="dimensionName"
+                                            label="维度描述"
+                                    >
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="scaleName"
+                                            label="所属量表"
+                                    >
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="scaleTypeName"
+                                            label="量表大类"
+                                    >
+                                    </el-table-column>
+
+                                    <el-table-column
+                                            prop="dimensionCode"
+                                            label="维度编码"
+                                    >
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="createDate"
+                                            label="创建时间"
+                                    >
+                                    </el-table-column>
+                                    <el-table-column
+                                            prop="updateDate"
+                                            label="更新时间"
+                                    >
+                                    </el-table-column>
+
+
+                                    <el-table-column
+                                            fixed="right"
+                                            label="操作"
+                                            width="160">
+                                        <template slot-scope="scope">
+                                            <el-button
+                                                    v-on:click="editRow(scope.row.dimensionId)"
+                                                    type="button"
+                                                    size="small">
+                                                编辑
+                                            </el-button>
+                                            <el-button
+                                                    v-on:click="removeRow(scope.row.dimensionId)"
+                                                    type="button"
+                                                    size="small">
+                                                删除
+                                            </el-button>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                                <div class="block">
+                                    <el-pagination
+                                            @size-change="handleSizeChange"
+                                            @current-change="handleCurrentChange"
+                                            :current-page="pageNum"
+                                            :page-sizes="pageSizes"
+                                            :page-size="pageSize"
+                                            :page-count="9"
+                                            layout="total, sizes, prev, pager, next, jumper"
+                                            :total="totalSize">
+                                    </el-pagination>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Wrapper -->
+
+</div>
+<!-- /Main Wrapper -->
+
+<!-- jQuery -->
+<script src="assets/js/jquery-3.5.1.min.js"></script>
+
+<!-- Bootstrap Core JS -->
+<script src="assets/js/popper.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+
+<!-- Feather Icon JS -->
+<script src="assets/js/feather.min.js"></script>
+
+<!-- Slimscroll JS -->
+<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Datatables JS -->
+<script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="assets/plugins/datatables/datatables.min.js"></script>
+
+<!-- Custom JS -->
+<script src="assets/js/script.js"></script>
+
 </body>
+
+<script>
+    let storage = new Storage();
+    var dimension = new Vue({
+        el: '#dimension',
+        data: {
+            //初始页
+            typeList:[],
+            userinfo: '',
+            activePage: '/dimension.html',
+            dimensionList: [],
+            scaleList: [],
+            pageNum: 1,
+            totalSize: 0,
+            pageSize: 10,
+            pageSizes: [2,3,5,10,20,50,100],
+            form:{
+                scaleId: null,
+                scaleType: null,
+                dimensionName: ''
+            },
+            loading: false,
+
+        },
+        methods: {
+
+            getUserInfo() {
+                service.get("/user/getUserInfo").then(res => {
+                    this.userinfo = res.data;
+                });
+            },
+            async getDimensionList(pageNum, pageSize,isForm) {
+                var data = {
+                    pageNum: pageNum,
+                    pageSize: pageSize
+                };
+
+                if(isForm){
+                    data = this.form;
+                    data.pageNum = pageNum;
+                    data.pageSize = pageSize
+                }
+                this.loading = true
+                await service({
+                    method: "post",
+                    url: "/dimension/getDimensionPageList",
+                    data: data
+                }).then(res => {
+                    this.dimensionList = res.data.dataList
+                    this.totalSize = res.data.totalSize
+                }).finally(()=>{
+                    this.loading = false;
+                })
+            },
+            handleSizeChange(size) {
+                this.pageSize = size;
+                this.getDimensionList(this.pageNum,this.pageSize)
+            },
+            handleCurrentChange(currentPage) {
+                this.pageNum = currentPage
+                this.getDimensionList(this.pageNum,this.pageSize)
+            },
+            onSubmit(){
+                this.getDimensionList(this.pageNum,this.pageSize,true)
+            },
+
+            editRow(dimensionId){
+                window.location.href="/edit-dimension.html?dimensionId="+dimensionId
+            },
+            removeRow(dimensionId){
+                this.$confirm('请您确定是否要删除该选项，删除后无法恢复！', '删除问题选项', {
+                    confirmButtonText: '确认',
+                    cancelButtonText: '取消',
+                    dangerouslyUseHTMLString: true,
+                    type: 'warning',
+                    center: true
+                }).then(() => {
+                    service.get("/option/deleteOption?dimensionId="+dimensionId).then(res=>{
+                        if(res.data){
+                            this.$message({message:"成功删除该问题选项",type:"success"})
+                            //刷新用户列表
+                            this.getOptionsList(this.pageNum,this.pageSize,false)
+                        }
+                    })
+                }).catch(()=>{
+                    thispoint.$message({
+                        type: 'info',
+                        message: '取消删除操作'
+                    })
+                })
+            },
+            selectType(val){
+                this.form.scaleType = val;
+                this.form.scaleId = null;
+                service("/question/getScaleListByType?scaleType="+val).then(res=>{
+                    this.scaleList = res.data
+                })
+            },
+            loadType(){
+                return [
+                    {"id":10,"typeName":"人际"},
+                    {"id":20,"typeName":"学习"},
+                    {"id":30,"typeName":"就业"},
+                    {"id":40,"typeName":"情感"}
+                ]
+            }
+        },
+        created(){
+            this.getDimensionList(this.pageNum,this.pageSize,false)
+        },
+        mounted() {
+            this.typeList = this.loadType();
+            initMenu(storage.getItem("routeMap"),this.activePage)
+            intThisPoint(this);
+            this.getUserInfo();
+        },
+    })
+
+
+
+
+
+</script>
 </html>

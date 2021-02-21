@@ -4,6 +4,8 @@ import com.lby.psychology.model.pojo.PsycScale;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Mapper
 @Repository
 public interface PsycScaleMapper {
@@ -18,5 +20,7 @@ public interface PsycScaleMapper {
     int updateByPrimaryKeySelective(PsycScale record);
 
     int updateByPrimaryKey(PsycScale record);
+
+    List<PsycScale> selectScaleListByType(Integer type);
 
 }

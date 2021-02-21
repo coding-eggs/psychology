@@ -146,18 +146,74 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <el-form ref="form" :model="form" label-width="80px">
-                        <el-form-item label="评判描述">
+                    <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+                        <el-form-item label="量表大类" prop="scaleType">
+                            <el-select
+                                    v-model="form.scaleType"
+                                    @change="selectType"
+                                    filterable
+                                    remote
+                                    clearable
+                                    placeholder="请选择大类">
+                                <el-option
+                                        v-for="item in typeList"
+                                        :key="item.id"
+                                        :label="item.typeName"
+                                        :value="item.id">
+
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="所属量表" prop="scaleId">
+                            <el-select
+                                    v-model="form.scaleId"
+                                    @change="selectScale"
+                                    filterable
+                                    remote
+                                    clearable
+                                    placeholder="请选择量表">
+                                <el-option
+                                        v-for="item in scaleList"
+                                        :key="item.scaleId"
+                                        :label="item.scaleName"
+                                        :value="item.scaleId">
+
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="所属维度" prop="dimensionId">
+                            <el-select
+                                    v-model="form.dimensionId"
+                                    filterable
+                                    remote
+                                    clearable
+                                    placeholder="请选择量表">
+                                <el-option
+                                        v-for="item in dimensionList"
+                                        :key="item.dimensionId"
+                                        :label="item.dimensionName"
+                                        :value="item.dimensionId">
+
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="评判描述" prop="judgeName">
                             <el-input type="textarea" v-model="form.judgeName" placeholder="评判描述"></el-input>
                         </el-form-item>
-                        <el-form-item label="评分范围">
-                            <el-col :span="3">
-                                <el-input v-model="form.startScore" placeholder="起始分数"></el-input>
+                        <el-row>
+                            <el-col :span="6">
+                                <el-form-item label="起始分数" prop="startScore">
+                                    <el-input v-model.number="form.startScore" placeholder="起始分数"></el-input>
+                                </el-form-item>
                             </el-col>
-                            <el-col :span="3">
-                                <el-input v-model="form.endScore" placeholder="结束分数"></el-input>
+                            <el-col :span="6">
+                                <el-form-item label="结束分数" prop="endScore">
+                                    <el-input v-model.number="form.endScore" placeholder="结束分数"></el-input>
+                                </el-form-item>
                             </el-col>
-                        </el-form-item>
+                        </el-row>
+
+
                         <el-form-item>
                             <el-button type="primary" v-on:click="onSubmit">立即创建</el-button>
                         </el-form-item>
@@ -200,11 +256,41 @@
         data: {
             //初始页
             userinfo: '',
+            typeList:[],
+            scaleList:[],
+            dimensionList:[],
             activePage: '/judge.html',
             form:{
+                scaleType: null,
+                scaleId: null,
+                dimensionId: null,
                 judgeName:"",
                 startScore: null,
                 endScore:null,
+            },
+            rules:{
+                judgeName:[
+                    {required: true,message:"请输评判描述",trigger: 'blur'},
+                    {min: 1,max: 400,message: '长度 1 到 400 个字符',trigger: 'blur'},
+                ],
+                startScore:[
+                    {required: true,message:"请输入分数",trigger: 'blur'},
+                    {type:'number',min: 0,max: 999,message: '数字在 0 - 999 之间（只能输入数字）',trigger: 'blur'},
+                ],
+                endScore:[
+                    {required: true,message:"请输入分数",trigger: 'blur'},
+                    {type:'number',min: 0,max: 999,message: '数字在 0 - 999 之间（只能输入数字）',trigger: 'blur'},
+                ],
+                dimensionId:[
+                    {required: true,message:"请选择维度",trigger: 'blur'},
+                ],
+                scaleType:[
+                    {required: true,message:"请输选择大类",trigger: 'blur'},
+                ],
+                scaleId: [
+                    {required: true,message:"请选择量表",trigger: 'blur'},
+
+                ]
             }
 
         },
@@ -215,20 +301,57 @@
                 });
             },
             onSubmit(){
+                if(this.$refs['form'].validate(valid=>{
+                    if(valid){
+                        service({
+                            method: 'post',
+                            url: '/judge/addJudge',
+                            data: this.form
+                        }).then(res=>{
+                            if(res.data){
+                                this.$message({message:"新增成功",type:"success"})
+                            }
+                        })
+                    }else{
+                        this.$message({message:"数据格式不正确",type:"error"})
+                    }
+                }));
+            },
+            selectType(val){
+                this.form.scaleType = val;
+                this.form.scaleId = null;
+                service("/question/getScaleListByType?scaleType="+val).then(res=>{
+                    this.scaleList = res.data
+                })
+            },
+            selectScale(val){
+                this.form.scaleId = val;
+                this.form.dimensionId = null;
                 service({
                     method: 'post',
-                    url: '/judge/addJudge',
-                    data: this.form
-                }).then(res=>{
-                    if(res.data){
-                        this.$message({message:"新增成功",type:"success"})
+                    url: '/dimension/getDimensionListByScale',
+                    data:{
+                        scaleId: this.form.scaleId,
+                        scaleType: this.form.scaleType
                     }
+                }).then(res=>{
+                    this.dimensionList = res.data
                 })
+            },
+            loadType(){
+                return [
+                    {"id":10,"typeName":"人际"},
+                    {"id":20,"typeName":"学习"},
+                    {"id":30,"typeName":"就业"},
+                    {"id":40,"typeName":"情感"}
+                ]
             }
+
         },
         created(){
         },
         mounted() {
+            this.typeList = this.loadType()
             initMenu(storage.getItem("routeMap"),this.activePage)
             intThisPoint(this);
             this.getUserInfo();

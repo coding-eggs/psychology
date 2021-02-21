@@ -152,6 +152,56 @@
 					<!-- Search Filter -->
 					<div>
 						<el-form :inline="true"  ref="form" :model="form">
+							<el-form-item label="量表大类" prop="scaleType">
+								<el-select
+										v-model="form.scaleType"
+										@change="selectType"
+										filterable
+										remote
+										clearable
+										placeholder="请选择大类">
+									<el-option
+											v-for="item in typeList"
+											:key="item.id"
+											:label="item.typeName"
+											:value="item.id">
+
+									</el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item label="所属量表" prop="scaleId">
+								<el-select
+										v-model="form.scaleId"
+										@change="selectScale"
+										filterable
+										remote
+										clearable
+										placeholder="请选择量表">
+									<el-option
+											v-for="item in scaleList"
+											:key="item.scaleId"
+											:label="item.scaleName"
+											:value="item.scaleId">
+
+									</el-option>
+								</el-select>
+							</el-form-item>
+							<el-form-item label="所属维度" prop="dimensionId">
+								<el-select
+										v-model="form.dimensionId"
+										filterable
+										remote
+										clearable
+										placeholder="请选择量表">
+									<el-option
+											v-for="item in dimensionList"
+											:key="item.dimensionId"
+											:label="item.dimensionName"
+											:value="item.dimensionId">
+
+									</el-option>
+								</el-select>
+							</el-form-item>
 							<el-form-item label="起始分数">
 								<el-input v-model="form.startScore"></el-input>
 							</el-form-item>
@@ -184,6 +234,12 @@
 													label="评判标准描述"
 													>
 											</el-table-column>
+											<el-table-column
+													prop="dimensionName"
+													label="所属维度"
+											>
+											</el-table-column>
+
 											<el-table-column  label="分数范围" width="200px">
 												<template slot-scope="scope">
 													<span>{{scope.row.startScore}}</span><span> - </span>
@@ -266,11 +322,17 @@
 			userinfo: '',
 			activePage: '/judge.html',
 			judgeList: [],
+			typeList:[],
+			scaleList:[],
+			dimensionList:[],
 			pageNum: 1,
 			totalSize: 0,
 			pageSize: 10,
 			pageSizes: [2,3,5,10,20,50,100],
 			form:{
+				dimensionId: null,
+				scaleId: null,
+				scaleType: null,
 				startScore: null,
 				endScore: null
 			},
@@ -319,6 +381,35 @@
 				this.getJudgeList(this.pageNum,this.pageSize,true)
 			},
 
+			selectType(val){
+				this.form.scaleType = val;
+				this.form.scaleId = null;
+				service("/question/getScaleListByType?scaleType="+val).then(res=>{
+					this.scaleList = res.data
+				})
+			},
+			selectScale(val){
+				this.form.scaleId = val;
+				this.form.dimensionId = null;
+				service({
+					method: 'post',
+					url: '/dimension/getDimensionListByScale',
+					data:{
+						scaleId: this.form.scaleId,
+						scaleType: this.form.scaleType
+					}
+				}).then(res=>{
+					this.dimensionList = res.data
+				})
+			},
+			loadType(){
+				return [
+					{"id":10,"typeName":"人际"},
+					{"id":20,"typeName":"学习"},
+					{"id":30,"typeName":"就业"},
+					{"id":40,"typeName":"情感"}
+				]
+			},
 			editRow(judgeId){
 				window.location.href="/edit-judge.html?judgeId="+judgeId
 			},
@@ -350,6 +441,7 @@
 			this.getJudgeList(this.pageNum,this.pageSize,false)
 		},
 		mounted() {
+			this.typeList = this.loadType()
 			initMenu(storage.getItem("routeMap"),this.activePage)
 			intThisPoint(this);
 			this.getUserInfo();
