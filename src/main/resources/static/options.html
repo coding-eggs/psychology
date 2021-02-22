@@ -334,11 +334,11 @@
 			},
 			handleSizeChange(size) {
 				this.pageSize = size;
-				this.getOptionsList(this.pageNum,this.pageSize)
+				this.getOptionsList(this.pageNum,this.pageSize,true)
 			},
 			handleCurrentChange(currentPage) {
 				this.pageNum = currentPage
-				this.getOptionsList(this.pageNum,this.pageSize)
+				this.getOptionsList(this.pageNum,this.pageSize,true)
 			},
 			onSubmit(){
 				this.getOptionsList(this.pageNum,this.pageSize,true)

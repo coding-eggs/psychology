@@ -235,7 +235,7 @@
                     if(valid){
                         service({
                             method: 'post',
-                            url: '/question/updateScale',
+                            url: '/scale/updateScale',
                             data: this.form
                         }).then(res=>{
                             if(res.data){
@@ -259,7 +259,7 @@
             initScaleInfo(){
                 var scaleId = window.location.href.split("?")[1].split("=")[1];
                 if(scaleId!==undefined){
-                    service.get("/question/getScaleDetail?scaleId="+scaleId).then(res=>{
+                    service.get("/scale/getScaleDetail?scaleId="+scaleId).then(res=>{
                         this.form.scaleId = res.data.scaleId
                         this.form.scaleType = res.data.scaleType
                         this.form.scaleName = res.data.scaleName

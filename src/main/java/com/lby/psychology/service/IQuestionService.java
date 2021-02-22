@@ -2,12 +2,10 @@ package com.lby.psychology.service;
 
 import com.lby.psychology.model.co.PsycQuestionCo;
 import com.lby.psychology.model.common.PageResult;
-import com.lby.psychology.model.pojo.PsycScale;
-import com.lby.psychology.model.vo.PsycQuestionDetailVo;
+import com.lby.psychology.model.pojo.PsycQuestion;
 import com.lby.psychology.model.vo.PsycQuestionVo;
 
 import java.util.List;
-import java.util.Map;
 
 public interface IQuestionService {
 
@@ -21,47 +19,38 @@ public interface IQuestionService {
     List<PsycQuestionVo> getQuestionLikeSearch(String keyword);
 
     /**
-    * 获取问题列表
+    * 分页查询问题列表
     * @author lby
-    * @param co 筛选参数
-    * @date 2021/2/17 20:40
+    * @param co 查询参数
+    * @date 2021/2/22 21:27
     * @return com.lby.psychology.model.common.PageResult
     */
     PageResult getQuestionPageList(PsycQuestionCo co);
 
-
-
     /**
-    * 根据量表编码获取量表详情
+    * 新增问题
     * @author lby
-    * @param scaleCode 量表code
-    * @date 2021/2/18 15:06
-
-    */
-    List<PsycQuestionDetailVo> getQuestionDetail(Integer scaleCode);
-
-
-    /**
-    * 新增量表
-    * @author lby
-    * @param co 量表信息
-    * @date 2021/2/20 11:04
+    * @param vo 新增数据
+    * @date 2021/2/22 22:31
     * @return boolean
     */
-    boolean addScale(PsycScale co);
+    boolean addQuestion(PsycQuestion vo);
 
     /**
-    * 获取量表详情
+    * 更新问题接口
     * @author lby
-    * @param scaleId 量表id
-    * @date 2021/2/20 15:10
-    * @return com.lby.psychology.model.pojo.PsycScale
+    * @param vo 更新问题得参数
+    * @date 2021/2/22 22:53
+    * @return boolean
     */
-    PsycScale getScaleDetail(Integer scaleId);
+    boolean updateQuestion(PsycQuestion vo);
 
-
-    boolean updateScale(PsycScale psycScale);
-
-
-    List<PsycScale> getScaleListByType(Integer scaleType);
+    /**
+    * 查询问题详情
+    * @author lby
+    * @param questionId 问题id
+    * @date 2021/2/22 22:59
+    * @return com.lby.psychology.model.vo.PsycQuestionVo
+    */
+    PsycQuestionVo getQuestionInfo(Integer questionId);
 }

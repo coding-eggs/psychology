@@ -301,7 +301,7 @@
             selectType(val){
                 this.form.scaleType = val;
                 this.form.scaleId = null;
-                service("/question/getScaleListByType?scaleType="+val).then(res=>{
+                service("/scale/getScaleListByType?scaleType="+val).then(res=>{
                     this.scaleList = res.data
                 })
             },

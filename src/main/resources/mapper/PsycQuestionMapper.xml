@@ -54,7 +54,32 @@
           LEFT JOIN psyc_question_dimension pqd ON ps.scale_id = pqd.scale_id and pqd.scale_id = #{scaleId}
           INNER JOIN psyc_question pq ON pqd.dimension_id = pq.dimension
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <select id="selectQuestionPageList" resultType="com.lby.psychology.model.vo.PsycQuestionVo">
+      select id, question_name,s.scale_name,qd.dimension_name, dimension, q.create_date, q.update_date
+      from psyc_question q left join psyc_question_dimension qd on q.dimension = qd.dimension_id
+      left join psyc_scale s on qd.scale_id = s.scale_id
+      where 1 = 1
+      <if test="scaleType!=null">
+        and s.scale_type = #{scaleType}
+      </if>
+      <if test="scaleId !=null">
+        and s.scale_id = #{scaleId}
+      </if>
+      <if test="dimensionId != null">
+        and qd.dimension_id = #{dimensionId}
+      </if>
+       <if test="questionName != null and questionName != ''">
+         and q.question_name like CONCAT(#{questionName},'%')
+       </if>
+    </select>
+  <select id="selectQuestionInfo" resultType="com.lby.psychology.model.vo.PsycQuestionVo">
+    select q.id,q.question_name,q.dimension ,qd.scale_id,s.scale_type
+    from psyc_question q left join psyc_question_dimension qd on q.dimension = qd.dimension_id
+    left join psyc_scale s on qd.scale_id = s.scale_id
+    where q.id = #{questionId}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from psyc_question
     where id = #{id,jdbcType=INTEGER}
   </delete>
@@ -107,14 +132,15 @@
     insert into psyc_scale(scale_type,scale_name)
     value (#{scaleType},#{scaleName})
   </insert>
+  <insert id="insertQuestion">
+    insert into psyc_question(question_name, dimension)
+    value (#{questionName},#{dimension})
+  </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycQuestion">
     update psyc_question
     <set>
       <if test="questionName != null">
         question_name = #{questionName,jdbcType=VARCHAR},
-      </if>
-      <if test="scaleId != null">
-        scale_id = #{scaleId,jdbcType=INTEGER},
       </if>
       <if test="dimension != null">
         dimension = #{dimension,jdbcType=INTEGER},

@@ -308,7 +308,7 @@
 				this.loading = true
 				await service({
 					method: "post",
-					url: "/question/getQuestionPageList",
+					url: "/scale/getScalePageList",
 					data: data
 				}).then(res => {
 					this.scaleList = res.data.dataList
@@ -324,11 +324,11 @@
 			},
 			handleSizeChange(size) {
 				this.pageSize = size;
-				this.getQuestionList(this.pageNum,this.pageSize)
+				this.getQuestionList(this.pageNum,this.pageSize,true)
 			},
 			handleCurrentChange(currentPage) {
 				this.pageNum = currentPage
-				this.getQuestionList(this.pageNum,this.pageSize)
+				this.getQuestionList(this.pageNum,this.pageSize,true)
 			},
 			onSubmit(){
 				this.getQuestionList(this.pageNum,this.pageSize,true)

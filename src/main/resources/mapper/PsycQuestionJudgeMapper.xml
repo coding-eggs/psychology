@@ -20,7 +20,14 @@
       select  qj.judge_id, judge_name, start_score, end_score,qd.dimension_id,qd.dimension_name
         from psyc_question_judge qj left join psyc_dimension_judge_rlt pdjr on qj.judge_id = pdjr.judge_id
         left join psyc_question_dimension qd on pdjr.dimension_id = qd.dimension_id
+        left join psyc_scale s on qd.scale_id = s.scale_id
         where 1 = 1
+        <if test="scaleId != null">
+          and s.scale_id = #{scaleId}
+        </if>
+          <if test="scaleType != null">
+            and s.scale_type =#{scaleType}
+          </if>
         <if test="startScore!=null">
           and start_score <![CDATA[ >= ]]> #{startScore}
         </if>

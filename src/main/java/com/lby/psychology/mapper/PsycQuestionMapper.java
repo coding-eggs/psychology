@@ -33,4 +33,11 @@ public interface PsycQuestionMapper {
     List<PsycQuestionVo> selectQuestionDetail(@Param("scaleId") Integer Id);
 
     int insertScale(PsycScale co);
+
+    List<PsycQuestionVo> selectQuestionPageList(PsycQuestionCo co);
+
+    int insertQuestion(PsycQuestion question);
+
+    PsycQuestionVo selectQuestionInfo(Integer questionId);
+
 }

@@ -38,7 +38,7 @@
 <body>
 
 <!-- Main Wrapper -->
-<div class="main-wrapper" id="addscale">
+<div class="main-wrapper" id="addquestion">
 
     <!-- Header -->
     <div class="header">
@@ -137,7 +137,7 @@
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Dashboard</a>
                             </li>
-                            <li class="breadcrumb-item active">新增量表页</li>
+                            <li class="breadcrumb-item active">新增问题页</li>
                         </ul>
                     </div>
                 </div>
@@ -152,7 +152,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <el-form ref="form" :rules="rules" :model="form">
-                        <el-form-item label="量表类型" prop="scaleType">
+                        <el-form-item label="量表大类" prop="scaleType">
                             <el-select
                                     v-model="form.scaleType"
                                     @change="selectType"
@@ -165,12 +165,46 @@
                                         :key="item.id"
                                         :label="item.typeName"
                                         :value="item.id">
+
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="量表描述" prop="scaleName">
+                        <el-form-item label="所属量表" prop="scaleId">
+                            <el-select
+                                    v-model="form.scaleId"
+                                    @change="selectScale"
+                                    filterable
+                                    remote
+                                    clearable
+                                    placeholder="请选择量表">
+                                <el-option
+                                        v-for="item in scaleList"
+                                        :key="item.scaleId"
+                                        :label="item.scaleName"
+                                        :value="item.scaleId">
+
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="所属维度" prop="dimension">
+                            <el-select
+                                    v-model="form.dimension"
+                                    filterable
+                                    remote
+                                    clearable
+                                    placeholder="请选择量表">
+                                <el-option
+                                        v-for="item in dimensionList"
+                                        :key="item.dimensionId"
+                                        :label="item.dimensionName"
+                                        :value="item.dimensionId">
+
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="问题描述" prop="questionName">
                             <el-col :span="8">
-                                <el-input v-model="form.scaleName" placeholder="量表描述" clearable></el-input>
+                                <el-input v-model="form.questionName" placeholder="问题描述" clearable></el-input>
                             </el-col>
                         </el-form-item>
                         <el-form-item>
@@ -211,25 +245,36 @@
 <script>
     let storage = new Storage();
 
-    var addscale = new Vue({
-        el: '#addscale',
+    var addquestion = new Vue({
+        el: '#addquestion',
         data: {
             //初始页
             userinfo: '',
             typeList:[],
-            activePage: '/scale.html',
+            scaleList:[],
+            dimensionList:[],
+            activePage: '/questions.html',
             form:{
+                scaleId: null,
+                dimension: null,
+                questionName: "",
                 scaleType: null,
                 scaleName: ''
             },
             rules:{
-                scaleName:[
-                    {required: true,message:"请输入量表描述",trigger: 'blur'},
+                questionName:[
+                    {required: true,message:"请输问题描述",trigger: 'blur'},
                     {min: 1,max: 100,message: '长度 1 到 100 个字符',trigger: 'blur'},
                 ],
                 scaleType:[
-                    {required: true,message:"请选择量表大类",trigger: 'blur'},
+                    {required: true,message:"请输选择大类",trigger: 'blur'},
                 ],
+                scaleId: [
+                    {required: true,message:"请选择量表",trigger: 'blur'},
+                ],
+                dimension: [
+                    {required: true,message:"请选择维度",trigger: 'blur'},
+                ]
             }
         },
         methods: {
@@ -238,20 +283,12 @@
                     this.userinfo = res.data;
                 });
             },
-            loadType(){
-                return [
-                    {"id":10,"typeName":"人际"},
-                    {"id":20,"typeName":"学习"},
-                    {"id":30,"typeName":"就业"},
-                    {"id":40,"typeName":"情感"}
-                ]
-            },
             onSubmit(){
                 if(this.$refs['form'].validate(valid=>{
                     if(valid){
                         service({
                             method: 'post',
-                            url: '/scale/addScale',
+                            url: '/question/addQuestion',
                             data: this.form
                         }).then(res=>{
                             if(res.data){
@@ -262,6 +299,35 @@
                         this.$message({message:"数据格式不正确",type:"error"})
                     }
                 }));
+            },
+            selectType(val){
+                this.form.scaleType = val;
+                this.form.scaleId = null;
+                service("/scale/getScaleListByType?scaleType="+val).then(res=>{
+                    this.scaleList = res.data
+                })
+            },
+            selectScale(val){
+                this.form.scaleId = val;
+                this.form.dimension = null;
+                service({
+                    method: 'post',
+                    url: '/dimension/getDimensionListByScale',
+                    data:{
+                        scaleId: this.form.scaleId,
+                        scaleType: this.form.scaleType
+                    }
+                }).then(res=>{
+                    this.dimensionList = res.data
+                })
+            },
+            loadType(){
+                return [
+                    {"id":10,"typeName":"人际"},
+                    {"id":20,"typeName":"学习"},
+                    {"id":30,"typeName":"就业"},
+                    {"id":40,"typeName":"情感"}
+                ]
             }
 
         },

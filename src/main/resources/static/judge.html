@@ -371,11 +371,11 @@
 			},
 			handleSizeChange(size) {
 				this.pageSize = size;
-				this.getJudgeList(this.pageNum,this.pageSize)
+				this.getJudgeList(this.pageNum,this.pageSize,true)
 			},
 			handleCurrentChange(currentPage) {
 				this.pageNum = currentPage
-				this.getJudgeList(this.pageNum,this.pageSize)
+				this.getJudgeList(this.pageNum,this.pageSize,true)
 			},
 			onSubmit(){
 				this.getJudgeList(this.pageNum,this.pageSize,true)
@@ -384,7 +384,7 @@
 			selectType(val){
 				this.form.scaleType = val;
 				this.form.scaleId = null;
-				service("/question/getScaleListByType?scaleType="+val).then(res=>{
+				service("/scale/getScaleListByType?scaleType="+val).then(res=>{
 					this.scaleList = res.data
 				})
 			},

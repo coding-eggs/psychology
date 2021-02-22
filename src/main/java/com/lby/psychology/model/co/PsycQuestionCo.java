@@ -12,5 +12,9 @@ public class PsycQuestionCo extends PageBasic {
 
     private Integer scaleType;
 
+    private Integer dimensionId;
+
+    private String questionName;
+
     private String scaleName;
 }

@@ -51,5 +51,5 @@ pagehelper:
   auto-dialect: true
 logging:
   level:
-    root: debug
+    root: info
 

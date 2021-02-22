@@ -38,7 +38,7 @@
 <body>
 
 <!-- Main Wrapper -->
-<div class="main-wrapper" id="addscale">
+<div class="main-wrapper" id="editquestion">
 
     <!-- Header -->
     <div class="header">
@@ -137,22 +137,17 @@
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Dashboard</a>
                             </li>
-                            <li class="breadcrumb-item active">新增量表页</li>
+                            <li class="breadcrumb-item active">修改问题页</li>
                         </ul>
                     </div>
                 </div>
             </div>
             <!-- /Page Header -->
 
-            <!-- Search Filter -->
-
-
-            <!-- /Search Filter -->
-
             <div class="row">
                 <div class="col-sm-12">
-                    <el-form ref="form" :rules="rules" :model="form">
-                        <el-form-item label="量表类型" prop="scaleType">
+                    <el-form ref="form" :rules="rules" :model="form" label-width="80px">
+                        <el-form-item label="量表大类" prop="scaleType">
                             <el-select
                                     v-model="form.scaleType"
                                     @change="selectType"
@@ -165,13 +160,45 @@
                                         :key="item.id"
                                         :label="item.typeName"
                                         :value="item.id">
+
                                 </el-option>
                             </el-select>
                         </el-form-item>
-                        <el-form-item label="量表描述" prop="scaleName">
-                            <el-col :span="8">
-                                <el-input v-model="form.scaleName" placeholder="量表描述" clearable></el-input>
-                            </el-col>
+                        <el-form-item label="所属量表" prop="scaleId">
+                            <el-select
+                                    v-model="form.scaleId"
+                                    @change="selectScale"
+                                    filterable
+                                    remote
+                                    clearable
+                                    placeholder="请选择量表">
+                                <el-option
+                                        v-for="item in scaleList"
+                                        :key="item.scaleId"
+                                        :label="item.scaleName"
+                                        :value="item.scaleId">
+
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="所属维度" prop="dimension">
+                            <el-select
+                                    v-model="form.dimension"
+                                    filterable
+                                    remote
+                                    clearable
+                                    placeholder="请选择量表">
+                                <el-option
+                                        v-for="item in dimensionList"
+                                        :key="item.dimensionId"
+                                        :label="item.dimensionName"
+                                        :value="item.dimensionId">
+
+                                </el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="问题描述">
+                            <el-input type="textarea" v-model="form.questionName" placeholder="问题描述"></el-input>
                         </el-form-item>
                         <el-form-item>
                             <el-button type="primary" v-on:click="onSubmit">保存</el-button>
@@ -210,33 +237,99 @@
 
 <script>
     let storage = new Storage();
-
-    var addscale = new Vue({
-        el: '#addscale',
+    var editquestion = new Vue({
+        el: '#editquestion',
         data: {
             //初始页
             userinfo: '',
             typeList:[],
-            activePage: '/scale.html',
+            scaleList:[],
+            dimensionList:[],
+            activePage: '/questions.html',
             form:{
+                id: null,
                 scaleType: null,
-                scaleName: ''
+                scaleId: null,
+                dimension: null,
+                questionName:"",
             },
             rules:{
-                scaleName:[
-                    {required: true,message:"请输入量表描述",trigger: 'blur'},
+                questionName:[
+                    {required: true,message:"请输入问题描述",trigger: 'blur'},
                     {min: 1,max: 100,message: '长度 1 到 100 个字符',trigger: 'blur'},
                 ],
-                scaleType:[
-                    {required: true,message:"请选择量表大类",trigger: 'blur'},
+                dimension:[
+                    {required: true,message:"请选择维度",trigger: 'blur'},
                 ],
+                scaleType:[
+                    {required: true,message:"请输选择大类",trigger: 'blur'},
+                ],
+                scaleId: [
+                    {required: true,message:"请选择量表",trigger: 'blur'},
+
+                ]
             }
+
         },
         methods: {
             getUserInfo() {
                 service.get("/user/getUserInfo").then(res => {
                     this.userinfo = res.data;
                 });
+            },
+            onSubmit(){
+                if(this.$refs['form'].validate(valid=>{
+                    if(valid){
+                        service({
+                            method: 'post',
+                            url: '/question/updateQuestion',
+                            data: this.form
+                        }).then(res=>{
+                            if(res.data){
+                                this.$message({message:"保存成功",type:"success"})
+                            }
+                        })
+                    }else{
+                        this.$message({message:"数据格式不正确",type:"error"})
+                    }
+                }));
+
+
+            },
+            initQuestionInfo(){
+                var questionId = window.location.href.split("?")[1].split("=")[1];
+                if(questionId!==undefined){
+                    service.get("/question/getQuestionInfo?questionId="+questionId).then(res=>{
+                        this.form.questionName = res.data.questionName
+                        this.form.id = res.data.id
+                        this.selectType(res.data.scaleType)
+                        this.selectScale(res.data.scaleId);
+                        this.form.scaleId = res.data.scaleId
+                        this.form.scaleType = res.data.scaleType
+                        this.form.dimension = res.data.dimension
+                    })
+                }
+            },
+            selectType(val){
+                this.form.scaleType = val;
+                this.form.scaleId = null;
+                service("/scale/getScaleListByType?scaleType="+val).then(res=>{
+                    this.scaleList = res.data
+                })
+            },
+            selectScale(val){
+                this.form.scaleId = val;
+                this.form.dimension = null;
+                service({
+                    method: 'post',
+                    url: '/dimension/getDimensionListByScale',
+                    data:{
+                        scaleId: this.form.scaleId,
+                        scaleType: this.form.scaleType
+                    }
+                }).then(res=>{
+                    this.dimensionList = res.data
+                })
             },
             loadType(){
                 return [
@@ -245,33 +338,16 @@
                     {"id":30,"typeName":"就业"},
                     {"id":40,"typeName":"情感"}
                 ]
-            },
-            onSubmit(){
-                if(this.$refs['form'].validate(valid=>{
-                    if(valid){
-                        service({
-                            method: 'post',
-                            url: '/scale/addScale',
-                            data: this.form
-                        }).then(res=>{
-                            if(res.data){
-                                this.$message({message:"新增成功",type:"success"})
-                            }
-                        })
-                    }else{
-                        this.$message({message:"数据格式不正确",type:"error"})
-                    }
-                }));
             }
-
         },
         created(){
         },
         mounted() {
-            this.typeList = this.loadType();
+            this.typeList = this.loadType()
             initMenu(storage.getItem("routeMap"),this.activePage)
             intThisPoint(this);
             this.getUserInfo();
+            this.initQuestionInfo();
         },
     })
 
