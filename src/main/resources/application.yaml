@@ -1,5 +1,11 @@
 server:
-  port: 9527
+  port: 9528
+  ssl:
+    key-store: classpath:ailuoli.cn.jks
+    key-store-password: i12yn725y20q
+    key-store-type: JKS
+    enabled: true
+
 knife4j:
   enable: true
 spring:

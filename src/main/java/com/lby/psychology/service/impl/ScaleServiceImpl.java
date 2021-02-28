@@ -1,4 +1,4 @@
-package com.lby.psychology.service;
+package com.lby.psychology.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -12,6 +12,7 @@ import com.lby.psychology.model.enums.EnumScaleCategories;
 import com.lby.psychology.model.pojo.PsycScale;
 import com.lby.psychology.model.vo.PsycQuestionDetailVo;
 import com.lby.psychology.model.vo.PsycQuestionVo;
+import com.lby.psychology.service.IScaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +23,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-public class ScaleServiceImpl implements IScaleService{
+public class ScaleServiceImpl implements IScaleService {
 
     @Autowired
     private PsycQuestionMapper questionMapper;
