@@ -154,7 +154,6 @@
 						<el-form :inline="true"  ref="form" :model="form">
 							<el-select
 									v-model="form.scaleType"
-									@change="selectType"
 									filterable
 									remote
 									clearable
@@ -258,9 +257,6 @@
 		<!-- Slimscroll JS -->
 		<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
-		<!-- Datatables JS -->
-		<script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
-		<script src="assets/plugins/datatables/datatables.min.js"></script>
 
 		<!-- Custom JS -->
 		<script src="assets/js/script.js"></script>
@@ -359,14 +355,6 @@
 					})
 				})
 			},
-			selectType(val){
-				this.form.typeId = val;
-				this.form.scaleTypeId = '';
-				this.scaleTypeList =  this.typeList.filter(e=>{
-					return  e.id===val
-				})[0].scaleTypeList;
-			},
-
 			loadType(){
 				return [
 					{"id":10,"typeName":"人际"},

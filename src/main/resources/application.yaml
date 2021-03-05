@@ -40,11 +40,15 @@ spring:
     valicode:
       expired: 300
     password: mmabrxnycmzabgjg
-
   security:
     remember:
       # 两周
       timeout: "1209600"
+minio:
+  endpoint: https://ailuoli.cn:9000
+  domain: https://ailuoli.cn:9000
+  accessKey: a0/v2tunfHEfdgx78hXKPgldrfb5vSR7Ftnl3C
+  secretKey: a0cnBv/d1PbvCfU764M.XFuYu/tSAWquUM4O6iC0cwUYPoNu0SbYWO
 mybatis:
   mapper-locations: classpath:/mapper/*Mapper.xml
   type-aliases-package: com.lby.psychology.model
