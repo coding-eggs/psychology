@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.KeyPair;
 import java.security.interfaces.RSAPublicKey;
 
-@Api
+@Api(tags = "用户接口API")
 @Slf4j
 @RestController
 @RequestMapping("/user")

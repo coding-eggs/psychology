@@ -10,7 +10,6 @@ import lombok.Data;
  * psyc_question
  * @author
  */
-@ApiModel(value="com.lby.psychology.model.pojo.PsycQuestion人际关系问题表")
 @Data
 public class PsycQuestion implements Serializable {
     /**

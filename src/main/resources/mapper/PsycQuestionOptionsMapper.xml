@@ -40,7 +40,7 @@
     from psyc_question_options qo left join psyc_question q on qo.option_id = q.id
     where option_id = #{optionId}
   </select>
-    <select id="selectOptionByQuestionId" resultType="com.lby.psychology.model.pojo.PsycQuestionOptions">
+    <select id="selectOptionByQuestionId" resultType="com.lby.psychology.model.vo.PsycQuestionOptionsVo">
       select option_id, question_id, option_code, option_score, option_name, create_date, update_date
       from psyc_question_options where question_id = #{questionId}
     </select>

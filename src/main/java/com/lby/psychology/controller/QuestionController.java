@@ -6,12 +6,14 @@ import com.lby.psychology.model.common.PageResult;
 import com.lby.psychology.model.pojo.PsycQuestion;
 import com.lby.psychology.model.vo.PsycQuestionVo;
 import com.lby.psychology.service.IQuestionService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Api(tags = "问题接口API")
 @RestController
 @RequestMapping("/question")
 public class QuestionController {

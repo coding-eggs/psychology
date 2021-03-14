@@ -38,7 +38,7 @@
 <body>
 
 <!-- Main Wrapper -->
-<div class="main-wrapper" id="scale">
+<div class="main-wrapper" id="examination">
 
     <!-- Header -->
     <div class="header">
@@ -205,7 +205,7 @@
                         </el-form-item>
 
                         <el-form-item>
-                            <el-button type="primary" >开始答题</el-button>
+                            <el-button type="primary" v-on:click="skipDetail">开始答题</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -242,8 +242,8 @@
 <script>
     let storage = new Storage();
 
-    var scale = new Vue({
-        el: '#scale',
+    var examination = new Vue({
+        el: '#examination',
         data: {
             //初始页
             userinfo: '',
@@ -281,10 +281,15 @@
                     {"id":30,"typeName":"就业"},
                     {"id":40,"typeName":"情感"}
                 ]
+            },
+            skipDetail(){
+                if(this.form.scaleId!==null){
+                    window.open("/examination-detail.html?scaleId="+this.form.scaleId)
+                }
             }
         },
         created(){
-            this.getQuestionList(this.pageNum,this.pageSize,false)
+
         },
         mounted() {
             this.typeList = this.loadType();

@@ -6,12 +6,14 @@ import com.lby.psychology.model.common.PageResult;
 import com.lby.psychology.model.pojo.PsycScale;
 import com.lby.psychology.model.vo.PsycQuestionDetailVo;
 import com.lby.psychology.service.IScaleService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Api(tags = "量表接口API")
 @RestController
 @RequestMapping("/scale")
 public class ScaleController {

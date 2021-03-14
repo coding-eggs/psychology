@@ -6,11 +6,13 @@ import com.lby.psychology.model.common.PageResult;
 import com.lby.psychology.model.pojo.PsycQuestionOptions;
 import com.lby.psychology.model.vo.PsycQuestionOptionsVo;
 import com.lby.psychology.service.IOptionService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Api(tags = "选项接口API")
 @RestController
 @RequestMapping("/option")
 public class OptionController {

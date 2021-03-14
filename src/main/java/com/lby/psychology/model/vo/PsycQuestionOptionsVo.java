@@ -15,5 +15,8 @@ public class PsycQuestionOptionsVo extends PsycQuestionOptions {
     @ApiModelProperty(value="问题描述")
     private String questionName;
 
+    @ApiModelProperty(value = "是否被选中")
+    private Boolean check;
+
 
 }

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lby.psychology.mapper.PsycExamRecordMapper">
+  <resultMap id="BaseResultMap" type="com.lby.psychology.model.pojo.PsycExamRecord">
+    <id column="record_id" jdbcType="BIGINT" property="recordId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="scale_id" jdbcType="INTEGER" property="scaleId" />
+    <result column="use_time" jdbcType="TIMESTAMP" property="useTime" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.lby.psychology.model.pojo.PsycExamRecord">
+    <result column="record_content" jdbcType="BLOB" property="recordContent" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    record_id, user_id, scale_id, use_time, create_date, update_date
+  </sql>
+  <sql id="Blob_Column_List">
+    record_content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from psyc_exam_record
+    where record_id = #{recordId,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from psyc_exam_record
+    where record_id = #{recordId,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" keyColumn="record_id" keyProperty="recordId" parameterType="com.lby.psychology.model.pojo.PsycExamRecord" useGeneratedKeys="true">
+    insert into psyc_exam_record (user_id, scale_id, use_time, 
+      create_date, update_date, record_content
+      )
+    values (#{userId,jdbcType=INTEGER}, #{scaleId,jdbcType=INTEGER}, #{useTime,jdbcType=TIMESTAMP}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{recordContent,jdbcType=BLOB}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="record_id" keyProperty="recordId" parameterType="com.lby.psychology.model.pojo.PsycExamRecord" useGeneratedKeys="true">
+    insert into psyc_exam_record
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="scaleId != null">
+        scale_id,
+      </if>
+      <if test="useTime != null">
+        use_time,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="recordContent != null">
+        record_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="scaleId != null">
+        #{scaleId,jdbcType=INTEGER},
+      </if>
+      <if test="useTime != null">
+        #{useTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recordContent != null">
+        #{recordContent,jdbcType=BLOB},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycExamRecord">
+    update psyc_exam_record
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="scaleId != null">
+        scale_id = #{scaleId,jdbcType=INTEGER},
+      </if>
+      <if test="useTime != null">
+        use_time = #{useTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recordContent != null">
+        record_content = #{recordContent,jdbcType=BLOB},
+      </if>
+    </set>
+    where record_id = #{recordId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.lby.psychology.model.pojo.PsycExamRecord">
+    update psyc_exam_record
+    set user_id = #{userId,jdbcType=INTEGER},
+      scale_id = #{scaleId,jdbcType=INTEGER},
+      use_time = #{useTime,jdbcType=TIMESTAMP},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      record_content = #{recordContent,jdbcType=BLOB}
+    where record_id = #{recordId,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.lby.psychology.model.pojo.PsycExamRecord">
+    update psyc_exam_record
+    set user_id = #{userId,jdbcType=INTEGER},
+      scale_id = #{scaleId,jdbcType=INTEGER},
+      use_time = #{useTime,jdbcType=TIMESTAMP},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where record_id = #{recordId,jdbcType=BIGINT}
+  </update>
+</mapper>

@@ -19,14 +19,21 @@ public class PsycQuestionVo extends PsycQuestion {
     @ApiModelProperty(value="量表id")
     private Integer scaleId;
 
+    @ApiModelProperty("量表描述")
     private String scaleName;
 
+    @ApiModelProperty(value = "量表类型")
     private Integer scaleType;
 
+    @ApiModelProperty(value = "量表类型描述")
     private String scaleTypeName;
 
+    @ApiModelProperty(value = "维度名称")
     private String dimensionName;
 
-    private List<PsycQuestionOptions> optionList;
+    @ApiModelProperty(value = "是否做过")
+    private boolean done;
+
+    private List<PsycQuestionOptionsVo> optionList;
 
 }

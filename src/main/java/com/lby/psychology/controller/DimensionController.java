@@ -1,6 +1,5 @@
 package com.lby.psychology.controller;
 
-import com.lby.psychology.mapper.PsycQuestionOptionsMapper;
 import com.lby.psychology.model.ResponseData;
 import com.lby.psychology.model.co.PsycDimensionCo;
 import com.lby.psychology.model.common.PageResult;
@@ -9,6 +8,7 @@ import com.lby.psychology.model.pojo.PsycScale;
 import com.lby.psychology.model.vo.PsycDimensionVo;
 import com.lby.psychology.model.vo.PsycQuestionDetailVo;
 import com.lby.psychology.service.IDimensionService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
+@Api(tags = "维度接口API")
 @RestController
 @RequestMapping("/dimension")
 public class DimensionController {

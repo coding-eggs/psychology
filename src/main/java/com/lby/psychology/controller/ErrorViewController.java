@@ -1,10 +1,12 @@
 package com.lby.psychology.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+@Api(tags = "异常页面路由")
 @RestController
 public class ErrorViewController {
 
