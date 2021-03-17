@@ -240,21 +240,21 @@
 	let storage = new Storage();
 	var editcustomer = new Vue({
 		el: '#editcustomer',
-		data: {
-			//初始页
-			activePage: '/customers.html',
-			userinfo: '',
-			basicUser: {
-				nickname: '',
-				email: '',
-				sexName:'',
-				sex: null,
-				userStatus:null,
-				userStatusName:'',
-				birthDate:'',
-				figureUrl:'',
-
-
+		data() {
+			return {
+				//初始页
+				activePage: '/customers.html',
+				userinfo: '',
+				basicUser: {
+					nickname: '',
+					email: '',
+					sexName:'',
+					sex: null,
+					userStatus:null,
+					userStatusName:'',
+					birthDate:'',
+					figureUrl:'',
+				}
 			}
 		},
 		methods: {

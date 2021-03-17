@@ -268,21 +268,22 @@
 
 	var scale = new Vue({
 		el: '#scale',
-		data: {
-			//初始页
-			userinfo: '',
-			activePage: '/scale.html',
-			scaleList: [],
-			pageNum: 1,
-			totalSize: 0,
-			pageSize: 10,
-			pageSizes: [2,3,5,10,20,50,100],
-			typeList:[],
-			form:{
-				scaleType: null,
-			},
-			loading: false
-
+		data() {
+			return {
+				//初始页
+				userinfo: '',
+				activePage: '/scale.html',
+				scaleList: [],
+				pageNum: 1,
+				totalSize: 0,
+				pageSize: 10,
+				pageSizes: [2,3,5,10,20,50,100],
+				typeList:[],
+				form:{
+					scaleType: null,
+				},
+				loading: false
+			}
 		},
 		methods: {
 			getUserInfo() {

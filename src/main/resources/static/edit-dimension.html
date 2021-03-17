@@ -236,35 +236,37 @@
 
     var editdimension = new Vue({
         el: '#editdimension',
-        data: {
-            //初始页
-            userinfo: '',
-            typeList:[],
-            scaleList:[],
-            activePage: '/dimension.html',
-            form:{
-                dimensionId: null,
-                scaleId: null,
-                dimensionName: "",
-                dimensionCode: "",
-                scaleType: null,
-                scaleName: ''
-            },
-            rules:{
-                dimensionName:[
-                    {required: true,message:"请输维度描述",trigger: 'blur'},
-                    {min: 1,max: 100,message: '长度 1 到 100 个字符',trigger: 'blur'},
-                ],
-                dimensionCode:[
-                    {required: true,message:"请输入维度编码",trigger: 'blur'},
-                    {min: 1,max: 20,message: '长度 1 到 20 个字符',trigger: 'blur'},
-                ],
-                scaleType:[
-                    {required: true,message:"请输选择大类",trigger: 'blur'},
-                ],
-                scaleId: [
-                    {required: true,message:"请选择量表",trigger: 'blur'},
-                ]
+        data() {
+            return {
+                //初始页
+                userinfo: '',
+                typeList:[],
+                scaleList:[],
+                activePage: '/dimension.html',
+                form:{
+                    dimensionId: null,
+                    scaleId: null,
+                    dimensionName: "",
+                    dimensionCode: "",
+                    scaleType: null,
+                    scaleName: ''
+                },
+                rules:{
+                    dimensionName:[
+                        {required: true,message:"请输维度描述",trigger: 'blur'},
+                        {min: 1,max: 100,message: '长度 1 到 100 个字符',trigger: 'blur'},
+                    ],
+                    dimensionCode:[
+                        {required: true,message:"请输入维度编码",trigger: 'blur'},
+                        {min: 1,max: 20,message: '长度 1 到 20 个字符',trigger: 'blur'},
+                    ],
+                    scaleType:[
+                        {required: true,message:"请输选择大类",trigger: 'blur'},
+                    ],
+                    scaleId: [
+                        {required: true,message:"请选择量表",trigger: 'blur'},
+                    ]
+                }
             }
         },
         methods: {

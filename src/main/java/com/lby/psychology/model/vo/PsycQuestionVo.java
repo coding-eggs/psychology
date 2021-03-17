@@ -34,6 +34,13 @@ public class PsycQuestionVo extends PsycQuestion {
     @ApiModelProperty(value = "是否做过")
     private boolean done;
 
+    /**
+     * 选项编码
+     */
+    @ApiModelProperty(value="选项编码")
+    private String optionCode;
+
+
     private List<PsycQuestionOptionsVo> optionList;
 
 }

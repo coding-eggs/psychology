@@ -48,7 +48,7 @@
             margin-left: 5%;
             margin-top: 10px;
             text-align: center;
-            line-height: 200px;
+            width: 20%;
         }
 
         .el-main {
@@ -56,7 +56,6 @@
             color: #333;
             margin-top: 10px;
             margin-right: 5%;
-            text-align: center;
             line-height: 100%;
         }
 
@@ -87,7 +86,7 @@
             margin-bottom: 10px;
             padding: 0px;
         }
-        .bs-glyphicons li {
+        .bs-glyphicons li a{
             float: left;
             width: 50px;
             height: 50px;
@@ -96,17 +95,25 @@
             line-height: 1.4;
             text-align: center;
             background-color: #f9f9f9;
-            border: 3px solid rgb(239,236,236);
+            border: 3px solid #f9f9f9;
             display: list-item;
             text-align: -webkit-match-parent;
         }
-        .bs-glyphicons li:hover {
+        .bs-glyphicons li a:hover {
             background-color: #b8adad;
         }
         .bs-glyphicons .glyphicon-class {
             display: block;
             text-align: center;
             word-wrap: break-word;
+        }
+        .el-container:nth-child(5) .el-aside,
+        .el-container:nth-child(6) .el-aside {
+            line-height: 260px;
+        }
+
+        .el-container:nth-child(7) .el-aside {
+            line-height: 320px;
         }
 
     </style>
@@ -117,31 +124,33 @@
 <div class="main-wrapper" id="examinationdetail">
 
     <div>
+
         <el-container>
             <el-container>
-                <el-aside width="20%" style="background-color: #efeeee">
-                    <h4 style="margin-top: 20px">{{this.scaleName}}</h4>
-                    <span>答题人：{{this.nickname}}</span>
+                <el-aside >
+                    <h5 style="margin-top: 20px"><strong>{{this.scaleName}}</strong></h5>
+                    <h6 style="margin-top: 20px;margin-bottom: 20px"><span>答题人：{{this.nickname}}</span> <span style="margin-left: 10px">耗时：{{form.time}}</span></h6>
                     <div class="bs-glyphicons">
                         <ul class="bs-glyphicons-list">
-                            <li v-for="(item,index) in questionList"><span class="glyphicon-class">{{index+1}}</span></li>
+                            <li v-for="(item,index) in form.questionList" ><span class="glyphicon-class"><a :href="'#'+index" :id="'index'+index">{{index+1}}</a></span></li>
                         </ul>
                     </div>
-                    <button type="button" class="btn btn-primary">提交答案</button>
+                    <button type="button" class="btn btn-primary" v-on:click="onSubmit">提交答案</button>
                 </el-aside>
-                <el-main style="background-color: #efeeee">
-                    <ul>
-                        <li v-for="item in questionList">
-                            <div>{{item.questionName}}</div>
-                            <ul>
-                                <li v-for="op in item.optionList">
-                                    <label class="form-check-label">{{op.optionCode}}.{{op.optionName}}</label>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                <el-main>
+                    <el-form ref="form" :model="form">
+                        <el-form-item v-for="(item ,index) in form.questionList" :key="index" :id="index">
+                            <h5>{{index+1}}.{{item.questionName}}</h5>
+                            <el-radio-group v-model="form.questionList[index].optionCode">
+                                <el-radio v-for="op in item.optionList" :label="op.optionCode" @change="selectRadio(index)">{{op.optionCode}}. {{op.optionName}}</el-radio>
+                            </el-radio-group>
+                            <hr/>
+                        </el-form-item>
+                    </el-form>
+
                 </el-main>
             </el-container>
+            <el-footer>版权所有：lby Copyright © 2021 lby.</el-footer>
         </el-container>
     </div>
 
@@ -176,18 +185,23 @@
 
     var examinationdetail = new Vue({
         el: '#examinationdetail',
-        data: {
-            //初始页
-            userinfo: '',
-            scaleName: '',
-            nickname: '',
-            questionList: [],
-            activePage: '/examination.html',
-            form:{
-
-            },
-            loading: false
-
+        data(){
+            return {
+                //初始页
+                userinfo: '',
+                hour: 0,
+                minute: 0,
+                ms: 0,
+                second: 0,
+                scaleName: '',
+                nickname: '',
+                activePage: '/examination.html',
+                form:{
+                    time:"",
+                    questionList: [],
+                },
+                loading: false
+            }
         },
         methods: {
             getUserInfo() {
@@ -196,7 +210,33 @@
                 });
             },
             onSubmit(){
-
+                console.log(this.form.questionList)
+            },
+            timeStart(){
+                setInterval(this.timer,50)
+            },
+            timer(){
+                this.ms = this.ms + 50 //毫秒
+                if(this.ms >= 1000){
+                    this.ms=0
+                    this.second = this.second + 1
+                }
+                if(this.second >=60){
+                    this.second = 0;
+                    this.minute = this.minute + 1
+                }
+                if(this.minute >= 60){
+                    this.minute = 0
+                    this.hour = this.hour +1
+                }
+                this.form.time = this.toDub(this.hour)+":"+this.toDub(this.minute)+":"+this.toDub(this.second)
+            },
+            toDub(n){
+                if(n<10){
+                    return '0'+n
+                }else{
+                    return ""+n
+                }
             },
             async getScaleDetail() {
                 var scaleId = getParam("scaleId");
@@ -205,18 +245,23 @@
                     method: "get",
                     url: "/exam/getExamDetail?scaleId=" + scaleId,
                 }).then(res => {
-                    this.questionList = res.data.questionList;
+                    this.form.questionList = res.data.questionList;
                     this.scaleName = res.data.scaleName;
                     this.nickname = res.data.nickname;
                 }).finally(() => {
                     this.loading = false
                 })
+            },
+            selectRadio(index){
+                var ele = "index"+index;
+                document.getElementById(ele).style.background='#b8adad';
             }
         },
         created(){
 
         },
         mounted() {
+            this.timeStart();
             this.getScaleDetail();
             initMenu(storage.getItem("routeMap"),this.activePage)
             intThisPoint(this);

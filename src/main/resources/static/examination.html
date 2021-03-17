@@ -244,18 +244,19 @@
 
     var examination = new Vue({
         el: '#examination',
-        data: {
-            //初始页
-            userinfo: '',
-            typeList:[],
-            scaleList:[],
-            activePage: '/examination.html',
-            form:{
-                scaleType: null,
-                scaleId: null
-            },
-            loading: false
-
+        data() {
+            return {
+                //初始页
+                userinfo: '',
+                typeList:[],
+                scaleList:[],
+                activePage: '/examination.html',
+                form:{
+                    scaleType: null,
+                    scaleId: null
+                },
+                loading: false
+            }
         },
         methods: {
             getUserInfo() {

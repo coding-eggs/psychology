@@ -604,9 +604,11 @@
 	let storage = new Storage();
 	var index = new Vue({
 		el: '#app',
-		data: {
-			userinfo: '',
-			activePage: '/index.html'
+		data() {
+			return {
+				userinfo: '',
+				activePage: '/index.html'
+			}
 		},
 		methods:{
 			getUserInfo() {

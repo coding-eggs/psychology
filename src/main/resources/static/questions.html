@@ -347,26 +347,27 @@
 	let storage = new Storage();
 	var questions = new Vue({
 		el: '#questions',
-		data: {
-			//初始页
-			userinfo: '',
-			activePage: '/questions.html',
-			questionList: [],
-			typeList:[],
-			scaleList:[],
-			dimensionList:[],
-			pageNum: 1,
-			totalSize: 0,
-			pageSize: 10,
-			pageSizes: [2,3,5,10,20,50,100],
-			form:{
-				dimensionId: null,
-				scaleId: null,
-				scaleType: null,
-				questionName: ''
-			},
-			loading: false
-
+		data() {
+			return {
+				//初始页
+				userinfo: '',
+				activePage: '/questions.html',
+				questionList: [],
+				typeList:[],
+				scaleList:[],
+				dimensionList:[],
+				pageNum: 1,
+				totalSize: 0,
+				pageSize: 10,
+				pageSizes: [2,3,5,10,20,50,100],
+				form:{
+					dimensionId: null,
+					scaleId: null,
+					scaleType: null,
+					questionName: ''
+				},
+				loading: false
+			}
 		},
 		methods: {
 

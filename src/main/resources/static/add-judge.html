@@ -253,46 +253,47 @@
     let storage = new Storage();
     var addjudge = new Vue({
         el: '#addjudge',
-        data: {
-            //初始页
-            userinfo: '',
-            typeList:[],
-            scaleList:[],
-            dimensionList:[],
-            activePage: '/judge.html',
-            form:{
-                scaleType: null,
-                scaleId: null,
-                dimensionId: null,
-                judgeName:"",
-                startScore: null,
-                endScore:null,
-            },
-            rules:{
-                judgeName:[
-                    {required: true,message:"请输评判描述",trigger: 'blur'},
-                    {min: 1,max: 400,message: '长度 1 到 400 个字符',trigger: 'blur'},
-                ],
-                startScore:[
-                    {required: true,message:"请输入分数",trigger: 'blur'},
-                    {type:'number',min: 0,max: 999,message: '数字在 0 - 999 之间（只能输入数字）',trigger: 'blur'},
-                ],
-                endScore:[
-                    {required: true,message:"请输入分数",trigger: 'blur'},
-                    {type:'number',min: 0,max: 999,message: '数字在 0 - 999 之间（只能输入数字）',trigger: 'blur'},
-                ],
-                dimensionId:[
-                    {required: true,message:"请选择维度",trigger: 'blur'},
-                ],
-                scaleType:[
-                    {required: true,message:"请输选择大类",trigger: 'blur'},
-                ],
-                scaleId: [
-                    {required: true,message:"请选择量表",trigger: 'blur'},
+        data() {
+            return {
+                //初始页
+                userinfo: '',
+                typeList:[],
+                scaleList:[],
+                dimensionList:[],
+                activePage: '/judge.html',
+                form:{
+                    scaleType: null,
+                    scaleId: null,
+                    dimensionId: null,
+                    judgeName:"",
+                    startScore: null,
+                    endScore:null,
+                },
+                rules:{
+                    judgeName:[
+                        {required: true,message:"请输评判描述",trigger: 'blur'},
+                        {min: 1,max: 400,message: '长度 1 到 400 个字符',trigger: 'blur'},
+                    ],
+                    startScore:[
+                        {required: true,message:"请输入分数",trigger: 'blur'},
+                        {type:'number',min: 0,max: 999,message: '数字在 0 - 999 之间（只能输入数字）',trigger: 'blur'},
+                    ],
+                    endScore:[
+                        {required: true,message:"请输入分数",trigger: 'blur'},
+                        {type:'number',min: 0,max: 999,message: '数字在 0 - 999 之间（只能输入数字）',trigger: 'blur'},
+                    ],
+                    dimensionId:[
+                        {required: true,message:"请选择维度",trigger: 'blur'},
+                    ],
+                    scaleType:[
+                        {required: true,message:"请输选择大类",trigger: 'blur'},
+                    ],
+                    scaleId: [
+                        {required: true,message:"请选择量表",trigger: 'blur'},
 
-                ]
+                    ]
+                }
             }
-
         },
         methods: {
             getUserInfo() {

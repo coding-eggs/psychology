@@ -268,13 +268,15 @@
 
 	var scaledetail = new Vue({
 		el: '#scaledetail',
-		data: {
-			//初始页
-			userinfo: '',
-			scaleName: '',
-			activePage: '/scale.html',
-			questionDetailList: [],
-			loading: false
+		data() {
+			return {
+				//初始页
+				userinfo: '',
+				scaleName: '',
+				activePage: '/scale.html',
+				questionDetailList: [],
+				loading: false
+			}
 		},
 		methods: {
 			getUserInfo() {

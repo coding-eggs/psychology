@@ -317,27 +317,28 @@
 	let storage = new Storage();
 	var judge = new Vue({
 		el: '#judge',
-		data: {
-			//初始页
-			userinfo: '',
-			activePage: '/judge.html',
-			judgeList: [],
-			typeList:[],
-			scaleList:[],
-			dimensionList:[],
-			pageNum: 1,
-			totalSize: 0,
-			pageSize: 10,
-			pageSizes: [2,3,5,10,20,50,100],
-			form:{
-				dimensionId: null,
-				scaleId: null,
-				scaleType: null,
-				startScore: null,
-				endScore: null
-			},
-			loading: false
-
+		data() {
+			return {
+				//初始页
+				userinfo: '',
+				activePage: '/judge.html',
+				judgeList: [],
+				typeList:[],
+				scaleList:[],
+				dimensionList:[],
+				pageNum: 1,
+				totalSize: 0,
+				pageSize: 10,
+				pageSizes: [2,3,5,10,20,50,100],
+				form:{
+					dimensionId: null,
+					scaleId: null,
+					scaleType: null,
+					startScore: null,
+					endScore: null
+				},
+				loading: false
+			}
 		},
 		methods: {
 

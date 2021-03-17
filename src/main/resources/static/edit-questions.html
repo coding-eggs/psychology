@@ -239,37 +239,38 @@
     let storage = new Storage();
     var editquestion = new Vue({
         el: '#editquestion',
-        data: {
-            //初始页
-            userinfo: '',
-            typeList:[],
-            scaleList:[],
-            dimensionList:[],
-            activePage: '/questions.html',
-            form:{
-                id: null,
-                scaleType: null,
-                scaleId: null,
-                dimension: null,
-                questionName:"",
-            },
-            rules:{
-                questionName:[
-                    {required: true,message:"请输入问题描述",trigger: 'blur'},
-                    {min: 1,max: 100,message: '长度 1 到 100 个字符',trigger: 'blur'},
-                ],
-                dimension:[
-                    {required: true,message:"请选择维度",trigger: 'blur'},
-                ],
-                scaleType:[
-                    {required: true,message:"请输选择大类",trigger: 'blur'},
-                ],
-                scaleId: [
-                    {required: true,message:"请选择量表",trigger: 'blur'},
+        data() {
+            return {
+                //初始页
+                userinfo: '',
+                typeList:[],
+                scaleList:[],
+                dimensionList:[],
+                activePage: '/questions.html',
+                form:{
+                    id: null,
+                    scaleType: null,
+                    scaleId: null,
+                    dimension: null,
+                    questionName:"",
+                },
+                rules:{
+                    questionName:[
+                        {required: true,message:"请输入问题描述",trigger: 'blur'},
+                        {min: 1,max: 100,message: '长度 1 到 100 个字符',trigger: 'blur'},
+                    ],
+                    dimension:[
+                        {required: true,message:"请选择维度",trigger: 'blur'},
+                    ],
+                    scaleType:[
+                        {required: true,message:"请输选择大类",trigger: 'blur'},
+                    ],
+                    scaleId: [
+                        {required: true,message:"请选择量表",trigger: 'blur'},
 
-                ]
+                    ]
+                }
             }
-
         },
         methods: {
             getUserInfo() {

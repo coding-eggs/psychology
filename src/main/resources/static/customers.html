@@ -331,26 +331,27 @@
 	let storage = new Storage();
 	var customer = new Vue({
 		el: '#customer',
-		data: {
-			//初始页
-			userinfo: '',
-			activePage: '/customers.html',
-			userList: [],
-			pageNum: 1,
-			totalSize: 0,
-			pageSize: 10,
-			pageSizes: [2,3,5,10,20,50,100],
-			form:{
-				nickname: '',
-				email: '',
-				sex: '',
-				userStatus:'',
-				startCreateDate: null,
-				endCreateDate: null,
-				startLastUserLoginDate:null,
-				endLastUserLoginDate:null
+		data() {
+			return {
+				//初始页
+				userinfo: '',
+				activePage: '/customers.html',
+				userList: [],
+				pageNum: 1,
+				totalSize: 0,
+				pageSize: 10,
+				pageSizes: [2,3,5,10,20,50,100],
+				form:{
+					nickname: '',
+					email: '',
+					sex: '',
+					userStatus:'',
+					startCreateDate: null,
+					endCreateDate: null,
+					startLastUserLoginDate:null,
+					endLastUserLoginDate:null
+				}
 			}
-
 		},
 		methods: {
 

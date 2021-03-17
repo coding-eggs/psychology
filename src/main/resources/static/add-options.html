@@ -222,33 +222,34 @@
     let storage = new Storage();
     var addoption = new Vue({
         el: '#addoption',
-        data: {
-            //初始页
-            userinfo: '',
-            activePage: '/options.html',
-            keyword: "",
-            questionList: [],
-            form:{
-                questionId:"",
-                optionCode:"",
-                optionName:"",
-                optionScore: null,
-            },
-            rules:{
-                optionCode:[
-                    {required: true,message:"请输入选项编码,如： A,B,C",trigger: 'blur'},
-                    {min: 1,max: 5,message: '长度 1 到 5 个字符',trigger: 'blur'},
-                ],
-                optionName:[
-                    {required: true,message:"请输入选项描述",trigger: 'blur'},
-                    {min: 1,max: 100,message: '长度 1 到 100 个字符',trigger: 'blur'},
-                ],
-                optionScore:[
-                    {required: true,message:"请输入选项分数",trigger: 'blur'},
-                    {type:'number',min: 0,max: 999,message: '数字在 0 - 999 之间（只能输入数字）',trigger: 'blur'},
-                ]
+        data() {
+            return {
+                //初始页
+                userinfo: '',
+                activePage: '/options.html',
+                keyword: "",
+                questionList: [],
+                form:{
+                    questionId:"",
+                    optionCode:"",
+                    optionName:"",
+                    optionScore: null,
+                },
+                rules:{
+                    optionCode:[
+                        {required: true,message:"请输入选项编码,如： A,B,C",trigger: 'blur'},
+                        {min: 1,max: 5,message: '长度 1 到 5 个字符',trigger: 'blur'},
+                    ],
+                    optionName:[
+                        {required: true,message:"请输入选项描述",trigger: 'blur'},
+                        {min: 1,max: 100,message: '长度 1 到 100 个字符',trigger: 'blur'},
+                    ],
+                    optionScore:[
+                        {required: true,message:"请输入选项分数",trigger: 'blur'},
+                        {type:'number',min: 0,max: 999,message: '数字在 0 - 999 之间（只能输入数字）',trigger: 'blur'},
+                    ]
+                }
             }
-
         },
         methods: {
             getUserInfo() {

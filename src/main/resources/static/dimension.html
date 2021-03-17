@@ -316,24 +316,26 @@
     let storage = new Storage();
     var dimension = new Vue({
         el: '#dimension',
-        data: {
-            //初始页
-            typeList:[],
-            userinfo: '',
-            activePage: '/dimension.html',
-            dimensionList: [],
-            scaleList: [],
-            pageNum: 1,
-            totalSize: 0,
-            pageSize: 10,
-            pageSizes: [2,3,5,10,20,50,100],
-            form:{
-                scaleId: null,
-                scaleType: null,
-                dimensionName: ''
-            },
-            loading: false,
+        data() {
+            return {
+                //初始页
+                typeList:[],
+                userinfo: '',
+                activePage: '/dimension.html',
+                dimensionList: [],
+                scaleList: [],
+                pageNum: 1,
+                totalSize: 0,
+                pageSize: 10,
+                pageSizes: [2,3,5,10,20,50,100],
+                form:{
+                    scaleId: null,
+                    scaleType: null,
+                    dimensionName: ''
+                },
+                loading: false,
 
+            }
         },
         methods: {
 

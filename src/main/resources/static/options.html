@@ -285,22 +285,23 @@
 	let storage = new Storage();
 	var options = new Vue({
 		el: '#options',
-		data: {
-			//初始页
-			userinfo: '',
-			activePage: '/options.html',
-			optionList: [],
-			pageNum: 1,
-			totalSize: 0,
-			pageSize: 10,
-			pageSizes: [2,3,5,10,20,50,100],
-			form:{
-				questionName: '',
-				optionCode: '',
-				optionName: ''
-			},
-			loading: false,
-
+		data() {
+			return {
+				//初始页
+				userinfo: '',
+				activePage: '/options.html',
+				optionList: [],
+				pageNum: 1,
+				totalSize: 0,
+				pageSize: 10,
+				pageSizes: [2,3,5,10,20,50,100],
+				form:{
+					questionName: '',
+					optionCode: '',
+					optionName: ''
+				},
+				loading: false,
+			}
 		},
 		methods: {
 

@@ -206,23 +206,24 @@
     let storage = new Storage();
     var editscale = new Vue({
         el: '#editscale',
-        data: {
-            //初始页
-            userinfo: '',
-            activePage: '/scale.html',
-            typeList: [],
-            form:{
-                scaleId: null,
-                scaleType: null,
-                scaleName: ''
-            },
-            rules:{
-                scaleName:[
-                    {required: true,message:"请输入量表描述",trigger: 'blur'},
-                    {min: 1,max: 100,message: '长度 1 到 100 个字符',trigger: 'blur'},
-                ],
+        data() {
+            return {
+                //初始页
+                userinfo: '',
+                activePage: '/scale.html',
+                typeList: [],
+                form:{
+                    scaleId: null,
+                    scaleType: null,
+                    scaleName: ''
+                },
+                rules:{
+                    scaleName:[
+                        {required: true,message:"请输入量表描述",trigger: 'blur'},
+                        {min: 1,max: 100,message: '长度 1 到 100 个字符',trigger: 'blur'},
+                    ],
+                }
             }
-
         },
         methods: {
             getUserInfo() {
