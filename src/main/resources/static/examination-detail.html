@@ -36,14 +36,12 @@
     <![endif]-->
     <style>
         .el-header, .el-footer {
-            background-color: #B3C0D1;
             color: #333;
             text-align: center;
             line-height: 60px;
         }
 
         .el-aside {
-            background-color: #D3DCE6;
             color: #333;
             border-radius: 10px;
             margin-right: 5%;
@@ -54,7 +52,6 @@
         }
 
         .el-main {
-            background-color: #E9EEF3;
             border-radius: 10px;
             color: #333;
             margin-top: 10px;
@@ -67,14 +64,51 @@
             margin-bottom: 40px;
         }
 
-        .el-container:nth-child(5) .el-aside,
-        .el-container:nth-child(6) .el-aside {
-            line-height: 100%;
+
+        .bs-glyphicons {
+            margin-left: 20px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .bs-glyphicons-list {
+            padding-left: 0;
+            list-style: none;
         }
 
-        .el-container:nth-child(7) .el-aside {
-            line-height: 100%;
+        .bs-glyphicons ul {
+            display: block;
+            list-style-type: disc;
+            margin-block-start: 1em;
+            margin-block-end: 1em;
+            margin-inline-start: 0px;
+            margin-inline-end: 0px;
+            padding-inline-start: 40px;
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding: 0px;
         }
+        .bs-glyphicons li {
+            float: left;
+            width: 50px;
+            height: 50px;
+            padding: 10px;
+            font-size: 20px;
+            line-height: 1.4;
+            text-align: center;
+            background-color: #f9f9f9;
+            border: 3px solid rgb(239,236,236);
+            display: list-item;
+            text-align: -webkit-match-parent;
+        }
+        .bs-glyphicons li:hover {
+            background-color: #b8adad;
+        }
+        .bs-glyphicons .glyphicon-class {
+            display: block;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
     </style>
 </head>
 <body>
@@ -85,10 +119,28 @@
     <div>
         <el-container>
             <el-container>
-                <el-aside width="20%">
-                    
+                <el-aside width="20%" style="background-color: #efeeee">
+                    <h4 style="margin-top: 20px">{{this.scaleName}}</h4>
+                    <span>答题人：{{this.nickname}}</span>
+                    <div class="bs-glyphicons">
+                        <ul class="bs-glyphicons-list">
+                            <li v-for="(item,index) in questionList"><span class="glyphicon-class">{{index+1}}</span></li>
+                        </ul>
+                    </div>
+                    <button type="button" class="btn btn-primary">提交答案</button>
                 </el-aside>
-                <el-main></el-main>
+                <el-main style="background-color: #efeeee">
+                    <ul>
+                        <li v-for="item in questionList">
+                            <div>{{item.questionName}}</div>
+                            <ul>
+                                <li v-for="op in item.optionList">
+                                    <label class="form-check-label">{{op.optionCode}}.{{op.optionName}}</label>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </el-main>
             </el-container>
         </el-container>
     </div>
@@ -128,7 +180,8 @@
             //初始页
             userinfo: '',
             scaleName: '',
-            username: '',
+            nickname: '',
+            questionList: [],
             activePage: '/examination.html',
             form:{
 
@@ -154,7 +207,7 @@
                 }).then(res => {
                     this.questionList = res.data.questionList;
                     this.scaleName = res.data.scaleName;
-                    this.username = res.data.username;
+                    this.nickname = res.data.nickname;
                 }).finally(() => {
                     this.loading = false
                 })

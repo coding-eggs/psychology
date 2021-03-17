@@ -32,7 +32,7 @@ public class ExaminationController {
         List<PsycQuestionVo> questionVoList = examinationService.getExamDetail(scaleId);
         psycExamVo.setQuestionList(questionVoList);
         psycExamVo.setScaleName(questionVoList.get(0).getScaleName());
-        psycExamVo.setUsername(securityPsycUser.getUsername());
+        psycExamVo.setNickname(securityPsycUser.getNickname());
         return new ResponseData<>(psycExamVo);
     }
 

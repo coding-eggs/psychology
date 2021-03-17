@@ -8,8 +8,8 @@ import java.util.List;
 @Data
 public class PsycExamVo {
 
-    @ApiModelProperty(value = "用户名")
-    private String username;
+    @ApiModelProperty(value = "昵称")
+    private String nickname;
 
     @ApiModelProperty("量表名称")
     private String scaleName;

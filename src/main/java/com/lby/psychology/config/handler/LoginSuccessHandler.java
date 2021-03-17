@@ -56,7 +56,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         if(ObjectUtils.isEmpty(defaultSavedRequest)||"/".equals(defaultSavedRequest.getRequestURI())){
             map.put("requestURI","/index.html");
         }else{
-            map.put("requestURI",defaultSavedRequest.getRequestURI());
+            map.put("requestURI",defaultSavedRequest.getRequestURI()+"?"+defaultSavedRequest.getQueryString());
         }
         //获取该用户可访问得菜单权限
         List<RolePermissionVo> permissionVoList = roleMapper.selectRolePermission(securityPsycUser.getAuthorities().stream().map(PsycRole::getRoleId).collect(Collectors.toList()), EnumPermissionType.PAGE.getId());

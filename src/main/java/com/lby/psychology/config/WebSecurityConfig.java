@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
@@ -26,6 +27,7 @@ import javax.sql.DataSource;
 import java.security.KeyPair;
 
 @Configuration
+@EnableWebSecurity(debug = false)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${spring.security.remember.timeout}")
@@ -67,7 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
     * 记住我功能会将token存储在数据库，自动
-    * @author myk
+    * @author lby
     * @date 2021/1/25 9:25
     * @return org.springframework.security.web.authentication.rememberme.PersistentTokenRepository
     */
