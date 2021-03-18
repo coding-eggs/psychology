@@ -8,7 +8,7 @@ import lombok.Data;
 
 /**
  * psyc_question_dimension
- * @author 
+ * @author
  */
 @ApiModel(value="com.lby.psychology.model.pojo.PsycQuestionDimension维度表")
 @Data

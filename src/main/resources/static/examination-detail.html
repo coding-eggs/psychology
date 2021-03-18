@@ -35,35 +35,18 @@
     <script src="assets/js/respond.min.js"></script>
     <![endif]-->
     <style>
-        .el-header, .el-footer {
-            color: #333;
-            text-align: center;
-            line-height: 60px;
-        }
 
-        .el-aside {
-            color: #333;
-            border-radius: 10px;
-            margin-right: 5%;
+        .left{
             margin-left: 5%;
-            margin-top: 10px;
-            text-align: center;
-            width: 20%;
-        }
-
-        .el-main {
+            margin-top: 20px;
             border-radius: 10px;
-            color: #333;
-            margin-top: 10px;
-            margin-right: 5%;
-            line-height: 100%;
         }
-
-        body > .el-container {
-            margin-bottom: 40px;
+        .right{
+            margin-left: 5%;
+            margin-top: 20px;
+            margin-right: 20px;
+            border-radius: 10px;
         }
-
-
         .bs-glyphicons {
             margin-left: 20px;
             margin-bottom: 20px;
@@ -107,14 +90,6 @@
             text-align: center;
             word-wrap: break-word;
         }
-        .el-container:nth-child(5) .el-aside,
-        .el-container:nth-child(6) .el-aside {
-            line-height: 260px;
-        }
-
-        .el-container:nth-child(7) .el-aside {
-            line-height: 320px;
-        }
 
     </style>
 </head>
@@ -122,37 +97,40 @@
 
 <!-- Main Wrapper -->
 <div class="main-wrapper" id="examinationdetail">
-
     <div>
-        <el-container>
-            <el-container>
-                <el-aside >
-                    <h5 style="margin-top: 20px"><strong>{{this.scaleName}}</strong></h5>
-                    <h6 style="margin-top: 20px;margin-bottom: 20px"><span>答题人：{{this.nickname}}</span> <span style="margin-left: 10px">耗时：{{form.time}}</span></h6>
+        <div class="row">
+            <div class="col-md-3 left navbar-expand-lg navbar-light" >
+                <button class="navbar-toggler" type="button"  data-toggle="collapse" data-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div id="navbarNav" class="collapse navbar-collapse">
+                    <div>
+                        <h5 class="navbar-nav" style="margin-top: 20px"><strong>{{this.scaleName}}</strong></h5>
+                        <h6 class="navbar-nav" style="margin-top: 20px;margin-bottom: 20px"><span>答题人：{{this.nickname}}</span> <span style="margin-left: 10px">耗时：{{form.time}}</span></h6>
+                    </div>
                     <div class="bs-glyphicons">
-                        <ul class="bs-glyphicons-list">
-                            <li v-for="(item,index) in form.questionList" ><span class="glyphicon-class"><a :href="'#'+index" :id="'index'+index">{{index+1}}</a></span></li>
+
+                        <ul class="bs-glyphicons-list navbar-nav">
+                            <li class="nav-item" v-for="(item,index) in form.questionList" :key="index"><span class="glyphicon-class"><a :href="'#'+index" :id="'index'+index">{{index+1}}</a></span></li>
                         </ul>
                     </div>
-                    <button type="button" class="btn btn-primary" v-on:click="onSubmit">提交答案</button>
-                </el-aside>
-                <el-main>
-                    <el-form ref="form" :model="form">
-                        <el-form-item v-for="(item ,index) in form.questionList" :key="index" :id="index">
-                            <h5>{{index+1}}.{{item.questionName}}</h5>
-                            <el-radio-group v-model="form.questionList[index].optionCode">
-                                <el-radio v-for="op in item.optionList" :label="op.optionCode" @change="selectRadio(index)">{{op.optionCode}}. {{op.optionName}}</el-radio>
-                            </el-radio-group>
-                            <hr/>
-                        </el-form-item>
-                    </el-form>
-
-                </el-main>
-            </el-container>
-            <el-footer>版权所有：lby Copyright © 2021 lby.</el-footer>
-        </el-container>
+                </div>
+            </div>
+            <div class="col-md-7 right" >
+                <el-form ref="form" :model="form">
+                    <el-form-item v-for="(item ,index) in form.questionList" :key="index" :id="index">
+                        <h5>{{index+1}}.{{item.questionName}}</h5>
+                        <el-radio-group v-model="form.questionList[index].optionCode">
+                            <el-radio v-for="op in item.optionList" :label="op.optionCode" @change="selectRadio(index)">{{op.optionCode}}. {{op.optionName}}</el-radio>
+                        </el-radio-group>
+                        <hr/>
+                    </el-form-item>
+                </el-form>
+            </div>
+        </div>
     </div>
 
+<!--        <el-footer>版权所有：lby Copyright © 2021 lby.</el-footer>-->
 
 </div>
 <!-- /Main Wrapper -->
