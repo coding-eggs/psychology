@@ -21,7 +21,10 @@
         select scale_id, scale_name, scale_type, create_date, update_date
         from psyc_scale where scale_type = #{type}
     </select>
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <select id="selectDimensionIdByScaleId" resultType="java.lang.Integer">
+    select dimension_id from psyc_question_dimension where scale_id = #{scaleId}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from psyc_scale
     where scale_id = #{scaleId,jdbcType=INTEGER}
   </delete>

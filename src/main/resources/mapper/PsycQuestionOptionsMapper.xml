@@ -48,7 +48,10 @@
     delete from psyc_question_options
     where option_id = #{optionId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" keyColumn="option_id" keyProperty="optionId" parameterType="com.lby.psychology.model.pojo.PsycQuestionOptions" useGeneratedKeys="true">
+    <delete id="deleteOptionByQuestionId">
+      delete from psyc_question_options where question_id = #{questionId}
+    </delete>
+    <insert id="insert" keyColumn="option_id" keyProperty="optionId" parameterType="com.lby.psychology.model.pojo.PsycQuestionOptions" useGeneratedKeys="true">
     insert into psyc_question_options (question_id, option_code, option_score,
       option_name, create_date, update_date
       )

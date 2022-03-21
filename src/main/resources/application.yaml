@@ -1,14 +1,18 @@
 server:
-  port: 9528
-  ssl:
-    key-store: classpath:ailuoli.cn.jks
-    key-store-password: i12yn725y20q
-    key-store-type: JKS
-    enabled: true
+  port: 9527
+#  ssl:
+#    key-store: classpath:ailuoli.cn.jks
+#    key-store-password: i12yn725y20q
+#    key-store-type: JKS
+#    enabled: true
 
 knife4j:
   enable: true
 spring:
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 100MB
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://120.53.234.127:1234/psychology?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false&serverTimezone=GMT%2B8&allowPublicKeyRetrieval=true
@@ -18,7 +22,7 @@ spring:
       minimum-idle: 3
       maximum-pool-size: 10
       # 默认 800
-      max-lifetime: 18000000
+      max-lifetime: 43200
       connection-test-query: SELECT 1
   redis:
     port: 1235
@@ -44,11 +48,19 @@ spring:
     remember:
       # 两周
       timeout: "1209600"
+
+  activiti:
+    database-schema-update: true
+    db-history-used: true
+    history-level: full
+    check-process-definitions: true
+    process-definition-location-prefix: classpath:/bpmn/
 minio:
-  endpoint: https://ailuoli.cn:9000
-  domain: https://ailuoli.cn:9000
-  accessKey: a0/v2tunfHEfdgx78hXKPgldrfb5vSR7Ftnl3C
-  secretKey: a0cnBv/d1PbvCfU764M.XFuYu/tSAWquUM4O6iC0cwUYPoNu0SbYWO
+  endpoint: http://ailuoli.cn:9000
+  domain: http://ailuoli.cn:9000
+  accessKey: admin
+  secretKey: coding123456
+
 mybatis:
   mapper-locations: classpath:/mapper/*Mapper.xml
   type-aliases-package: com.lby.psychology.model
@@ -59,7 +71,8 @@ pagehelper:
   support-methods-arguments: true
   params: count=countSql
   auto-dialect: true
+
 logging:
   level:
+    com.lby.psychology.mapper.*: debug
     root: info
-

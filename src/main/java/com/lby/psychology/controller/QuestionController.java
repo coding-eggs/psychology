@@ -51,4 +51,10 @@ public class QuestionController {
         return new ResponseData<>(questionService.updateQuestion(vo));
     }
 
+    @ApiOperation("更新问题")
+    @GetMapping("/deleteQuestion")
+    public ResponseData<Boolean> deleteQuestion(Integer questionId){
+        return new ResponseData<>(questionService.deleteQuestion(questionId));
+    }
+
 }

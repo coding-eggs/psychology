@@ -1,7 +1,6 @@
 package com.lby.psychology.config;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lby.psychology.mapper.PsycRoleMapper;
 import com.lby.psychology.mapper.PsycUserMapper;
 import com.lby.psychology.model.QQAccessToken;
@@ -14,7 +13,6 @@ import com.lby.psychology.model.pojo.PsycUserRoleRlt;
 import com.lby.psychology.model.security.SecurityPsycUser;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Configuration
+
 @Slf4j
 public class QQAuthenticationManager implements AuthenticationManager {
     /**
@@ -72,15 +70,18 @@ public class QQAuthenticationManager implements AuthenticationManager {
                 securityPsycUser.setFigureUrl(qqUserInfo.getFigureurl_qq());
                 securityPsycUser.setSex(EnumSex.MAN.getName().equals(qqUserInfo.getGender().trim()) ? EnumSex.MAN.getId():EnumSex.WOMAN.getId());
                 securityPsycUser.setLastUserLoginDate(new Date());
+                securityPsycUser.setUsername(qqUserInfo.getNickname());
+                securityPsycUser.setNickname(qqUserInfo.getNickname());
                 securityPsycUser.setQqNickname(qqUserInfo.getNickname());
                 securityPsycUser.setQqOpenId(openId);
                 securityPsycUser.setAuthType(EnumAuthType.QQ.getId());
 
-                if(psycUserMapper.selectCountByOpenId(openId) > 0){
+                if(psycUserMapper.selectCountByOpenId(openId,EnumAuthType.QQ.getId()) > 0){
                     // 更新当前得账户
                     log.info("已存在该用户，更新用户信息");
                     psycUserMapper.updatePsycUserQQLogin(securityPsycUser);
                     principal = psycUserMapper.selectUserByOpenId(openId);
+                    principal.setAuthorities(authorityList);
                 }else {
                     //插入新的用户
                     log.info("新增qq登录用户");
@@ -98,6 +99,7 @@ public class QQAuthenticationManager implements AuthenticationManager {
                         psycUserRoleRltList.add(psycUserRoleRlt);
                     }
                     psycRoleMapper.insertRoleUserRlt(psycUserRoleRltList);
+                    principal.setAuthorities(authorityList);
                 }
             }
 

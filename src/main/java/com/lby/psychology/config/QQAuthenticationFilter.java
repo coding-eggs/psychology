@@ -50,7 +50,7 @@ public class QQAuthenticationFilter extends AbstractAuthenticationProcessingFilt
     /**
      * redirect_uri 回调地址，这里我们随便写个地址 只要是本项目就好，被filter直接拦截住
      */
-    private final static String REDIRECT_URI = "http://ailuoli.cn:9527/qqlogin/success";
+    private final static String REDIRECT_URI = "https://ailuoli.cn/qqlogin/success";
 
     /**
      * 获取 access_token_url 的 url

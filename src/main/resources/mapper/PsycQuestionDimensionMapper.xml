@@ -76,7 +76,10 @@
     select id, question_name, dimension ,create_date,update_date
     from psyc_question where dimension = #{dimensionId}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <select id="selectQuestionIdByDimension" resultType="java.lang.Integer">
+      select id  from psyc_question where dimension = #{dimensionId}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from psyc_question_dimension
     where dimension_id = #{dimensionId,jdbcType=INTEGER}
   </delete>

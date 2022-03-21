@@ -14,6 +14,8 @@ import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Slf4j
@@ -23,13 +25,14 @@ public class MinioUtil {
     @Autowired
     private MinioClient client;
 
+    public static final String DEFAULT_BUCKET = "psychology";
+
     private static final int DEFAULT_EXPIRY_TIME = 7 * 24 * 3600;
 
 
     public boolean checkBucketExists(String bucketName) throws IOException, InvalidKeyException, InvalidResponseException, InsufficientDataException, NoSuchAlgorithmException, ServerException, InternalException, XmlParserException, ErrorResponseException {
         return client.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
     }
-
     /**
      * 创建bucket
      */
@@ -53,9 +56,8 @@ public class MinioUtil {
         String originalFilename = file.getOriginalFilename();
         //新的文件名 = 存储桶文件名_时间戳.后缀名
         assert originalFilename != null;
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         String fileName = bucketName + "_" +
-                UUID.randomUUID().toString() + "_" + format.format(new Date()) + "_" +
+                UUID.randomUUID() + "_" + DateTimeFormatter.ISO_DATE.format(LocalDate.now()) + "_" +
                 originalFilename.substring(originalFilename.lastIndexOf("."));
         //开始上传
         client.putObject(
@@ -63,7 +65,7 @@ public class MinioUtil {
                         file.getInputStream(), file.getSize(), -1)
                         .contentType(file.getContentType())
                         .build());
-        return getObjectURL(bucketName,fileName,DEFAULT_EXPIRY_TIME);
+        return getObjectURL(bucketName,fileName,DEFAULT_EXPIRY_TIME).split("[?]")[0];
     }
 
     /**

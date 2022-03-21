@@ -16,8 +16,6 @@
 		<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
 		<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
 
-		<!-- Datatables CSS -->
-		<link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
 
 		<!-- Main CSS -->
 		<link rel="stylesheet" href="assets/css/style.css">
@@ -45,10 +43,10 @@
 
 				<!-- Logo -->
 				<div class="header-left">
-					<a href="index.html" class="logo">
+					<a href="profile.html" class="logo">
 						<img src="assets/img/logo.png" alt="Logo">
 					</a>
-					<a href="index.html" class="logo logo-small">
+					<a href="profile.html" class="logo logo-small">
 						<img src="assets/img/logo-small.png" alt="Logo" width="30" height="30">
 					</a>
 				</div>
@@ -60,14 +58,6 @@
 				</a>
 				<!-- /Sidebar Toggle -->
 
-				<!-- Search -->
-				<div class="top-nav-search">
-					<form>
-						<input type="text" class="form-control" placeholder="搜索">
-						<button class="btn" type="submit"><i class="fas fa-search"></i></button>
-					</form>
-				</div>
-				<!-- /Search -->
 
 				<!-- Mobile Menu Toggle -->
 				<a class="mobile_btn" id="mobile_btn">
@@ -102,8 +92,7 @@
 						</a>
 						<div class="dropdown-menu">
 							<a class="dropdown-item" href="profile.html"><i data-feather="user" class="mr-1"></i> 个人中心</a>
-							<a class="dropdown-item" href="settings.html"><i data-feather="settings" class="mr-1"></i> 设置</a>
-							<a class="dropdown-item" href="/user/logout"><i data-feather="log-out" class="mr-1"></i> 注销</a>
+							<button class="dropdown-item" onclick="logout()"><i data-feather="log-out" class="mr-1"></i> 注销</button>
 						</div>
 					</li>
 					<!-- /User Menu -->
@@ -135,9 +124,8 @@
 							<div class="col">
 								<h3 class="page-title">测试/题库管理</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Dashboard</a>
-									</li>
-									<li class="breadcrumb-item active">试题选项管理</li>
+									<li class="breadcrumb-item"><a href="profile.html">个人中心</a></li>
+									<li class="breadcrumb-item active">选项管理</li>
 								</ul>
 							</div>
 							<div class="col-auto">
@@ -272,10 +260,6 @@
 		<!-- Slimscroll JS -->
 		<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
-		<!-- Datatables JS -->
-		<script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
-		<script src="assets/plugins/datatables/datatables.min.js"></script>
-
 		<!-- Custom JS -->
 		<script src="assets/js/script.js"></script>
 
@@ -304,11 +288,25 @@
 			}
 		},
 		methods: {
-
 			getUserInfo() {
-				service.get("/user/getUserInfo").then(res => {
-					this.userinfo = res.data;
-				});
+				//设置用户信息
+				if(storage.getItem("userinfo")!=null){
+					this.userinfo = storage.getItem("userinfo");
+					initMenu(storage.getItem("routeMap"),this.activePage)
+				}else{
+					service.get("/user/getUserInfo").then(res=>{
+						storage.setItem({
+							name: "userinfo",
+							value: res.data.userinfo
+						})
+						storage.setItem({
+							name: "routeMap",
+							value: res.data.routeMap
+						})
+						initMenu(res.data.routeMap,this.activePage)
+						this.userinfo = res.data;
+					});
+				}
 			},
 			async getOptionsList(pageNum, pageSize,isForm) {
 				var data = {
@@ -375,7 +373,6 @@
 			this.getOptionsList(this.pageNum,this.pageSize,false)
 		},
 		mounted() {
-			initMenu(storage.getItem("routeMap"),this.activePage)
 			intThisPoint(this);
 			this.getUserInfo();
 		},

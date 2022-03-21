@@ -2,8 +2,10 @@ package com.lby.psychology.service;
 
 import com.lby.psychology.model.co.PsycUserCo;
 import com.lby.psychology.model.common.PageResult;
-import com.lby.psychology.model.vo.PsycUserVo;
-import com.lby.psychology.model.vo.RegisteredUserVo;
+import com.lby.psychology.model.pojo.PsycUser;
+import com.lby.psychology.model.vo.*;
+
+import java.util.List;
 
 public interface IUserService {
 
@@ -52,5 +54,53 @@ public interface IUserService {
     * @return com.lby.psychology.model.vo.PsycUserVo
     */
     PsycUserVo getUserByUserId(Long userId);
+
+
+    /**
+     * 获取用户角色权限列表
+     * @param roleIdList 角色列表
+     * @param permissionType 权限类型
+     */
+    List<RolePermissionVo> getRolePermissionList(List<Integer> roleIdList,Integer permissionType);
+
+    /**
+     * 更新用户头像
+     * @param userId 用户id
+     * @param url 头像地址
+     * @return 成功失败
+     */
+    boolean updateFigureUrl(Long userId, String url);
+
+    /**
+     * 更新用户信息
+     * @param user 用户信息
+     */
+    boolean updateUserInfo(PsycUser user);
+
+    /**
+     * 更改用户密码
+     * @param changePasswordVo
+     */
+    boolean updatePassword(PsycChangePasswordVo changePasswordVo);
+
+    /**
+     * 校验密码
+     * @param password
+     */
+    boolean checkPassword(Long userId, String password);
+
+    /**
+     * 查询用户密码
+     * @param userId 用户id
+     */
+    String getPasswordByUserId(Long userId);
+
+
+    /**
+     * 忘记密码
+     * @param forgetPasswordVo
+     * @return
+     */
+    boolean forgetPassword(PsycForgetPasswordVo forgetPasswordVo);
 
 }

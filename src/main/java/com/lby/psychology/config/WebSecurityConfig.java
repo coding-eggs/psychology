@@ -1,30 +1,25 @@
 package com.lby.psychology.config;
 
-import com.lby.psychology.config.handler.LoginFailureHandler;
-import com.lby.psychology.config.handler.LoginSuccessHandler;
-import com.lby.psychology.config.handler.RequestAccessDeniedHandler;
-import com.lby.psychology.config.handler.UserSessionInformationExpiredStrategy;
+import com.alipay.api.AlipayClient;
+import com.lby.psychology.config.handler.*;
 import com.lby.psychology.mapper.PsycRoleMapper;
 import com.lby.psychology.mapper.PsycUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.Resource;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
-import java.security.KeyPair;
 
 @Configuration
 @EnableWebSecurity(debug = false)
@@ -32,10 +27,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${spring.security.remember.timeout}")
     private Integer rememberTime;
-
-
-    @Autowired
-    private ApplicationContext context;
 
     @Autowired
     private PsycPasswordEncoder passwordEncoder;
@@ -62,10 +53,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private LoginFailureHandler loginFailureHandler;
 
     @Autowired
+    private PsycAuthenticationEntryPoint authenticationEntryPoint;
+
+
+
+    @Autowired
+    private SessionInvalidSessionStrategy invalidSessionStrategy;
+
+    @Autowired
     private RequestAccessDeniedHandler requestAccessDeniedHandler;
 
     @Autowired
     private UserSessionInformationExpiredStrategy userSessionInformationExpiredStrategy;
+
+
+
+    @Autowired
+    private OtherLoginConfig loginConfig;
+
+    @Autowired
+    private AlipayClient alipayClient;
 
     /**
     * 记住我功能会将token存储在数据库，自动
@@ -95,13 +102,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable()
                 .cors().disable()
                 .authorizeRequests()
-                .antMatchers("/test/hello","/user/email/check","/user/email/registered","/user/publicKey").permitAll()
-                .antMatchers("/assets/**","/login.html","/register.html").permitAll()
-                .antMatchers("/doc.html","/swagger-resources","/v2/api-docs","/swagger-ui.html","/swagger-resources/configuration/ui","/swagger-resources/configuration/security","/webjars/**").permitAll()
+                //注册和忘记密码接口忽略
+                .antMatchers("/test**/**","/user/email/check","/user/email/registered","/user/publicKey","/user/forgetPassword","/user/email/forgetPassword").permitAll()
+                //静态资源忽略
+                .antMatchers("/assets/**","/login.html","/register.html","/forgot-password.html","/404","/500","/login").permitAll()
+                //swagger，doc所需的要的路径忽略
+                .antMatchers("/doc.html*/**","/swagger-resources","/v2/api-docs","/swagger-ui.html","/swagger-resources/configuration/ui","/swagger-resources/configuration/security","/webjars/**").permitAll()
                 .anyRequest()
                 .access("@securityAuthorityDecision.hasPermission(request,authentication)");
         http
                 .addFilterAt(qqAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(alipayAuthenticationFilter(),UsernamePasswordAuthenticationFilter.class)
                 .formLogin()
                 .loginPage("/login.html")
                 .loginProcessingUrl("/user/login")
@@ -122,13 +133,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .tokenValiditySeconds(rememberTime);
         http
                 .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint)
                 .accessDeniedHandler(requestAccessDeniedHandler);
 
         http.sessionManagement()
-                .sessionFixation()
-                .changeSessionId()
-                .maximumSessions(1)
-                .maxSessionsPreventsLogin(false)
+                //默认session过期
+                .invalidSessionStrategy(invalidSessionStrategy)
+                //同一用户的在系统中的最大session数，默认1
+                .maximumSessions(-1)
+                //并发session过期
                 .expiredSessionStrategy(userSessionInformationExpiredStrategy);
 
     }
@@ -136,15 +149,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private QQAuthenticationFilter qqAuthenticationFilter() {
         QQAuthenticationFilter authenticationFilter = new QQAuthenticationFilter("/qqlogin/success",restTemplate);
         authenticationFilter.setAuthenticationManager(new QQAuthenticationManager(psycRoleMapper,psycUserMapper,restTemplate));
+        SavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+        authenticationSuccessHandler.setDefaultTargetUrl("/profile.html");
+        authenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
         return authenticationFilter;
     }
 
-    @Bean
-    public KeyPair keyPair(){
-        Resource keyStore = this.context.getResource("classpath:coding.keystore");
-        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(keyStore, "coding".toCharArray());
-        return keyStoreKeyFactory.getKeyPair("coding.keystore","coding".toCharArray());
+    private AlipayAuthenticationFilter alipayAuthenticationFilter() {
+        AlipayAuthenticationFilter alipayAuthenticationFilter = new AlipayAuthenticationFilter("/alipay/login",loginConfig);
+        alipayAuthenticationFilter.setAuthenticationManager(new AlipayAuthenticationManager(psycRoleMapper,psycUserMapper,alipayClient));
+        SavedRequestAwareAuthenticationSuccessHandler authenticationSuccessHandler = new SavedRequestAwareAuthenticationSuccessHandler();
+        authenticationSuccessHandler.setDefaultTargetUrl("/profile.html");
+        alipayAuthenticationFilter.setAuthenticationSuccessHandler(authenticationSuccessHandler);
+        return alipayAuthenticationFilter;
     }
+
+
 
 
 }

@@ -45,6 +45,12 @@ public class ScaleController {
         return new ResponseData<>(scaleService.updateScale(co));
     }
 
+    @ApiOperation("删除量表")
+    @GetMapping("/deleteScale")
+    public ResponseData<Boolean> deleteScale(Integer scaleId){
+        return new ResponseData<>(scaleService.deleteScale(scaleId));
+    }
+
     @ApiOperation("获取量表下拉")
     @GetMapping("/getScaleListByType")
     public ResponseData<List<PsycScale>> getScaleListByType(Integer scaleType){

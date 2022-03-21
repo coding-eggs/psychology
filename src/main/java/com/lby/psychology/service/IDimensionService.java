@@ -17,6 +17,8 @@ public interface IDimensionService {
 
     boolean updateDimension(PsycQuestionDimension psycQuestionDimension);
 
+    boolean deleteDimension(Integer dimensionId);
+
     PsycDimensionVo getDimensionDetail(Integer dimensionId);
 
     List<PsycDimensionVo> getDimensionListByScale(PsycScale co);

@@ -16,8 +16,6 @@
 		<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
 		<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
 
-		<!-- Datatables CSS -->
-		<link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
 
 		<!-- Main CSS -->
 		<link rel="stylesheet" href="assets/css/style.css">
@@ -45,10 +43,10 @@
 
 				<!-- Logo -->
 				<div class="header-left">
-					<a href="index.html" class="logo">
+					<a href="profile.html" class="logo">
 						<img src="assets/img/logo.png" alt="Logo">
 					</a>
-					<a href="index.html" class="logo logo-small">
+					<a href="profile.html" class="logo logo-small">
 						<img src="assets/img/logo-small.png" alt="Logo" width="30" height="30">
 					</a>
 				</div>
@@ -60,14 +58,6 @@
 				</a>
 				<!-- /Sidebar Toggle -->
 
-				<!-- Search -->
-				<div class="top-nav-search">
-					<form>
-						<input type="text" class="form-control" placeholder="搜索">
-						<button class="btn" type="submit"><i class="fas fa-search"></i></button>
-					</form>
-				</div>
-				<!-- /Search -->
 
 				<!-- Mobile Menu Toggle -->
 				<a class="mobile_btn" id="mobile_btn">
@@ -102,8 +92,7 @@
 						</a>
 						<div class="dropdown-menu">
 							<a class="dropdown-item" href="profile.html"><i data-feather="user" class="mr-1"></i> 个人中心</a>
-							<a class="dropdown-item" href="settings.html"><i data-feather="settings" class="mr-1"></i> 设置</a>
-							<a class="dropdown-item" href="/user/logout"><i data-feather="log-out" class="mr-1"></i> 注销</a>
+							<button class="dropdown-item" onclick="logout()"><i data-feather="log-out" class="mr-1"></i> 注销</button>
 						</div>
 					</li>
 					<!-- /User Menu -->
@@ -135,7 +124,7 @@
 							<div class="col">
 								<h3 class="page-title">测试/题库管理</h3>
 								<ul class="breadcrumb">
-									<li class="breadcrumb-item"><a href="index.html">Dashboard</a>
+									<li class="breadcrumb-item"><a href="profile.html">个人中心</a>
 									</li>
 									<li class="breadcrumb-item active">量表管理</li>
 								</ul>
@@ -287,11 +276,26 @@
 		},
 		methods: {
 			getUserInfo() {
-				service.get("/user/getUserInfo").then(res => {
-					this.userinfo = res.data;
-				});
+				//设置用户信息
+				if(storage.getItem("userinfo")!=null){
+					this.userinfo = storage.getItem("userinfo");
+					initMenu(storage.getItem("routeMap"),this.activePage)
+				}else{
+					service.get("/user/getUserInfo").then(res=>{
+						storage.setItem({
+							name: "userinfo",
+							value: res.data.userinfo
+						})
+						storage.setItem({
+							name: "routeMap",
+							value: res.data.routeMap
+						})
+						initMenu(res.data.routeMap,this.activePage)
+						this.userinfo = res.data;
+					});
+				}
 			},
-			async getQuestionList(pageNum, pageSize, isForm) {
+			async getScaleList(pageNum, pageSize, isForm) {
 				var data = {
 					pageNum: pageNum,
 					pageSize: pageSize
@@ -321,32 +325,32 @@
 			},
 			handleSizeChange(size) {
 				this.pageSize = size;
-				this.getQuestionList(this.pageNum,this.pageSize,true)
+				this.getScaleList(this.pageNum,this.pageSize,true)
 			},
 			handleCurrentChange(currentPage) {
 				this.pageNum = currentPage
-				this.getQuestionList(this.pageNum,this.pageSize,true)
+				this.getScaleList(this.pageNum,this.pageSize,true)
 			},
 			onSubmit(){
-				this.getQuestionList(this.pageNum,this.pageSize,true)
+				this.getScaleList(this.pageNum,this.pageSize,true)
 			},
 
 			editRow(scaleId){
 				window.location.href="/edit-scale.html?scaleId="+scaleId
 			},
-			removeRow(judgeId){
-				this.$confirm('请您确定是否要删除该评判，删除后无法恢复！', '删除评判规则', {
+			removeRow(scaleId){
+				this.$confirm('请您确定是否要删除该量表，<span style="color: red">'+'相关维度，问题，选项，评判 '+'</span>都会被删除！删除后无法恢复！', '删除量表', {
 					confirmButtonText: '确认',
 					cancelButtonText: '取消',
 					dangerouslyUseHTMLString: true,
 					type: 'warning',
 					center: true
 				}).then(() => {
-					service.get("/question/deleteQuestion?judgeId="+judgeId).then(res=>{
+					service.get("/scale/deleteScale?scaleId="+scaleId).then(res=>{
 						if(res.data){
-							this.$message({message:"成功删除该评判规则",type:"success"})
+							this.$message({message:"成功删除量表",type:"success"})
 							//刷新用户列表
-							this.getQuestionList(this.pageNum,this.pageSize)
+							this.getScaleList(this.pageNum,this.pageSize)
 						}
 					})
 				}).catch(()=>{
@@ -366,11 +370,10 @@
 			}
 		},
 		created(){
-			this.getQuestionList(this.pageNum,this.pageSize,false)
+			this.getScaleList(this.pageNum,this.pageSize,false)
 		},
 		mounted() {
 			this.typeList = this.loadType();
-			initMenu(storage.getItem("routeMap"),this.activePage)
 			intThisPoint(this);
 			this.getUserInfo();
 		},

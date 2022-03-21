@@ -16,8 +16,6 @@
     <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
 
-    <!-- Datatables CSS -->
-    <link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
@@ -45,10 +43,10 @@
 
         <!-- Logo -->
         <div class="header-left">
-            <a href="index.html" class="logo">
+            <a href="profile.html" class="logo">
                 <img src="assets/img/logo.png" alt="Logo">
             </a>
-            <a href="index.html" class="logo logo-small">
+            <a href="profile.html" class="logo logo-small">
                 <img src="assets/img/logo-small.png" alt="Logo" width="30" height="30">
             </a>
         </div>
@@ -60,14 +58,6 @@
         </a>
         <!-- /Sidebar Toggle -->
 
-        <!-- Search -->
-        <div class="top-nav-search">
-            <form>
-                <input type="text" class="form-control" placeholder="搜索">
-                <button class="btn" type="submit"><i class="fas fa-search"></i></button>
-            </form>
-        </div>
-        <!-- /Search -->
 
         <!-- Mobile Menu Toggle -->
         <a class="mobile_btn" id="mobile_btn">
@@ -102,8 +92,7 @@
                 </a>
                 <div class="dropdown-menu">
                     <a class="dropdown-item" href="profile.html"><i data-feather="user" class="mr-1"></i> 个人中心</a>
-                    <a class="dropdown-item" href="settings.html"><i data-feather="settings" class="mr-1"></i> 设置</a>
-                    <a class="dropdown-item" href="/user/logout"><i data-feather="log-out" class="mr-1"></i> 注销</a>
+                    <button class="dropdown-item" onclick="logout()"><i data-feather="log-out" class="mr-1"></i> 注销</button>
                 </div>
             </li>
             <!-- /User Menu -->
@@ -135,9 +124,9 @@
                     <div class="col">
                         <h3 class="page-title">测试/题库管理</h3>
                         <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html">Dashboard</a>
+                            <li class="breadcrumb-item"><a href="profile.html">个人中心</a>
                             </li>
-                            <li class="breadcrumb-item active">请选择您要答得题</li>
+                            <li class="breadcrumb-item active">测试管理（请选择您要答得题）</li>
                         </ul>
                     </div>
                 </div>
@@ -146,12 +135,11 @@
 
 
             <div class="card">
-                <div class="card-body" style="border-radius: 20px; background-color: #d4d0d0">
-
+                <div class="card-body" style="border-radius: 20px; background-color: white">
                     <div >
-                        <p><i class="el-icon-chat-line-round"></i>  1、请选择您要答题的量表种类，我们将根据不同维度的量表来评估您的近期心理情绪状态.</p>
-                        <p><i class="el-icon-chat-line-round"></i>  2、平均测试时间为5-7分钟，问题选项没有“对”与“错”之分，不需长时间思考.</p>
-                        <p><i class="el-icon-chat-line-round"></i>  3、测试的目的是反映最真实的自己。请最大程度放松下来，根究自己的实际情况如实回答，选择更接近你平时感受或行为的选项</p>
+                        <p><i class="el-icon-chat-line-round"></i>  <strong>1、请选择您要答题的量表种类，我们将根据不同维度的量表来评估您的近期心理情绪状态.</strong></p>
+                        <p><i class="el-icon-chat-line-round"></i>  <strong>2、平均测试时间为5-7分钟，问题选项没有“对”与“错”之分，不需长时间思考.</strong></p>
+                        <p><i class="el-icon-chat-line-round"></i>  <strong>3、测试的目的是反映最真实的自己。请最大程度放松下来，根究自己的实际情况如实回答，选择更接近你平时感受或行为的选项.</strong></p>
                     </div>
                 </div>
             </div>
@@ -163,8 +151,8 @@
                 <div class="col-sm-12">
                     <el-form  ref="form" :model="form">
                         <el-form-item prop="scaleType">
-                            <el-col :span="6">
-                                <el-select  style="display: block;"
+
+                                <el-select  style="display: block; width: 350px"
                                             v-model="form.scaleType"
                                             @change="selectType"
                                             filterable
@@ -179,14 +167,14 @@
 
                                     </el-option>
                                 </el-select>
-                            </el-col>
+
 
                         </el-form-item>
 
                         <el-form-item prop="scaleId">
                             <el-col :span="6">
                                 <el-select
-                                        style="display: block;"
+                                        style="display: block; width: 350px"
                                         v-model="form.scaleId"
                                         filterable
                                         remote
@@ -229,9 +217,6 @@
 <!-- Slimscroll JS -->
 <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
-<!-- Datatables JS -->
-<script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="assets/plugins/datatables/datatables.min.js"></script>
 
 <!-- Custom JS -->
 <script src="assets/js/script.js"></script>
@@ -259,9 +244,24 @@
         },
         methods: {
             getUserInfo() {
-                service.get("/user/getUserInfo").then(res => {
-                    this.userinfo = res.data;
-                });
+                //设置用户信息
+                if(storage.getItem("userinfo")!=null){
+                    this.userinfo = storage.getItem("userinfo");
+                    initMenu(storage.getItem("routeMap"),this.activePage)
+                }else{
+                    service.get("/user/getUserInfo").then(res=>{
+                        storage.setItem({
+                            name: "userinfo",
+                            value: res.data.userinfo
+                        })
+                        storage.setItem({
+                            name: "routeMap",
+                            value: res.data.routeMap
+                        })
+                        initMenu(res.data.routeMap,this.activePage)
+                        this.userinfo = res.data;
+                    });
+                }
             },
             onSubmit(){
                 this.getQuestionList(this.pageNum,this.pageSize,true)
@@ -293,7 +293,6 @@
         },
         mounted() {
             this.typeList = this.loadType();
-            initMenu(storage.getItem("routeMap"),this.activePage)
             intThisPoint(this);
             this.getUserInfo();
         },

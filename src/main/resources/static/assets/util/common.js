@@ -1,4 +1,4 @@
-function initMenu(routeMap,activePage){
+function  initMenu(routeMap,activePage){
     let obj = new Map();
     for(let i in routeMap){
         obj.set(i,routeMap[i])

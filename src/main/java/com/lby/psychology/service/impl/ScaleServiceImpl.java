@@ -12,6 +12,7 @@ import com.lby.psychology.model.enums.EnumScaleCategories;
 import com.lby.psychology.model.pojo.PsycScale;
 import com.lby.psychology.model.vo.PsycQuestionDetailVo;
 import com.lby.psychology.model.vo.PsycQuestionVo;
+import com.lby.psychology.service.IDimensionService;
 import com.lby.psychology.service.IScaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,9 @@ public class ScaleServiceImpl implements IScaleService {
 
     @Autowired
     private PsycScaleMapper scaleMapper;
+
+    @Autowired
+    private IDimensionService dimensionService;
 
 
     @Override
@@ -84,6 +88,14 @@ public class ScaleServiceImpl implements IScaleService {
     @Override
     public boolean updateScale(PsycScale psycScale) {
         return scaleMapper.updateByPrimaryKeySelective(psycScale) > 0;
+    }
+
+    @Override
+    public boolean deleteScale(Integer scaleId) {
+        //删除量表相关维度
+        scaleMapper.selectDimensionIdByScaleId(scaleId).forEach(e->dimensionService.deleteDimension(e));
+        //删除量表
+        return scaleMapper.deleteByPrimaryKey(scaleId) > 0;
     }
 
     @Override

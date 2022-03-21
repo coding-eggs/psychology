@@ -52,6 +52,13 @@ public class QuestionServiceImpl implements IQuestionService {
     }
 
     @Override
+    public boolean deleteQuestion(Integer questionId) {
+        //删除相关选项
+        optionsMapper.deleteOptionByQuestionId(questionId);
+        return questionMapper.deleteByPrimaryKey(questionId) > 0;
+    }
+
+    @Override
     public PsycQuestionVo getQuestionInfo(Integer questionId) {
         return questionMapper.selectQuestionInfo(questionId);
     }

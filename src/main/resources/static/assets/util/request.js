@@ -1,16 +1,24 @@
 let thispoint;
 
+
+const context = 'http://127.0.0.1:9527/'
 function intThisPoint(point){
     thispoint = point;
 }
 
+
+
 const service = axios.create({
-    // baseURL: process.env.BASE_API, // api的base_url
+    // baseURL: "https://ailuoli.cn:9528/psychology",
+    baseURL: context,
     timeout: 15000 // 请求超时时间
 })
 
+
 // request拦截器
 service.interceptors.request.use(config => {
+    config.headers.post['X-Requested-With'] = 'XMLHttpRequest';
+    config.headers.get['X-Requested-With'] = 'XMLHttpRequest';
     return config
 }, error => {
     // Do something with request error
@@ -26,12 +34,6 @@ service.interceptors.response.use(
          */
         const res = response.data
         if (res.code !== 200) {
-            thispoint.$message({
-                message: res.msg,
-                type: 'error',
-                duration: 3 * 1000
-            })
-
             // 401:未登录;
             if (res.code === 403) {
                 thispoint.$confirm('您没有权限访问该请求或页面，可以取消继续留在该页面，或者切换登录', '切换登录', {
@@ -46,6 +48,19 @@ service.interceptors.response.use(
                         type: 'info',
                         message: '取消切换登录'
                     })
+                })
+            }else if(res.code === 10001 || res.code ===10002 || res.code === 10000){
+                thispoint.$message({
+                    message: res.msg,
+                    type: 'error',
+                    duration: 3 * 1000
+                })
+                setTimeout('window.location.href="/login.html"',1000)
+            }else{
+                thispoint.$message({
+                    message: res.msg,
+                    type: 'error',
+                    duration: 3 * 1000
                 })
             }
             return Promise.reject('error')
@@ -63,5 +78,27 @@ service.interceptors.response.use(
         return Promise.reject(error)
     }
 )
+
+
+function logout(){
+    let storage = new Storage();
+    storage.removeItem("userinfo");
+    storage.removeItem("routeMap");
+    service.get("/user/logout");
+}
+
+function getPublicKey(){
+    let storage = new Storage();
+    service({
+        method: 'get',
+        url: '/user/publicKey',
+    }).then(response=>{
+        storage.setItem({
+            name: "publicKey",
+            value: response.data
+        })
+    })
+}
+
 
 

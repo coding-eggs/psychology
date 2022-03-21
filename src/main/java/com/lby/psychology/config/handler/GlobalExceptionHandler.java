@@ -31,6 +31,19 @@ public class GlobalExceptionHandler {
         return new ResponseData<>(psycException.getCode(),null);
     }
 
+
+    /**
+     * 其他异常处理
+     * @param exception 其他异常
+     * @return 同意返回错误结果
+     */
+    @ExceptionHandler(value = Exception.class)
+    public ResponseData<String> handlerOtherError(Exception exception){
+        log.error(ERROR_STRING,EnumResponseType.ERROR.getCode(),exception.getMessage(),exception);
+        return new ResponseData<>(EnumResponseType.ERROR.getCode(),null);
+    }
+
+
     /***
      * 参数异常 -- ConstraintViolationException()
      * 用于处理类似http://localhost:8080/user/getUser?age=30&name=yoyo请求中age和name的校验引发的异常

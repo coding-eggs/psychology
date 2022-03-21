@@ -19,22 +19,97 @@
     record_content
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
-    select 
+    select
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from psyc_exam_record
     where record_id = #{recordId,jdbcType=BIGINT}
   </select>
+    <select id="selectRecordListByUserId" resultType="com.lby.psychology.model.vo.PsycExamRecordVo">
+        select
+               r.record_id,
+               r.user_id,
+               r.scale_id,
+               s.scale_name,
+               s.scale_type,
+               r.use_time ,
+               r.create_date
+        from psyc_exam_record r left join psyc_scale s on r.scale_id = s.scale_id
+        where r.user_id = #{userId}
+        order by r.create_date desc
+
+    </select>
+  <select id="selectRecordById" resultType="com.lby.psychology.model.vo.PsycExamRecordVo">
+    select
+      r.record_id,
+      r.user_id,
+      u.nickname,
+      r.scale_id,
+      s.scale_name,
+      r.judge_content,
+      r.record_content,
+      r.use_time
+    from psyc_exam_record r left join psyc_scale s on r.scale_id = s.scale_id
+    left join psyc_user u on r.user_id = u.user_id
+    where r.record_id = #{recordId}
+
+  </select>
+    <select id="selectRecordTotalByScaleType" resultType="java.lang.Integer">
+      SELECT
+        COUNT(*)
+      FROM
+        psyc_exam_record r
+          LEFT JOIN psyc_scale s ON r.scale_id = s.scale_id
+      WHERE 1 = 1
+      <if test="scaleType!=null">
+        and s.scale_type = #{scaleType}
+      </if>
+
+    </select>
+  <select id="selectLastWeekIncreRate" resultType="java.math.BigDecimal">
+    SELECT
+        ((
+           SELECT
+             COUNT(*)
+           FROM
+             psyc_exam_record r
+               LEFT JOIN psyc_scale s ON r.scale_id = s.scale_id
+           WHERE
+             scale_type = #{scaleType}
+             AND YEARWEEK( date_format( r.create_date, '%Y-%m-%d' ), 1 ) = YEARWEEK( now(), 1 )- 1
+         ) - (
+           SELECT
+             COUNT(*)
+           FROM
+             psyc_exam_record r
+               LEFT JOIN psyc_scale s ON r.scale_id = s.scale_id
+           WHERE
+             scale_type = #{scaleType}
+             AND YEARWEEK( date_format( r.create_date, '%Y-%m-%d' ), 1 ) = YEARWEEK( now(), 1 )- 2
+         )) / (
+          SELECT
+            COUNT(*)
+          FROM
+            psyc_exam_record r
+              LEFT JOIN psyc_scale s ON r.scale_id = s.scale_id
+          WHERE
+            scale_type = #{scaleType}
+            AND YEARWEEK( date_format( r.create_date, '%Y-%m-%d' ), 1 ) = YEARWEEK( now(), 1 )- 2
+        );
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from psyc_exam_record
     where record_id = #{recordId,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" keyColumn="record_id" keyProperty="recordId" parameterType="com.lby.psychology.model.pojo.PsycExamRecord" useGeneratedKeys="true">
-    insert into psyc_exam_record (user_id, scale_id, use_time, 
+    <delete id="deleteRecordByUserId">
+      delete from psyc_exam_record where user_id = #{userId}
+    </delete>
+    <insert id="insert" keyColumn="record_id" keyProperty="recordId" parameterType="com.lby.psychology.model.pojo.PsycExamRecord" useGeneratedKeys="true">
+    insert into psyc_exam_record (user_id, scale_id, use_time,
       create_date, update_date, record_content
       )
-    values (#{userId,jdbcType=INTEGER}, #{scaleId,jdbcType=INTEGER}, #{useTime,jdbcType=TIMESTAMP}, 
+    values (#{userId,jdbcType=INTEGER}, #{scaleId,jdbcType=INTEGER}, #{useTime,jdbcType=TIMESTAMP},
       #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP}, #{recordContent,jdbcType=BLOB}
       )
   </insert>
@@ -80,6 +155,15 @@
         #{recordContent,jdbcType=BLOB},
       </if>
     </trim>
+  </insert>
+  <insert id="insertRecord">
+    insert into psyc_exam_record(user_id,
+                                 scale_id,
+                                 use_time,
+                                 record_content,
+                                 judge_content
+                                 )
+    values (#{userId},#{scaleId},#{useTime},#{recordContent},#{judgeContent})
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.lby.psychology.model.pojo.PsycExamRecord">
     update psyc_exam_record

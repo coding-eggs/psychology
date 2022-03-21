@@ -31,4 +31,6 @@ public interface PsycQuestionOptionsMapper {
     List<PsycQuestionOptionsVo> selectOptionByQuestionId(@Param("questionId") Integer questionId);
 
     int insertOption(PsycOptionCo options);
+
+    int deleteOptionByQuestionId(@Param("questionId") Integer questionId);
 }

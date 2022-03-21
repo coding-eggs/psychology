@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -54,9 +55,9 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         map.put("user",securityPsycUser);
         // 跳转到页面
         if(ObjectUtils.isEmpty(defaultSavedRequest)||"/".equals(defaultSavedRequest.getRequestURI())){
-            map.put("requestURI","/index.html");
+            map.put("requestURI","/profile.html");
         }else{
-            map.put("requestURI",defaultSavedRequest.getRequestURI()+"?"+defaultSavedRequest.getQueryString());
+            map.put("requestURI",defaultSavedRequest.getRequestURI()+(StringUtils.isEmpty(defaultSavedRequest.getQueryString()) ? "":"?"+defaultSavedRequest.getQueryString()));
         }
         //获取该用户可访问得菜单权限
         List<RolePermissionVo> permissionVoList = roleMapper.selectRolePermission(securityPsycUser.getAuthorities().stream().map(PsycRole::getRoleId).collect(Collectors.toList()), EnumPermissionType.PAGE.getId());

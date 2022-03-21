@@ -16,11 +16,9 @@
     <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
     <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
 
-    <!-- Datatables CSS -->
-    <link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style-copy.css">
 
     <script src="assets/js/vue.js"></script>
     <script src="assets/js/axios.js"></script>
@@ -36,25 +34,30 @@
     <![endif]-->
     <style>
 
-        .left{
-            margin-left: 5%;
-            margin-top: 20px;
-            border-radius: 10px;
+        .el-header, .el-footer {
+            background-color: #B3C0D1;
+            color: #333;
+            text-align: center;
+            line-height: 60px;
         }
+
         .right{
-            margin-left: 5%;
-            margin-top: 20px;
-            margin-right: 20px;
-            border-radius: 10px;
+            border-radius: 20px;
+            background-color: #fff;
         }
         .bs-glyphicons {
             margin-left: 20px;
             margin-bottom: 20px;
             overflow: hidden;
         }
-        .bs-glyphicons-list {
-            padding-left: 0;
-            list-style: none;
+
+
+        span{
+            word-break:normal;
+            width:auto;
+            white-space:pre-wrap;
+            word-wrap : break-word ;
+            overflow: hidden ;
         }
 
         .bs-glyphicons ul {
@@ -69,27 +72,33 @@
             margin-bottom: 10px;
             padding: 0px;
         }
+        .bs-glyphicons li{
+            text-align: center;
+            display: inline-block;
+
+        }
         .bs-glyphicons li a{
-            float: left;
             width: 50px;
             height: 50px;
             padding: 10px;
             font-size: 20px;
             line-height: 1.4;
-            text-align: center;
-            background-color: #f9f9f9;
-            border: 3px solid #f9f9f9;
+            color: black;
+            /*background-color: #eceaea;*/
+            border: 3px solid #f7f8f9;
             display: list-item;
             text-align: -webkit-match-parent;
         }
         .bs-glyphicons li a:hover {
-            background-color: #b8adad;
+            background-color: #c9c6c6;
         }
         .bs-glyphicons .glyphicon-class {
             display: block;
-            text-align: center;
-            word-wrap: break-word;
         }
+        body{
+            background-color: #f7f8f9;
+        }
+
 
     </style>
 </head>
@@ -97,40 +106,73 @@
 
 <!-- Main Wrapper -->
 <div class="main-wrapper" id="examinationdetail">
-    <div>
-        <div class="row">
-            <div class="col-md-3 left navbar-expand-lg navbar-light" >
-                <button class="navbar-toggler" type="button"  data-toggle="collapse" data-target="#navbarNav">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div id="navbarNav" class="collapse navbar-collapse">
-                    <div>
-                        <h5 class="navbar-nav" style="margin-top: 20px"><strong>{{this.scaleName}}</strong></h5>
-                        <h6 class="navbar-nav" style="margin-top: 20px;margin-bottom: 20px"><span>答题人：{{this.nickname}}</span> <span style="margin-left: 10px">耗时：{{form.time}}</span></h6>
-                    </div>
-                    <div class="bs-glyphicons">
 
-                        <ul class="bs-glyphicons-list navbar-nav">
-                            <li class="nav-item" v-for="(item,index) in form.questionList" :key="index"><span class="glyphicon-class"><a :href="'#'+index" :id="'index'+index">{{index+1}}</a></span></li>
-                        </ul>
-                    </div>
+
+
+    <el-dialog
+            title="试题结果"
+            :visible.sync="dialogVisible"
+            width="40%"
+            :before-close="handleClose">
+        <hr style="background-color: #66b1ff;margin-top: -15px">
+        <div v-for="(item,index) in judgeList" :key="index">
+            <strong style="font-size: 20px;color: #66b1ff;margin-top: 5px">{{index+1}}. </strong><span>{{item.dimensionName}}</span>
+            <div style="font-size: 15px;font-family: 'Microsoft YaHei',serif;font-style: italic;color: #9A5F09FF;margin-top: 5px;letter-spacing: 2px">{{item.judgeName}}</div>
+        </div>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="handleClose" icon="el-icon-s-home">返回个人中心</el-button>
+        </div>
+
+    </el-dialog>
+
+
+    <!-- Mobile Menu Toggle -->
+    <a class="mobile_btn" id="mobile_btn" style="position: fixed">
+        <i class="fas fa-bars"></i>
+    </a>
+    <!-- /Mobile Menu Toggle -->
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar" >
+        <div class="sidebar-inner slimscroll">
+            <div class="bs-glyphicons">
+                <div>
+                    <h5  style="margin-top: 20px;text-align: center"><strong>{{this.scaleName}}</strong></h5>
+                    <h6  style="margin-top: 20px;margin-bottom: 20px;text-align: center"><span>答题人：{{this.nickname}}</span> <span style="margin-left: 10px">耗时：{{form.time}}</span></h6>
                 </div>
-            </div>
-            <div class="col-md-7 right" >
-                <el-form ref="form" :model="form">
-                    <el-form-item v-for="(item ,index) in form.questionList" :key="index" :id="index">
-                        <h5>{{index+1}}.{{item.questionName}}</h5>
-                        <el-radio-group v-model="form.questionList[index].optionCode">
-                            <el-radio v-for="op in item.optionList" :label="op.optionCode" @change="selectRadio(index)">{{op.optionCode}}. {{op.optionName}}</el-radio>
-                        </el-radio-group>
-                        <hr/>
-                    </el-form-item>
-                </el-form>
+
+                <div>
+                    <ul class="bs-glyphicons-list">
+                        <li class="nav-item" v-for="(item,index) in form.questionList" :key="index">
+                            <span class="glyphicon-class"><a :href="'#'+index" :id="'index'+index">{{index+1}}</a></span>
+                        </li>
+                    </ul>
+                </div>
+                <div style="text-align: center;margin-top: 20px">
+                    <el-button type="primary" v-on:click="onSubmit">提交答案</el-button>
+                </div>
             </div>
         </div>
     </div>
+    <!-- /Sidebar -->
 
-<!--        <el-footer>版权所有：lby Copyright © 2021 lby.</el-footer>-->
+    <div class="page-wrapper" >
+        <div class="content container-fluid">
+            <div class="row ">
+                <div class="col-md-9 right" >
+                    <el-form ref="form" :model="form" style="margin-top: 20px">
+                        <el-form-item v-for="(item ,index) in form.questionList" :key="index" :id="index">
+                            <h5>{{index+1}}.{{item.questionName}}</h5>
+                            <el-radio-group v-model="form.questionList[index].optionCode">
+                                <el-radio v-for="op in item.optionList" :label="op.optionCode" @change="selectRadio(index)">{{op.optionCode}}. {{op.optionName}}</el-radio>
+                            </el-radio-group>
+                            <hr/>
+                        </el-form-item>
+                    </el-form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 <!-- /Main Wrapper -->
@@ -148,9 +190,6 @@
 <!-- Slimscroll JS -->
 <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
-<!-- Datatables JS -->
-<script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="assets/plugins/datatables/datatables.min.js"></script>
 
 <!-- Custom JS -->
 <script src="assets/js/script.js"></script>
@@ -165,7 +204,10 @@
         data(){
             return {
                 //初始页
+                dialogVisible: false,
                 userinfo: '',
+                collapse: false,
+                judgeList: [],
                 hour: 0,
                 minute: 0,
                 ms: 0,
@@ -175,6 +217,7 @@
                 activePage: '/examination.html',
                 form:{
                     time:"",
+                    scaleId: null,
                     questionList: [],
                 },
                 loading: false
@@ -182,15 +225,53 @@
         },
         methods: {
             getUserInfo() {
-                service.get("/user/getUserInfo").then(res => {
-                    this.userinfo = res.data;
-                });
+                //设置用户信息
+                if(storage.getItem("userinfo")!=null){
+                    this.userinfo = storage.getItem("userinfo");
+                    initMenu(storage.getItem("routeMap"),this.activePage)
+                }else{
+                    service.get("/user/getUserInfo").then(res=>{
+                        storage.setItem({
+                            name: "userinfo",
+                            value: res.data.userinfo
+                        })
+                        storage.setItem({
+                            name: "routeMap",
+                            value: res.data.routeMap
+                        })
+                        initMenu(res.data.routeMap,this.activePage)
+                        this.userinfo = res.data;
+                    });
+                }
             },
             onSubmit(){
-                console.log(this.form.questionList)
+                for(let i = 0; i<this.form.questionList.length; i++){
+                    if(this.form.questionList[i].optionCode==null||this.form.questionList[i].optionCode===''){
+                        this.$message({
+                            message: "请完成所有问题",
+                            type: 'warning',
+                        })
+                        return;
+                    }
+                }
+                service({
+                    method: "post",
+                    url: "/exam/examScale",
+                    data: this.form
+                }).then(res => {
+                    this.judgeList = res.data;
+                    this.dialogVisible=true;
+                }).finally(() => {
+                    this.loading = false
+                })
+
             },
             timeStart(){
                 setInterval(this.timer,50)
+            },
+            handleClose(done) {
+                this.dialogVisible = false;
+                window.location.href="/profile.html"
             },
             timer(){
                 this.ms = this.ms + 50 //毫秒
@@ -217,6 +298,7 @@
             },
             async getScaleDetail() {
                 var scaleId = getParam("scaleId");
+                this.form.scaleId = scaleId;
                 this.loading = true
                 await service({
                     method: "get",
@@ -231,7 +313,7 @@
             },
             selectRadio(index){
                 var ele = "index"+index;
-                document.getElementById(ele).style.background='#b8adad';
+                document.getElementById(ele).style.border='3px solid #409EFF';
             }
         },
         created(){
@@ -240,7 +322,6 @@
         mounted() {
             this.timeStart();
             this.getScaleDetail();
-            initMenu(storage.getItem("routeMap"),this.activePage)
             intThisPoint(this);
             this.getUserInfo();
         },

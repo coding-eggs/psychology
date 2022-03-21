@@ -49,7 +49,7 @@ $(function(){
 	$(document).on('click', '#mobile_btn', function () {
 		$wrapper.toggleClass('slide-nav');
 		$('.sidebar-overlay').toggleClass('opened');
-		$('html').addClass('menu-opened');
+		// $('html').addClass('menu-opened');
 		return false;
 	});
 

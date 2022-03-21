@@ -6,7 +6,8 @@ import lombok.Getter;
 public enum EnumAuthType {
 
     EMAIL(10,"邮箱"),
-    QQ(20,"qq");
+    QQ(20,"qq"),
+    ALIPAY(30,"支付宝");
 
     private final Integer id;
     private final String name;

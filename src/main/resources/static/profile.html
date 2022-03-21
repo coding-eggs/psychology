@@ -1,489 +1,643 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-		<title>Kanakku - Bootstrap Admin HTML Template</title>
-		
-		<!-- Favicon -->
-		<link rel="shortcut icon" href="assets/img/favicon.png">
-		
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="assets/css/bootstrap.min.css">
-		
-		<!-- Fontawesome CSS -->
-		<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
-		<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
-		
-		<!-- Main CSS -->
-		<link rel="stylesheet" href="assets/css/style.css">
-		
-		<!--[if lt IE 9]>
-			<script src="assets/js/html5shiv.min.js"></script>
-			<script src="assets/js/respond.min.js"></script>
-		<![endif]-->
-	</head>
-	<body>
-	
-		<!-- Main Wrapper -->
-		<div class="main-wrapper">
-		
-			<!-- Header -->
-			<div class="header">
-			
-				<!-- Logo -->
-				<div class="header-left">
-					<a href="index.html" class="logo">
-						<img src="assets/img/logo.png" alt="Logo">
-					</a>
-					<a href="index.html" class="logo logo-small">
-						<img src="assets/img/logo-small.png" alt="Logo" width="30" height="30">
-					</a>
-				</div>
-				<!-- /Logo -->
-				
-				<!-- Sidebar Toggle -->
-				<a href="javascript:void(0);" id="toggle_btn">
-					<i class="fas fa-bars"></i>
-				</a>
-				<!-- /Sidebar Toggle -->
-				
-				<!-- Search -->
-				<div class="top-nav-search">
-					<form>
-						<input type="text" class="form-control" placeholder="Search here">
-						<button class="btn" type="submit"><i class="fas fa-search"></i></button>
-					</form>
-				</div>
-				<!-- /Search -->
-				
-				<!-- Mobile Menu Toggle -->
-				<a class="mobile_btn" id="mobile_btn">
-					<i class="fas fa-bars"></i>
-				</a>
-				<!-- /Mobile Menu Toggle -->
-				
-				<!-- Header Menu -->
-				<ul class="nav user-menu">
-				
-					<!-- Flag -->
-					<li class="nav-item dropdown has-arrow flag-nav">
-						<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
-							<img src="assets/img/flags/us.png" alt="" height="20"> <span>English</span>
-						</a>
-						<div class="dropdown-menu dropdown-menu-right">
-							<a href="javascript:void(0);" class="dropdown-item">
-								<img src="assets/img/flags/us.png" alt="" height="16"> English
-							</a>
-							<a href="javascript:void(0);" class="dropdown-item">
-								<img src="assets/img/flags/fr.png" alt="" height="16"> French
-							</a>
-							<a href="javascript:void(0);" class="dropdown-item">
-								<img src="assets/img/flags/es.png" alt="" height="16"> Spanish
-							</a>
-							<a href="javascript:void(0);" class="dropdown-item">
-								<img src="assets/img/flags/de.png" alt="" height="16"> German
-							</a>
-						</div>
-					</li>
-					<!-- /Flag -->
-					
-					<!-- Notifications -->
-					<li class="nav-item dropdown">
-						<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
-							<i data-feather="bell"></i> <span class="badge badge-pill">5</span>
-						</a>
-						<div class="dropdown-menu notifications">
-							<div class="topnav-dropdown-header">
-								<span class="notification-title">Notifications</span>
-								<a href="javascript:void(0)" class="clear-noti"> Clear All</a>
-							</div>
-							<div class="noti-content">
-								<ul class="notification-list">
-									<li class="notification-message">
-										<a href="activities.html">
-											<div class="media">
-												<span class="avatar avatar-sm">
-													<img class="avatar-img rounded-circle" alt="" src="assets/img/profiles/avatar-02.jpg">
-												</span>
-												<div class="media-body">
-													<p class="noti-details"><span class="noti-title">Brian Johnson</span> paid the invoice <span class="noti-title">#DF65485</span></p>
-													<p class="noti-time"><span class="notification-time">4 mins ago</span></p>
-												</div>
-											</div>
-										</a>
-									</li>
-									<li class="notification-message">
-										<a href="activities.html">
-											<div class="media">
-												<span class="avatar avatar-sm">
-													<img class="avatar-img rounded-circle" alt="" src="assets/img/profiles/avatar-03.jpg">
-												</span>
-												<div class="media-body">
-													<p class="noti-details"><span class="noti-title">Marie Canales</span> has accepted your estimate <span class="noti-title">#GTR458789</span></p>
-													<p class="noti-time"><span class="notification-time">6 mins ago</span></p>
-												</div>
-											</div>
-										</a>
-									</li>
-									<li class="notification-message">
-										<a href="activities.html">
-											<div class="media">
-												<div class="avatar avatar-sm">
-													<span class="avatar-title rounded-circle bg-primary-light"><i class="far fa-user"></i></span>
-												</div>
-												<div class="media-body">
-													<p class="noti-details"><span class="noti-title">New user registered</span></p>
-													<p class="noti-time"><span class="notification-time">8 mins ago</span></p>
-												</div>
-											</div>
-										</a>
-									</li>
-									<li class="notification-message">
-										<a href="activities.html">
-											<div class="media">
-												<span class="avatar avatar-sm">
-													<img class="avatar-img rounded-circle" alt="" src="assets/img/profiles/avatar-04.jpg">
-												</span>
-												<div class="media-body">
-													<p class="noti-details"><span class="noti-title">Barbara Moore</span> declined the invoice <span class="noti-title">#RDW026896</span></p>
-													<p class="noti-time"><span class="notification-time">12 mins ago</span></p>
-												</div>
-											</div>
-										</a>
-									</li>
-									<li class="notification-message">
-										<a href="activities.html">
-											<div class="media">
-												<div class="avatar avatar-sm">
-													<span class="avatar-title rounded-circle bg-info-light"><i class="far fa-comment"></i></span>
-												</div>
-												<div class="media-body">
-													<p class="noti-details"><span class="noti-title">You have received a new message</span></p>
-													<p class="noti-time"><span class="notification-time">2 days ago</span></p>
-												</div>
-											</div>
-										</a>
-									</li>
-								</ul>
-							</div>
-							<div class="topnav-dropdown-footer">
-								<a href="activities.html">View all Notifications</a>
-							</div>
-						</div>
-					</li>
-					<!-- /Notifications -->
-					
-					<!-- User Menu -->
-					<li class="nav-item dropdown has-arrow main-drop">
-						<a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Psychology Manage System</title>
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="assets/img/favicon.png">
+
+    <link rel="stylesheet" href="assets/css/element.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+
+    <!-- Fontawesome CSS -->
+    <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
+
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <script src="assets/js/vue.js"></script>
+    <script src="assets/js/axios.js"></script>
+    <script src="assets/util/localStorageUtil.js"></script>
+    <script src="assets/util/request.js"></script>
+    <script src="assets/util/common.js"></script>
+    <script src="assets/js/element.js"></script>
+    <script src="assets/util/jsencrypt.js"></script>
+
+
+    <!--[if lt IE 9]>
+    <script src="assets/js/html5shiv.min.js"></script>
+    <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+
+<!-- Main Wrapper -->
+<div class="main-wrapper" id="profile" v-show="isRouterAlive">
+
+    <!-- Header -->
+    <div class="header">
+
+        <!-- Logo -->
+        <div class="header-left">
+            <a href="profile.html" class="logo">
+                <img src="assets/img/logo.png" alt="Logo">
+            </a>
+            <a href="profile.html" class="logo logo-small">
+                <img src="assets/img/logo-small.png" alt="Logo" width="30" height="30">
+            </a>
+        </div>
+        <!-- /Logo -->
+
+        <!-- Sidebar Toggle -->
+        <a href="javascript:void(0);" id="toggle_btn">
+            <i class="fas fa-bars"></i>
+        </a>
+        <!-- /Sidebar Toggle -->
+
+        <!-- Mobile Menu Toggle -->
+        <a class="mobile_btn" id="mobile_btn">
+            <i class="fas fa-bars"></i>
+        </a>
+        <!-- /Mobile Menu Toggle -->
+
+        <!-- Header Menu -->
+        <ul class="nav user-menu">
+
+            <!-- Flag -->
+            <li class="nav-item dropdown has-arrow flag-nav">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+                    <img src="assets/img/flags/zh.png" alt="" height="20"> <span>简体中文</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right">
+                    <a href="javascript:void(0);" class="dropdown-item">
+                        <img src="assets/img/flags/zh.png" alt="" height="16"> 简体中文
+                    </a>
+                </div>
+            </li>
+            <!-- /Flag -->
+
+            <!-- User Menu -->
+            <li class="nav-item dropdown has-arrow main-drop">
+                <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
 							<span class="user-img">
-								<img src="assets/img/profiles/avatar-01.jpg" alt="">
+								<img :src="userinfo.figureUrl==='' ? 'assets/img/logo-small.png': userinfo.figureUrl " alt="">
 								<span class="status online"></span>
 							</span>
-							<span>Admin</span>
-						</a>
-						<div class="dropdown-menu">
-							<a class="dropdown-item" href="profile.html"><i data-feather="user" class="mr-1"></i> Profile</a>
-							<a class="dropdown-item" href="settings.html"><i data-feather="settings" class="mr-1"></i> Settings</a>
-							<a class="dropdown-item" href="login.html"><i data-feather="log-out" class="mr-1"></i> Logout</a>
-						</div>
-					</li>
-					<!-- /User Menu -->
-					
-				</ul>
-				<!-- /Header Menu -->
-				
-			</div>
-			<!-- /Header -->
-			
-			<!-- Sidebar -->
-			<div class="sidebar" id="sidebar">
-				<div class="sidebar-inner slimscroll">
-					<div id="sidebar-menu" class="sidebar-menu">
-						<ul>
-							<li class="menu-title"><span>Main</span></li>
-							<li>
-								<a href="index.html"><i data-feather="home"></i> <span>Dashboard</span></a>
-							</li>
-							<li>
-								<a href="customers.html"><i data-feather="users"></i> <span>Customers</span></a>
-							</li>
-							<li>
-								<a href="estimates.html"><i data-feather="file-text"></i> <span>Estimates</span></a>
-							</li>
-							<li>
-								<a href="invoices.html"><i data-feather="clipboard"></i> <span>Invoices</span></a>
-							</li>
-							<li>
-								<a href="payments.html"><i data-feather="credit-card"></i> <span>Payments</span></a>
-							</li>
-							<li>
-								<a href="expenses.html"><i data-feather="package"></i> <span>Expenses</span></a>
-							</li>
-							<li>
-								<a href="settings.html"><i data-feather="settings"></i> <span>Settings</span></a>
-							</li>
-							<li class="submenu">
-								<a href="#"><i data-feather="grid"></i> <span> Application</span> <span class="menu-arrow"></span></a>
-								<ul>
-									<li><a href="chat.html">Chat</a></li>
-									<li><a href="calendar.html">Calendar</a></li>
-									<li><a href="inbox.html">Email</a></li>
-								</ul>
-							</li>
-							<li class="menu-title"> 
-								<span>Pages</span>
-							</li>
-							<li class="active"> 
-								<a href="profile.html"><i data-feather="user-plus"></i> <span>Profile</span></a>
-							</li>
-							<li class="submenu">
-								<a href="#"><i data-feather="lock"></i> <span> Authentication </span> <span class="menu-arrow"></span></a>
-								<ul>
-									<li><a href="login.html"> Login </a></li>
-									<li><a href="register.html"> Register </a></li>
-									<li><a href="forgot-password.html"> Forgot Password </a></li>
-									<li><a href="lock-screen.html"> Lock Screen </a></li>
-								</ul>
-							</li>
-							<li class="submenu">
-								<a href="#"><i data-feather="alert-octagon"></i> <span> Error Pages </span> <span class="menu-arrow"></span></a>
-								<ul>
-									<li><a href="error-404.html">404 Error </a></li>
-									<li><a href="error-500.html">500 Error </a></li>
-								</ul>
-							</li>
-							<li> 
-								<a href="users.html"><i data-feather="user"></i> <span>Users</span></a>
-							</li>
-							<li> 
-								<a href="blank-page.html"><i data-feather="file"></i> <span>Blank Page</span></a>
-							</li>
-							<li> 
-								<a href="maps-vector.html"><i data-feather="map-pin"></i> <span>Vector Maps</span></a>
-							</li>
-							<li class="menu-title"> 
-								<span>UI Interface</span>
-							</li>
-							<li> 
-								<a href="components.html"><i data-feather="layers"></i> <span>Components</span></a>
-							</li>
-							<li class="submenu">
-								<a href="#"><i data-feather="columns"></i> <span> Forms </span> <span class="menu-arrow"></span></a>
-								<ul>
-									<li><a href="form-basic-inputs.html">Basic Inputs </a></li>
-									<li><a href="form-input-groups.html">Input Groups </a></li>
-									<li><a href="form-horizontal.html">Horizontal Form </a></li>
-									<li><a href="form-vertical.html"> Vertical Form </a></li>
-									<li><a href="form-mask.html"> Form Mask </a></li>
-									<li><a href="form-validation.html"> Form Validation </a></li>
-								</ul>
-							</li>
-							<li class="submenu">
-								<a href="#"><i data-feather="layout"></i> <span> Tables </span> <span class="menu-arrow"></span></a>
-								<ul>
-									<li><a href="tables-basic.html">Basic Tables </a></li>
-									<li><a href="data-tables.html">Data Table </a></li>
-								</ul>
-							</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!-- /Sidebar -->
-			
-			<!-- Page Wrapper -->
-			<div class="page-wrapper">
-				<div class="content container-fluid">
-				
-					<div class="row justify-content-lg-center">
-						<div class="col-lg-10">
-						
-							<!-- Page Header -->
-							<div class="page-header">
-								<div class="row">
-									<div class="col">
-										<h3 class="page-title">Profile</h3>
-										<ul class="breadcrumb">
-											<li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-											<li class="breadcrumb-item active">Profile</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-							<!-- /Page Header -->
-			   
-							<div class="profile-cover">
-								<div class="profile-cover-wrap">
-									<img class="profile-cover-img" src="assets/img/profiles/avatar-02.jpg" alt="Profile Cover">
+                    <span v-html="userinfo.nickname"></span>
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="profile.html"><i data-feather="user" class="mr-1"></i> 个人中心</a>
+                    <button class="dropdown-item" onclick="logout()"><i data-feather="log-out" class="mr-1"></i> 注销</button>
+                </div>
+            </li>
+            <!-- /User Menu -->
 
-									<!-- Custom File Cover -->
-									<div class="cover-content">
-										<div class="custom-file-btn">
-											<input type="file" class="custom-file-btn-input" id="cover_upload">
-											<label class="custom-file-btn-label btn btn-sm btn-white" for="cover_upload">
-												<i class="fas fa-camera"></i>
-												<span class="d-none d-sm-inline-block ml-1">Update Cover</span>
-											</label>
-										</div>
-									</div>
-									<!-- /Custom File Cover -->
-								</div>
-							</div>
+        </ul>
+        <!-- /Header Menu -->
 
-							<div class="text-center mb-5">
-								<label class="avatar avatar-xxl profile-cover-avatar" for="avatar_upload">
-									<img class="avatar-img" src="assets/img/profiles/avatar-02.jpg" alt="Profile Image">
-									<input type="file" id="avatar_upload">
-									<span class="avatar-edit">
-										<i data-feather="edit-2" class="avatar-uploader-icon shadow-soft"></i>
-									</span>
-								</label>
-								<h2>Charles Hafner <i class="fas fa-certificate text-primary small" data-toggle="tooltip" data-placement="top" title="" data-original-title="Verified"></i></h2>
-								<ul class="list-inline">
-									<li class="list-inline-item">
-										<i class="far fa-building"></i> <span>Hafner Pvt Ltd.</span>
-									</li>
-									<li class="list-inline-item">
-										<i class="fas fa-map-marker-alt"></i> West Virginia, US
-									</li>
-									<li class="list-inline-item">
-										<i class="far fa-calendar-alt"></i> <span>Joined November 2017</span>
-									</li>
-								</ul>
-							</div>
-			
-							<div class="row">
-								<div class="col-lg-4">
-									<div class="card card-body">
-										<h5>Complete your profile</h5>
+    </div>
+    <!-- /Header -->
 
-										<!-- Progress -->
-										<div class="d-flex justify-content-between align-items-center">
-											<div class="progress progress-md flex-grow-1">
-												<div class="progress-bar bg-primary" role="progressbar" style="width: 30%" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-											</div>
-											<span class="ml-4">30%</span>
-										</div>
-										<!-- /Progress -->
-									</div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-inner slimscroll">
+            <div id="sidebar-menu" class="sidebar-menu" >
+                <ul id="sidebarMenu">
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /Sidebar -->
 
-									<div class="card">
-										<div class="card-header">
-											<h5 class="card-title d-flex justify-content-between">
-												<span>Profile</span> 
-												<a class="btn btn-sm btn-white" href="settings.html">Edit</a>
-											</h5>
-										</div>
-										<div class="card-body">
-											<ul class="list-unstyled mb-0">
-												<li class="py-0">
-													<small class="text-dark">About</small>
-												</li>
-												<li>
-													Charles Hafner
-												</li>
-												<li>
-													Hafner Pvt Ltd.
-												</li>
-												<li class="pt-2 pb-0">
-													<small class="text-dark">Contacts</small>
-												</li>
-												<li>
-													charleshafner@example.com
-												</li>
-												<li>
-													+1 (304) 499-13-66
-												</li>
-												<li class="pt-2 pb-0">
-													<small class="text-dark">Address</small>
-												</li>
-												<li>
-													4663  Agriculture Lane,<br>
-													Miami,<br>
-													Florida - 33165,<br>
-													United States.
-												</li>
-											</ul>
-										</div>
-									</div>
+    <!-- Page Wrapper -->
+    <div class="page-wrapper">
+        <div class="content container-fluid">
 
-								</div>
+            <div class="profile-cover">
+                <div class="profile-cover-wrap">
+                    <img class="profile-cover-img" :src="userinfo.figureUrl" alt="Profile Cover">
+                </div>
+            </div>
 
-								<div class="col-lg-8">
-									<div class="card">
-										<div class="card-header">
-											<h5 class="card-title">Activity</h5>
-										</div>
-										<div class="card-body card-body-height">
-											<ul class="activity-feed">
-												<li class="feed-item">
-													<div class="feed-date">Nov 16</div>
-													<span class="feed-text"><a href="profile.html">Brian Johnson</a> has paid the invoice <a href="view-invoice.html">"#DF65485"</a></span>
-												</li>
-												<li class="feed-item">
-													<div class="feed-date">Nov 7</div>
-													<span class="feed-text"><a href="profile.html">Marie Canales</a>  has accepted your estimate <a href="view-estimate.html">#GTR458789</a></span>
-												</li>
-												<li class="feed-item">
-													<div class="feed-date">Oct 24</div>
-													<span class="feed-text">New expenses added <a href="expenses.html">"#TR018756</a></span>
-												</li>
-												<li class="feed-item">
-													<div class="feed-date">Oct 24</div>
-													<span class="feed-text">New expenses added <a href="expenses.html">"#TR018756</a></span>
-												</li>
-												<li class="feed-item">
-													<div class="feed-date">Oct 24</div>
-													<span class="feed-text">New expenses added <a href="expenses.html">"#TR018756</a></span>
-												</li>
-												<li class="feed-item">
-													<div class="feed-date">Oct 24</div>
-													<span class="feed-text">New expenses added <a href="expenses.html">"#TR018756</a></span>
-												</li>
-												<li class="feed-item">
-													<div class="feed-date">Oct 24</div>
-													<span class="feed-text">New expenses added <a href="expenses.html">"#TR018756</a></span>
-												</li>
-												<li class="feed-item">
-													<div class="feed-date">Jan 27</div>
-													<span class="feed-text"><a href="profile.html">Robert Martin</a> gave a review for <a href="product-details.html">"Dell Laptop"</a></span>
-												</li>
-												<li class="feed-item">
-													<div class="feed-date">Jan 14</div>
-													<span class="feed-text">New customer registered <a href="profile.html">"Tori Carter"</a></span>
-												</li>
-											</ul>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				
-			</div>
-			<!-- /Page Wrapper -->
-			
-		</div>
-		<!-- /Main Wrapper -->
-		
-		<!-- jQuery -->
-		<script src="assets/js/jquery-3.5.1.min.js"></script>
-		
-		<!-- Bootstrap Core JS -->
-		<script src="assets/js/popper.min.js"></script>
-		<script src="assets/js/bootstrap.min.js"></script>
-		
-		<!-- Feather Icon JS -->
-		<script src="assets/js/feather.min.js"></script>
-		
-		<!-- Slimscroll JS -->
-		<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-		
-		<!-- Custom JS -->
-		<script src="assets/js/script.js"></script>
+            <div class="text-center mb-5">
+                <div>
+                    <label class="avatar avatar-xxl profile-cover-avatar" for="avatar_upload">
+                        <img class="avatar-img" :src="userinfo.figureUrl" alt="Profile Image">
+                        <input type="file" name="file" ref="file" v-on:change="uploadFigureUrl" id="avatar_upload">
+                        <span class="avatar-edit">
+							<i data-feather="edit-2" class="avatar-uploader-icon shadow-soft"></i>
+						</span>
+                    </label>
+                </div>
+                <div style="margin-top: 20px">
+                    <h2>{{userinfo.nickname}} <i class="fas fa-certificate text-primary small" data-toggle="tooltip" data-placement="top" title="" data-original-title="昵称"></i></h2>
+                </div>
 
-	</body>
+            </div>
+
+
+            <div class="row">
+                <div class="col-xl-3 col-md-4">
+
+                    <!-- Settings Menu -->
+                    <div class="widget settings-menu">
+                        <ul>
+                            <li class="nav-item">
+                                <a v-on:click="changeDisplayCard('basicInfo',1)" type="button"  :class="{active: cardActive===1}">
+                                    <i class="far fa-user"></i> <span>基本信息</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a v-on:click="changeDisplayCard('examRecord',2)" type="button"  :class="{active: cardActive===2}" >
+                                    <i class="far fa-list-alt"></i> <span>答题记录</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a v-on:click="changeDisplayCard('accountSetting',3)" type="button"  :class="{active: cardActive===3}">
+                                    <i class="fas fa-unlock-alt"></i> <span>账号设置</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- /Settings Menu -->
+
+                </div>
+
+                <div class="col-xl-9 col-md-8">
+
+                    <div class="card" id="basicInfo" v-show="displayCard.basicInfo">
+                        <div class="card-header form-line">
+                            <span class="card-title" style="font-size: 20px">基本信息</span>
+                            <span  style="float: right;font-size: 15px;"><a href="#" v-on:click="enableEdit">{{editOrDisable}}</a></span>
+                        </div>
+                        <div class="card-body">
+                            <!-- Form -->
+                            <el-form :model="userinfo" :rules="rules" ref="ruleForm">
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label input-label">昵称</label>
+                                    <div class="col-sm-9">
+                                        <el-form-item prop="nickname">
+                                            <el-input type="text" style="width: 100%" id="name" placeholder="昵称" v-bind:disabled="disabled" v-model="userinfo.nickname"></el-input>
+                                        </el-form-item>
+                                    </div>
+                                </div>
+
+                                <div class="row ">
+                                    <label class="col-sm-3 col-form-label input-label">性别 <span class="text-muted">(可选)</span></label>
+                                    <div class="col-sm-9">
+                                        <el-form-item prop="sex">
+                                            <el-select v-model="userinfo.sex" placeholder="请选择" style="width: 100%" v-bind:disabled="disabled"  clearable>
+                                                <el-option label="男" :value="Number(10)"></el-option>
+                                                <el-option label="女" :value="Number(20)"></el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <label class="col-sm-3 col-form-label input-label">生日 <span class="text-muted">(可选)</span></label>
+                                    <div class="col-sm-9">
+                                        <el-form-item prop="birthDate">
+                                            <el-date-picker
+                                                    style="width: 100%"
+                                                    v-model="userinfo.birthDate"
+                                                    type="date"
+                                                    v-bind:disabled="disabled"
+                                                    value-format="yyyy-MM-dd"
+                                                    placeholder="选择日期">
+                                            </el-date-picker>
+                                        </el-form-item>
+                                    </div>
+                                </div>
+
+
+                                <div class="row ">
+                                    <label class="col-sm-3 col-form-label input-label">手机号 <span class="text-muted">(可选)</span></label>
+                                    <div class="col-sm-9">
+                                        <el-form-item prop="phone">
+                                            <el-input type="text" style="width: 100%" placeholder="手机号" v-bind:disabled="disabled"  v-model="userinfo.phone"></el-input>
+                                        </el-form-item>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <label class="col-sm-3 col-form-label input-label">邮箱</label>
+                                    <div class="col-sm-9">
+                                        <el-input type="email" style="width: 100%" id="email" placeholder="邮箱" disabled="disabled"  v-model="userinfo.email"></el-input>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <label class="col-sm-3 col-form-label input-label">创建日期 </label>
+                                    <div class="col-sm-9">
+                                        <el-date-picker
+                                                style="width: 100%"
+                                                v-model="userinfo.createDate"
+                                                type="date"
+                                                disabled="disabled"
+                                                value-format="yyyy-MM-dd"
+                                                placeholder="选择日期">
+                                        </el-date-picker>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <label class="col-sm-3 col-form-label input-label">最近登录日期 </label>
+                                    <div class="col-sm-9">
+                                        <el-date-picker
+                                                style="width: 100%"
+                                                v-model="userinfo.lastUserLoginDate"
+                                                type="date"
+                                                disabled="disabled"
+                                                value-format="yyyy-MM-dd HH:mm:ss"
+                                                placeholder="选择日期">
+                                        </el-date-picker>
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <label class="col-sm-3 col-form-label input-label">最近更改密码日期 </label>
+                                    <div class="col-sm-9">
+                                        <el-date-picker
+                                                style="width: 100%"
+                                                v-model="userinfo.lastPasswordRestDate"
+                                                type="date"
+                                                disabled="disabled"
+                                                value-format="yyyy-MM-dd HH:mm:ss"
+                                                placeholder="选择日期">
+                                        </el-date-picker>
+                                    </div>
+                                </div>
+
+                                <div class="row form-group">
+                                    <label  class="col-sm-3 col-form-label input-label">用户状态 </label>
+                                    <div class="col-sm-9">
+                                        <el-select v-model="userinfo.userStatus+''" placeholder="请选择" style="width: 100%" disabled="disabled" clearable>
+                                            <el-option label="正常" value=1></el-option>
+                                            <el-option label="冻结" value=0></el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+
+                                <div class="text-right">
+                                    <button type="button" v-bind:disabled="disabled" class="btn btn-primary" v-on:click="onSubmit">保 存</button>
+                                </div>
+                            </el-form>
+                            <!-- /Form -->
+
+                        </div>
+                    </div>
+                    <div class="card" id="examRecord" v-show="displayCard.examRecord">
+                        <div class="card-header form-line">
+                            <span class="card-title" style="font-size: 20px">答题记录</span>
+                        </div>
+                        <div class="card-body">
+                            <el-table
+                                    v-loading="loading"
+                                    :data="recordList"
+                                    style="width: 100%">
+                                <el-table-column fixed label="序号"
+                                                 width="50" align="center">
+                                    <template scope="scope"><span>{{scope.$index+(pageNum - 1) * pageSize + 1}} </span></template>
+                                </el-table-column>
+                                <el-table-column label="量表名称">
+                                    <template scope="scope">
+                                        <a href="#" v-on:click="skipDetail(scope.row.recordId)" class="user-a">{{scope.row.scaleName}} </a>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column
+                                        prop="scaleTypeName"
+                                        label="量表类型"
+                                >
+                                </el-table-column>
+                                <el-table-column
+                                        prop="useTime"
+                                        label="耗时"
+                                >
+                                </el-table-column>
+
+                                <el-table-column
+                                        prop="createDate"
+                                        label="创建时间"
+                                >
+                                </el-table-column>
+
+                            </el-table>
+                            <div class="block">
+                                <el-pagination
+                                        @size-change="handleSizeChange"
+                                        @current-change="handleCurrentChange"
+                                        :current-page="pageNum"
+                                        :page-sizes="pageSizes"
+                                        :page-size="pageSize"
+                                        :page-count="9"
+                                        layout="total, sizes, prev, pager, next, jumper"
+                                        :total="totalSize">
+                                </el-pagination>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card" id="accountSetting" v-show="displayCard.accountSetting">
+                        <div class="card-header form-line">
+                            <span class="card-title" style="font-size: 20px">账户设置</span>
+                        </div>
+                        <div class="card-body">
+                            <div>
+                                <span class="card-title" style="font-size: 20px"><i class="fas fa-unlock-alt"></i> <span>密码</span></span>
+                                <span  style="float: right;font-size: 20px;" v-on:click="displayPasswordFormChange"><a href="#" >修改密码</a></span>
+                                <el-form :rules="rules" :model="passwordForm" style="margin-top: 10px" v-show="displayPasswordForm">
+                                    <el-form-item prop="oldPassword" >
+                                        <el-input v-model="passwordForm.oldPassword" type="password" placeholder="请输入原密码"></el-input>
+                                    </el-form-item>
+                                    <el-form-item prop="newPassword">
+                                        <el-input v-model="passwordForm.newPassword" type="password" placeholder="请输入新密码" ></el-input>
+                                    </el-form-item>
+                                    <el-button type="primary" v-on:click="changePassword">提 交</el-button>
+                                </el-form>
+
+                            </div>
+                            <div style="margin-top: 20px">
+                                <span class="card-title" style="font-size: 20px"><i class="fas fa-mail-bulk"></i> <span>邮箱</span></span>
+                                <span  style="float: right;font-size: 20px;"><a href="#" >修改邮箱</a></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Page Wrapper -->
+
+</div>
+<!-- /Main Wrapper -->
+
+<!-- jQuery -->
+<script src="assets/js/jquery-3.5.1.min.js"></script>
+
+<!-- Bootstrap Core JS -->
+<script src="assets/js/popper.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+
+<!-- Feather Icon JS -->
+<script src="assets/js/feather.min.js"></script>
+
+<!-- Slimscroll JS -->
+<script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+
+<!-- Custom JS -->
+<script src="assets/js/script.js"></script>
+
+</body>
+
+<script>
+
+    let storage = new Storage();
+
+    var profile = new Vue({
+        el: '#profile',
+        data() {
+
+            const checkPhone = (rule,value,callback) =>{
+                if(value !== storage.getItem("userinfo").phone+'' && value!==undefined){
+                    const pattern = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/;
+                    if(!pattern.test(value)){
+                        callback(new Error("请输入正确手机号"))
+                    }else{
+                        callback();
+                    }
+                }else {
+                    callback();
+                }
+            };
+            const checkNickName = (rule,value,callback) =>{
+                if(value !== storage.getItem("userinfo").nickname+''){
+                    if(value === null || value ===''){
+                        callback(new Error("昵称不能为空"))
+                    }else if(value.length > 25){
+                        callback(new Error("昵称长度太长，小于25位"))
+                    }else{
+                        callback();
+                    }
+                }else {
+                    callback();
+                }
+            };
+
+            return {
+                //初始页
+                isRouterAlive: false,
+                userinfo: {},
+                recordList: [],
+                encrypt: null,
+                activePage: '/profile.html',
+                loading: false,
+                disabled: true,
+                editOrDisable: "编 辑",
+                cardActive: 1,
+                pageNum: 1,
+                totalSize: 0,
+                pageSize: 10,
+                pageSizes: [2,3,5,10,20,50,100],
+                displayCard:{
+                    basicInfo: true,
+                    examRecord: false,
+                    accountSetting: false
+                },
+                displayPasswordForm: false,
+
+                passwordForm:{
+                  oldPassword: '',
+                  newPassword: ''
+                },
+                rules: {
+                    phone: [
+                        {validator: checkPhone,trigger: 'change'}
+                    ],
+                    nickname: [
+                        {validator: checkNickName,trigger: 'change'}
+                    ],
+                    oldPassword: [
+                        {required: true,message:"请输入原密码",trigger: 'blur'},
+                        {min: 6,max: 30,message: '密码长度6-30位',trigger: 'blur'},
+                    ],
+                    newPassword: [
+                        {required: true,message:"请输入新密码",trigger: 'blur'},
+                        {min: 6,max: 30,message: '密码长度6-30位',trigger: 'blur'},
+                    ]
+                }
+            }
+        },
+        methods: {
+
+            async getUserInfo() {
+                //设置用户信息
+                if (storage.getItem("userinfo") != null) {
+                    this.isRouterAlive = true;
+                    this.userinfo = storage.getItem("userinfo");
+                    initMenu(storage.getItem("routeMap"), this.activePage)
+                } else {
+                    await service.get("/user/getUserInfo").then(res => {
+                        storage.setItem({
+                            name: "userinfo",
+                            value: res.data.userinfo
+                        })
+                        storage.setItem({
+                            name: "routeMap",
+                            value: res.data.routeMap
+                        })
+                        this.isRouterAlive = false;
+                        window.location.reload();
+                        return;
+                    });
+                }
+                intThisPoint(this);
+                getPublicKey();
+                this.getExamRecordList(this.pageNum, this.pageSize, false)
+            },
+
+            uploadFigureUrl(){
+                console.log(1);
+                let file = $(this.$el).find('#avatar_upload')[0].files[0];
+                let formData = new FormData();
+                formData.append('file',file);
+                service({
+                    method: "post",
+                    headers: {'Content-Type':'multipart/form-data'},
+                    url: "/user/updateCurrentFigureUrl",
+                    data: formData
+                }).then(res => {
+                    if(res.data!=null && res.data!==''){
+                        this.userinfo.figureUrl = res.data;
+                        storage.setItem({
+                            name: "userinfo",
+                            value: this.userinfo
+                        })
+                    }
+                })
+            },
+            onSubmit(){
+                this.$refs['ruleForm'].validate(valid =>{
+                    if(valid){
+                        const user = {
+                            nickname: this.userinfo.nickname,
+                            birthDate: this.userinfo.birthDate,
+                            sex: this.userinfo.sex,
+                            phone: this.userinfo.phone
+                        };
+                        service({
+                            method: "post",
+                            url: "/user/updateCurrentUserInfo",
+                            data: user
+                        }).then(res=>{
+                            if(res.data){
+                                storage.setItem({
+                                    name: "userinfo",
+                                    value: this.userinfo
+                                })
+                                this.$message({type:"success",message: "更新用户信息成功"})
+                                this.enableEdit();
+                            }
+                        })
+                    }else{
+                        this.$message({message:"数据格式不正确",type:"error"})
+                    }
+                })
+            },
+
+            handleSizeChange(size) {
+                this.pageSize = size;
+                this.getExamRecordList(this.pageNum,this.pageSize,true)
+            },
+            handleCurrentChange(currentPage) {
+                this.pageNum = currentPage
+                this.getExamRecordList(this.pageNum,this.pageSize,true)
+            },
+            getExamRecordList(pageNum, pageSize,isForm){
+                var data = {
+                    pageNum: pageNum,
+                    pageSize: pageSize
+                };
+
+                if(isForm){
+                    data.pageNum = pageNum;
+                    data.pageSize = pageSize
+                }
+                service({
+                    method: 'post',
+                    url: "/exam/getCurrentUserRecord",
+                    data: data
+                }).then(res=>{
+                    this.recordList = res.data.dataList;
+                    this.totalSize = res.data.totalSize
+                })
+            },
+
+            changeDisplayCard(card,act){
+                for(item in this.displayCard){
+                    this.displayCard[item] = item === card;
+                }
+                this.cardActive = act;
+            },
+
+            enableEdit(){
+                if(this.disabled){
+                    this.editOrDisable = "返 回"
+                    this.disabled = false;
+                }else{
+                    this.editOrDisable = "编 辑"
+                    this.disabled = true;
+                    this.userinfo = storage.getItem("userinfo");
+                }
+            },
+            skipDetail(recordId){
+                window.location.href="/examination-record-detail.html?recordId="+recordId;
+            },
+
+            displayPasswordFormChange(){
+                this.displayPasswordForm = !this.displayPasswordForm;
+            },
+
+            changePassword(){
+
+                this.initPublicKey();
+                const data = {
+                    oldPassword: this.encrypt.encrypt(this.passwordForm.oldPassword),
+                    newPassword: this.encrypt.encrypt(this.passwordForm.newPassword)
+                };
+                service({
+                    method: 'post',
+                    url: '/user/changeCurrentPassword',
+                    data: data
+                }).then(res=>{
+                    if(res.data){
+                        this.$message({message:"密码修改成功,请重新登录",type:"success"})
+                        setTimeout('logout()',1000);
+                    }else{
+                        this.$message({message:"密码修改失败",type:"warning"})
+                    }
+                })
+            },
+            initPublicKey(){
+                this.encrypt = new JSEncrypt();
+                this.encrypt.setPublicKey(storage.getItem("publicKey"))
+            }
+        },
+        created(){
+            this.getUserInfo();
+        },
+        mounted() {
+
+        },
+    })
+
+
+
+
+
+</script>
 </html>

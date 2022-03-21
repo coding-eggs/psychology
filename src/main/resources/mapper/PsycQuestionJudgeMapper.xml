@@ -50,11 +50,32 @@
     left join psyc_scale s on  qd.scale_id = s.scale_id
     where qj.judge_id = #{judgeId}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    <select id="selectJudgeByScore" resultType="com.lby.psychology.model.vo.PsycJudgeVo">
+      SELECT
+        qj.judge_id,
+        judge_name,
+        start_score,
+        end_score,
+        qd.dimension_id,
+        qd.dimension_name
+      FROM
+        psyc_question_judge qj left join psyc_dimension_judge_rlt pdjr on qj.judge_id = pdjr.judge_id
+                               left join psyc_question_dimension qd on pdjr.dimension_id = qd.dimension_id
+      WHERE
+        pdjr.dimension_id = #{dimensionId}
+        AND #{score} BETWEEN start_score
+        AND end_score
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from psyc_question_judge
     where judge_id = #{judgeId,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" keyColumn="judge_id" keyProperty="judgeId" parameterType="com.lby.psychology.model.pojo.PsycQuestionJudge" useGeneratedKeys="true">
+    <delete id="deleteDimension">
+      delete
+      from psyc_dimension_judge_rlt
+      where dimension_id = #{dimensionId};
+    </delete>
+    <insert id="insert" keyColumn="judge_id" keyProperty="judgeId" parameterType="com.lby.psychology.model.pojo.PsycQuestionJudge" useGeneratedKeys="true">
     insert into psyc_question_judge (judge_name, start_score, end_score
       )
     values (#{judgeName,jdbcType=VARCHAR}, #{startScore,jdbcType=INTEGER}, #{endScore,jdbcType=INTEGER}

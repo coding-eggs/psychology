@@ -14,6 +14,7 @@ import com.lby.psychology.model.vo.PsycDimensionVo;
 import com.lby.psychology.model.vo.PsycQuestionDetailVo;
 import com.lby.psychology.model.vo.PsycQuestionVo;
 import com.lby.psychology.service.IDimensionService;
+import com.lby.psychology.service.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +27,14 @@ public class DimensionServiceImpl implements IDimensionService {
     @Autowired
     private PsycQuestionDimensionMapper dimensionMapper;
 
-
     @Autowired
     private PsycQuestionOptionsMapper optionsMapper;
 
     @Autowired
     private PsycQuestionJudgeMapper questionJudgeMapper;
+
+    @Autowired
+    private IQuestionService questionService;
 
     @Override
     public PageResult getDimensionPageList(PsycDimensionCo co) {
@@ -53,6 +56,17 @@ public class DimensionServiceImpl implements IDimensionService {
     @Override
     public boolean updateDimension(PsycQuestionDimension psycQuestionDimension) {
         return dimensionMapper.updateByPrimaryKeySelective(psycQuestionDimension) > 0;
+    }
+
+    @Override
+    public boolean deleteDimension(Integer dimensionId) {
+        //删除维度相关问题，和相关选项
+        //删除相关选项
+        dimensionMapper.selectQuestionIdByDimension(dimensionId).forEach(e->questionService.deleteQuestion(e));
+        //删除维度评判
+        questionJudgeMapper.deleteDimension(dimensionId);
+        //删除维度
+        return  dimensionMapper.deleteByPrimaryKey(dimensionId) > 0;
     }
 
     @Override

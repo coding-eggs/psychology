@@ -43,10 +43,11 @@
       select count(*)
       from psyc_user
       where qq_open_id = #{openId}
+      and auth_type = #{authType}
     </select>
   <select id="selectUserByOpenId" resultType="com.lby.psychology.model.security.SecurityPsycUser">
     select
-      user_id, auth_type, username, `password`, email, qq_nickname, qq_open_id, birth_date,
+      user_id, auth_type, username, nickname,`password`, email, qq_nickname, qq_open_id, birth_date,
       sex, figure_url, create_date, update_date, phone, user_status, last_password_rest_date,
       last_user_login_date
     from psyc_user
@@ -132,7 +133,13 @@
     GROUP BY
     u.user_id
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    <select id="selectPassword" resultType="java.lang.String">
+      select password from psyc_user where user_id = #{userId}
+    </select>
+    <select id="selectPasswordByUserId" resultType="java.lang.String">
+      select password from psyc_user where user_id = #{userId}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from psyc_user
     where user_id = #{userId,jdbcType=BIGINT}
   </delete>
@@ -255,6 +262,7 @@
         (
           auth_type,
           username,
+          nickname,
           qq_nickname,
           qq_open_id,
           sex,
@@ -264,6 +272,7 @@
         (
         #{authType,jdbcType=INTEGER},
         #{qqNickname,jdbcType=VARCHAR},
+         #{nickname,jdbcType=VARCHAR},
         #{qqNickname,jdbcType=VARCHAR},
         #{qqOpenId,jdbcType=VARCHAR},
         #{sex,jdbcType=SMALLINT},
@@ -350,14 +359,38 @@
         sex = #{sex,jdbcType=SMALLINT},
         last_user_login_date = #{lastUserLoginDate,jdbcType=TIMESTAMP},
         qq_nickname = #{qqNickname,jdbcType=VARCHAR},
-        username = ( CASE WHEN LENGTH( username ) > 0 THEN username ELSE #{qqNickname,jdbcType=VARCHAR} END ),
-        auth_type = #{authType,jdbcType=INTEGER}
+        username = ( CASE WHEN LENGTH( username ) > 0 THEN username ELSE #{qqNickname,jdbcType=VARCHAR} END )
     where qq_open_id = #{qqOpenId,jdbcType=VARCHAR}
+          and  auth_type = #{authType,jdbcType=INTEGER}
+
 
   </update>
     <update id="updateLastLoginDate">
       update psyc_user
       set last_user_login_date = #{now}
       where user_id = #{userId}
+    </update>
+    <update id="updateFigureUrl">
+      update psyc_user
+      set figure_url = #{url}
+      where user_id = #{userId}
+    </update>
+    <update id="updateUserInfo">
+      update psyc_user
+      set nickname = #{nickname},
+          sex = #{sex},
+          phone = #{phone},
+          birth_date = #{birthDate}
+      where user_id = #{userId}
+    </update>
+  <update id="updatePassword">
+    update psyc_user
+    set password = #{password}
+    where user_id = #{userId}
+  </update>
+    <update id="updatePasswordByEmail">
+      update psyc_user
+      set password = #{password}
+      where email= #{mail}
     </update>
 </mapper>

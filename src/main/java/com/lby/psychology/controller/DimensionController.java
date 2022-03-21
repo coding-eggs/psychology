@@ -45,6 +45,12 @@ public class DimensionController {
         return new ResponseData<>(dimensionService.updateDimension(co));
     }
 
+    @ApiOperation("删除维度")
+    @GetMapping("/deleteDimension")
+    public ResponseData<Boolean> deleteDimension(Integer dimensionId){
+        return new ResponseData<>(dimensionService.deleteDimension(dimensionId));
+    }
+
     @ApiOperation("获取维度详情")
     @GetMapping("/getDimensionDetail")
     public ResponseData<PsycDimensionVo> getDimensionDetail(Integer dimensionId){

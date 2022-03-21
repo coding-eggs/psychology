@@ -1,5 +1,6 @@
 package com.lby.psychology.model.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -60,6 +61,7 @@ public class PsycUser implements Serializable {
     /**
      * 生日
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value="生日")
     private Date birthDate;
 
@@ -78,6 +80,7 @@ public class PsycUser implements Serializable {
     /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @ApiModelProperty(value="创建时间")
     private Date createDate;
 

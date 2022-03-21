@@ -45,6 +45,13 @@ public interface IQuestionService {
     */
     boolean updateQuestion(PsycQuestion vo);
 
+
+    /**
+     * 删除问题接口
+     * @param questionId 问题id
+     */
+    boolean deleteQuestion(Integer questionId);
+
     /**
     * 查询问题详情
     * @author lby

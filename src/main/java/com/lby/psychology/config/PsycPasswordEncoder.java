@@ -19,8 +19,6 @@ import java.util.Base64;
 @Component
 public class PsycPasswordEncoder implements PasswordEncoder {
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private KeyPair keyPair;
@@ -32,12 +30,12 @@ public class PsycPasswordEncoder implements PasswordEncoder {
 
     @Override
     public String encode(CharSequence charSequence) {
-        return passwordEncoder.encode(charSequence);
+        return new BCryptPasswordEncoder().encode(charSequence);
     }
 
     @Override
     public boolean matches(CharSequence charSequence, String s) {
-        return passwordEncoder.matches(decodeByRSA(charSequence.toString()),s);
+        return new BCryptPasswordEncoder().matches(decodeByRSA(charSequence.toString()),s);
     }
 
 

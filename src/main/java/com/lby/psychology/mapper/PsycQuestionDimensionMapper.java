@@ -6,6 +6,7 @@ import com.lby.psychology.model.pojo.PsycScale;
 import com.lby.psychology.model.vo.PsycDimensionVo;
 import com.lby.psychology.model.vo.PsycQuestionVo;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -34,4 +35,6 @@ public interface PsycQuestionDimensionMapper {
     PsycDimensionVo selectDimensionDetail(Integer dimensionId);
 
     List<PsycQuestionVo> selectQuestionByDimension(Integer dimensionId);
+
+    List<Integer> selectQuestionIdByDimension(@Param("dimensionId") Integer dimensionId);
 }

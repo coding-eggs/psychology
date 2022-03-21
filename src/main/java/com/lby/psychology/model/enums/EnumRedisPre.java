@@ -4,7 +4,8 @@ import lombok.Getter;
 
 @Getter
 public enum EnumRedisPre {
-    EMAIL_CHECK("EC");
+    EMAIL_REG_CHECK("ERC:"),
+    EMAIL_FORGET_CHECK("EFC:");
 
 
     EnumRedisPre(String code) {

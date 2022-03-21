@@ -16,11 +16,12 @@ import java.io.IOException;
 
 /**
 * 已认证用户无权限处理器
-* @author myk
+* @author lby
 * @date 2021/1/27 23:34
 */
 @Component
 public class RequestAccessDeniedHandler implements AccessDeniedHandler {
+
     @Autowired
     private ObjectMapper objectMapper;
 

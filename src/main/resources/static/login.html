@@ -47,32 +47,28 @@
 						<div class="login-right">
 							<div class="login-right-wrap">
 								<h1><strong>登录</strong></h1>
-								<form ref="loginForm"  autoComplete="on">
-									<div class="form-group">
-										<input type="email"
-											   name="email"
-											   class="form-control"
-											   placeholder="邮箱"
-											   required="true"
-											   v-model="loginForm.email"
-											   v-on:keyup="checkEmail"
-											   ref="emailinput"
-											   autoComplete="on">
-									</div>
-									<div class="form-group">
-										<div class="pass-group">
-											<input type="password"
-												   class="form-control pass-input"
-												   placeholder="密码"
-												   name="password"
-												   v-model="loginForm.password"
-												   autoComplete="on"
-												   v-on:keyup="checkPassword"
-												   ref="passwordinput"
-											>
-											<span class="fas fa-eye toggle-password"></span>
-										</div>
-									</div>
+								<el-form :rules="rules" ref="ruleForm" :model="loginForm" >
+
+									<el-form-item prop="email">
+										<el-input type="email"
+												  placeholder="邮箱"
+												  required="true"
+												  v-model="loginForm.email"
+												  autocomplete="on">
+										</el-input>
+									</el-form-item>
+
+
+									<el-form-item prop="password">
+										<el-input type="password"
+												  placeholder="密码"
+												  v-model="loginForm.password"
+												  autocomplete="on"
+												  @keyup.enter.native="login"
+										>
+										</el-input>
+									</el-form-item>
+
 									<div class="form-group">
 										<div class="row">
 											<div class="col-6">
@@ -92,13 +88,16 @@
 										<span class="span-or">or</span>
 									</div>
 									<!-- Social Login -->
-									<div class="social-login mb-3">
+
+									<div class=" mb-3" style="text-align: center">
 										<span>其他登录方式</span>
-										<a href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101583722&redirect_uri=http://ailuoli.cn:9527/qqlogin/success" class="tencent"><img src="assets/img/qq-logo.jpg" alt="qq login"></a>
+										<a href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101583722&redirect_uri=https://ailuoli.cn/qqlogin/success" class="tencent"><img style="width: 50px;margin-left: 10px"  src="assets/img/qq-logo1.png" alt="QQ 登录"></a>
+										<a href="https://openauth.alipay.com/oauth2/publicAppAuthorize.htm?app_id=2021002141656448&scope=auth_user&redirect_uri=https://ailuoli.cn/alipay/login&state=init" class="tencent"><img style="width: 50px;margin-left: 10px"  src="assets/img/alipay-logo.png" alt="支付宝 登录"></a>
 									</div>
+
 									<!-- /Social Login -->
 									<div class="text-center dont-have">您是否已经有账户 ?   <a href="register.html" style="color: #4d4da7">注册</a></div>
-								</form>
+								</el-form>
 
 							</div>
 						</div>
@@ -127,10 +126,20 @@
 
 	<script>
 		let storage = new Storage();
-
 		const login = new Vue({
 			el: "#login-vue",
 			data(){
+
+				const checkEmail = (rule,value,callback) =>{
+					const pattern = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+					if(!pattern.test(value)){
+						callback(new Error("请输入格式正确的邮箱"))
+					}else{
+						callback();
+					}
+
+				};
+
 				return{
 					loginForm: {
 						email: "",
@@ -138,76 +147,66 @@
 						rememberMe: "",
 						publicKey:""
 					},
-					fullscreenLoading: false
+					encrypt: null,
+					fullscreenLoading: false,
+					rules: {
+						email: [
+							{validator: checkEmail,trigger: 'change'}
+						],
+						password: [
+							{required: true,message:"请输入密码",trigger: 'blur'},
+							{min: 6,max: 30,message: '密码长度6-30位',trigger: 'blur'},
+						]
+					}
 				}
+
 			},
 			methods:{
 				login(){
-					if(!this.checkEmail() && !this.checkPassword()){
-						return;
-					}
-					let encrypt = new JSEncrypt()
-					//请求公钥
-					encrypt.setPublicKey(this.loginForm.publicKey)
-					this.fullscreenLoading = true;
-					service({
-						method: 'post',
-						url: '/user/login',
-						data: Qs.stringify({
-							email: this.loginForm.email,
-							// password: this.loginForm.password,
-							password: encrypt.encrypt(this.loginForm.password),
-							rememberMe: this.loginForm.rememberMe
-						}),
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded'
-						},
-					}).then(response => {
-						const data = response.data;
-						storage.setItem({
-							name: "routeMap",
-							value: data.routeMap
-						});
-						window.location.href=data.requestURI;
-					}).finally(()=>{
-						this.fullscreenLoading = false
+					this.$refs['ruleForm'].validate(valid =>{
+						if(valid){
+							this.initPublicKey();
+							this.fullscreenLoading = true;
+							service({
+								method: 'post',
+								url: '/user/login',
+								data: Qs.stringify({
+									email: this.loginForm.email,
+									// password: this.loginForm.password,
+									password: this.encrypt.encrypt(this.loginForm.password),
+									rememberMe: this.loginForm.rememberMe
+								}),
+								headers: {
+									'Content-Type': 'application/x-www-form-urlencoded'
+								},
+							}).then(response => {
+								const data = response.data;
+								storage.setItem({
+									name: "routeMap",
+									value: data.routeMap
+								});
+								storage.setItem({
+									name: "userinfo",
+									value: data.user
+								})
+								window.location.href=data.requestURI;
+							}).finally(()=>{
+								this.fullscreenLoading = false
+							})
+						}else{
+							this.$message({message:"数据格式不正确",type:"error"})
+						}
 					})
 				},
 
-				checkEmail(){
-					var rule = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-					if(!rule.test(this.loginForm.email)) {
-						this.$refs.emailinput.placeholder = "请输入格式正确的邮箱"
-						this.$refs.emailinput.style.border = '1px solid red';
-						return false;
-					}else{
-						this.$refs.emailinput.style.border= '1px solid #dee2e6';
-						return true
-					}
-				},
-				checkPassword(){
-					if(this.loginForm.password.length < 6) {
-						this.$refs.passwordinput.placeholder = "密码长度不能小于6位"
-						this.$refs.passwordinput.style.border = '1px solid red';
-						return false;
-					}else{
-						this.$refs.passwordinput.style.border= '1px solid #dee2e6';
-						return true
-					}
-				},
+				initPublicKey(){
+					this.encrypt = new JSEncrypt();
+					this.encrypt.setPublicKey(storage.getItem("publicKey"))
+				}
 
 			},
 			created(){
-				service({
-					method: 'get',
-					url: '/user/publicKey',
-				}).then(response=>{
-					this.loginForm.publicKey = response.data;
-					storage.setItem({
-						name: "publicKey",
-						value: response.data
-					})
-				})
+				getPublicKey();
 			},
 			mounted(){
 				intThisPoint(this)

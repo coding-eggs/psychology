@@ -18,6 +18,8 @@ public interface PsycQuestionJudgeMapper {
 
     int insertSelective(PsycQuestionJudge record);
 
+    int deleteDimension(@Param("dimensionId") Integer dimensionId);
+
     PsycQuestionJudge selectByPrimaryKey(Integer judgeId);
 
     int updateByPrimaryKeySelective(PsycQuestionJudge record);
@@ -31,4 +33,6 @@ public interface PsycQuestionJudgeMapper {
     int insertDimensionJudgeRlt(PsycJudgeVo vo);
 
     PsycJudgeVo selectJudgeInfo(Integer judgeId);
+
+    PsycJudgeVo selectJudgeByScore(@Param("dimensionId") Integer dimensionId, @Param("score") Integer score);
 }

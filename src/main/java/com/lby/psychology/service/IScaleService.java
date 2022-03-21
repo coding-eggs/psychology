@@ -46,6 +46,12 @@ public interface IScaleService {
     boolean updateScale(PsycScale psycScale);
 
     /**
+     * 删除量表
+     * @param scaleId 量表id
+     */
+    boolean deleteScale(Integer scaleId);
+
+    /**
     * 获取量表下拉
     * @author lby
     * @param scaleType 量表类型

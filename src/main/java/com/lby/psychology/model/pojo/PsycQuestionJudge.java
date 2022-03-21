@@ -7,7 +7,7 @@ import lombok.Data;
 
 /**
  * psyc_question_judge
- * @author
+ * @author lby
  */
 @Data
 public class PsycQuestionJudge implements Serializable {

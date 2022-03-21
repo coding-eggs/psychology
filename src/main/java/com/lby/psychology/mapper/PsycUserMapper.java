@@ -31,7 +31,7 @@ public interface PsycUserMapper {
     SecurityPsycUser selectPsycUserByEmail(String email);
 
     //查询openId是否存在
-    int selectCountByOpenId (@Param("openId") String openId);
+    int selectCountByOpenId (@Param("openId") String openId,@Param("authType") Integer authType);
 
     //更新qq登录信息
     int updatePsycUserQQLogin(SecurityPsycUser user);
@@ -57,4 +57,16 @@ public interface PsycUserMapper {
     int deleteUserRole(Long userId);
 
     PsycUserVo selectUserByUserId(Long userId);
+
+    int updateFigureUrl(@Param("userId") Long userId,@Param("url") String url);
+
+    int updateUserInfo(PsycUser user);
+
+    String selectPassword(@Param("userId") Long userId);
+
+    int updatePassword(@Param("userId") Long userId,@Param("password") String password);
+
+    String selectPasswordByUserId(@Param("userId") Long userId);
+
+    int updatePasswordByEmail(@Param("mail") String mail,@Param("password") String password);
 }

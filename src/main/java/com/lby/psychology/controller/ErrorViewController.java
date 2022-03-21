@@ -28,4 +28,20 @@ public class ErrorViewController {
     }
 
 
+    @ApiOperation("login 跳转页面")
+    @RequestMapping("/login")
+    public ModelAndView loginPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("/login.html");
+        return modelAndView;
+    }
+
+    @ApiOperation("index 跳转页面")
+    @RequestMapping("/")
+    public ModelAndView indexPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("/profile.html");
+        return modelAndView;
+    }
+
 }

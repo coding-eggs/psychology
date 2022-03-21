@@ -18,66 +18,7 @@ $(document).ready(function() {
 	}
 
 
-	// Column chart
-	var columnCtx = document.getElementById("sales_chart"),
-	columnConfig = {
-		colors: ['#7638ff', '#fda600'],
-		series: [
-			{
-			name: "Received",
-			type: "column",
-			data: [70, 150, 80, 180, 150, 175, 201, 60, 200, 120, 190, 160, 50]
-			},
-			{
-			name: "Pending",
-			type: "column",
-			data: [23, 42, 35, 27, 43, 22, 17, 31, 22, 22, 12, 16, 80]
-			}
-		],
-		chart: {
-			type: 'bar',
-			fontFamily: 'Poppins, sans-serif',
-			height: 350,
-			toolbar: {
-				show: false
-			}
-		},
-		plotOptions: {
-			bar: {
-				horizontal: false,
-				columnWidth: '60%',
-				endingShape: 'rounded'
-			},
-		},
-		dataLabels: {
-			enabled: false
-		},
-		stroke: {
-			show: true,
-			width: 2,
-			colors: ['transparent']
-		},
-		xaxis: {
-			categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
-		},
-		yaxis: {
-			title: {
-				text: '$ (thousands)'
-			}
-		},
-		fill: {
-			opacity: 1
-		},
-		tooltip: {
-			y: {
-				formatter: function (val) {
-					return "$ " + val + " thousands"
-				}
-			}
-		}
-	};
-	var columnChart = new ApexCharts(columnCtx, columnConfig);
-	columnChart.render();
+
 
 	//Pie Chart
 	var pieCtx = document.getElementById("invoice_chart"),

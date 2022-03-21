@@ -45,61 +45,63 @@
 								<h1><strong>注册</strong></h1>
 
 								<!-- Form -->
-								<form >
-									<div class="form-group">
-										<input class="form-control"
+								<el-form :rules="rules" :model="registerForm" ref="ruleForm">
+
+									<el-form-item prop="nickname">
+										<el-input
 											   type="text"
-											   v-model="nickname"
+											   v-model="registerForm.nickname"
 											   placeholder="姓名"
-											   v-on:keyup="checkNickname"
-											   ref="usernameinput"
 										>
-									</div>
-									<div class="form-group">
-										<input class="form-control"
+										</el-input>
+									</el-form-item>
+
+									<el-form-item prop="email">
+										<el-input
 											   type="email"
-											   v-model="email"
+											   v-model="registerForm.email"
 											   placeholder="邮箱"
-											   v-on:keyup="checkEmail"
-											   ref="emailinput"
 										>
-									</div>
-									<div class="form-group">
-										<input class="form-control"
+										</el-input>
+									</el-form-item>
+
+									<el-form-item prop="password">
+										<el-input
 											   type="password"
-											   v-model="password"
+											   v-model="registerForm.password"
 											   placeholder="密码"
-											   v-on:keyup="checkPassword"
-											   ref="passwordinput"
 										>
-									</div>
-									<div class="form-group">
-										<input class="form-control"
+										</el-input>
+									</el-form-item>
+
+
+									<el-form-item prop="confirmPassword">
+										<el-input
 											   type="password"
-											   v-model="confirmPassword"
+											   v-model="registerForm.confirmPassword"
 											   placeholder="确认密码"
-											   v-on:keyup="checkConfirmPassword"
-											   ref="confirmPasswordinput"
+											   @keyup.enter.native="registered"
 										>
-									</div>
-									<div class="form-group input-group mb-3">
-										<input class="form-control"
-											   type="password"
-											   v-model="code"
-											   placeholder="验证邮箱"
-											   aria-label="验证邮箱" aria-describedby="basic-addon2"
-											   ref="codeinput"
-											   v-on:keyup="checkCode"
-										>
-										<div class="input-group-append">
-											<button class="btn btn-outline-secondary" v-show="codeShow" type="button" v-on:click="getEmailCode">发送验证码</button>
-											<button class="btn btn-outline-secondary" v-show="!codeShow" type="button" disabled="disabled" v-on:click="getEmailCode">{{count}}s后重试</button>
-										</div>
-									</div>
+										</el-input>
+									</el-form-item>
+
+									<el-form-item prop="code">
+
+										<el-input
+											   v-model="registerForm.code"
+											   placeholder="验证码"
+											   @keyup.enter.native="registered">
+											<el-button slot="append" v-show="codeShow" v-on:click="getEmailCode">发送验证码</el-button>
+											<el-button slot="append" v-show="!codeShow" v-on:click="getEmailCode"  disabled="disabled">{{count}}s后重试</el-button>
+
+										</el-input>
+
+									</el-form-item>
+
 									<div class="form-group mb-0">
 										<button class="btn btn-lg btn-block btn-primary" type="button" v-on:click="registered">注册</button>
 									</div>
-								</form>
+								</el-form>
 								<!-- /Form -->
 
 								<div class="login-or">
@@ -140,131 +142,113 @@
 <script>
 
 	let storage = new Storage();
-	let encrypt = new JSEncrypt()
-	//请求公钥
-	encrypt.setPublicKey(storage.getItem("publicKey"))
+
 	var reg = new Vue({
 		el: '#reg',
-		data: {
-			nickname: "",
-			email:"",
-			password:"",
-			confirmPassword:"",
-			code:"",
-			codeShow:true,
-			count:"",
-			timer: null
+		data() {
+			const checkEmail = (rule,value,callback) =>{
+				const pattern = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
+				if(!pattern.test(value)){
+					callback(new Error("请输入格式正确的邮箱"))
+				}else{
+					callback();
+				}
+
+			};
+
+			const checkConfirmPassword = (rule,value,callback) =>{
+				if(value==='' || value === null){
+					callback(new Error("确认密码不能为空"));
+				}
+				if(!(this.registerForm.password===this.registerForm.confirmPassword)){
+					callback(new Error("两次密码必须相同，且不能为空，请检查重新输入"))
+				}else{
+					callback();
+				}
+
+			};
+
+			return{
+				encrypt : null,
+				codeShow:true,
+				count:"",
+				timer: null,
+				registerForm: {
+					nickname: "",
+					email:"",
+					password:"",
+					confirmPassword:"",
+					code:"",
+				},
+
+				rules: {
+					email: [
+						{validator: checkEmail,trigger: 'change'}
+					],
+					nickname: [
+						{required: true,message:"昵称不能为空",trigger: 'blur'},
+					],
+					password: [
+						{required: true,message:"请输入密码",trigger: 'blur'},
+						{min: 6,max: 30,message: '密码长度6-30位',trigger: 'blur'},
+					],
+					confirmPassword: [
+						{validator: checkConfirmPassword,trigger: 'change'}
+					],
+					code: [
+						{required: true,message:"验证码不能为空",trigger: 'blur'}
+					]
+				}
+			}
 		},
 		methods:{
 			registered(){
-
-				if(this.checkAll()){
-					service({
-						method: 'post',
-						url: '/user/email/registered',
-						data:{
-							nickname: this.nickname,
-							email: this.email,
-							password: encrypt.encrypt(this.password),
-							code: this.code
-						}
-					}).then(response=>{
-						if(response.data){
-							thispoint.$confirm('您的账号注册成功！是否跳转到登录页？', '注册成功', {
-								confirmButtonText: '是',
-								cancelButtonText: '否',
-								type: 'success ',
-								center: true
-							}).then(() => {
-								window.location.href="/login.html"
-							}).catch(()=>{
-								thispoint.$message({
-									type: 'info',
-									message: '取消跳转登录'
+				this.$refs['ruleForm'].validate(valid =>{
+					if(valid){
+						this.initPublicKey();
+						service({
+							method: 'post',
+							url: '/user/email/registered',
+							data:{
+								nickname: this.registerForm.nickname,
+								email: this.registerForm.email,
+								password: this.encrypt.encrypt(this.registerForm.password),
+								code: this.registerForm.code
+							}
+						}).then(response=>{
+							if(response.data){
+								thispoint.$confirm('您的账号注册成功！是否跳转到登录页？', '注册成功', {
+									confirmButtonText: '是',
+									cancelButtonText: '否',
+									type: 'success ',
+									center: true
+								}).then(() => {
+									window.location.href="/login.html"
+								}).catch(()=>{
+									thispoint.$message({
+										type: 'info',
+										message: '取消跳转登录'
+									})
 								})
-							})
-						}
-					})
-				}else {
-					this.$message({message:"请填写正确得数据",type:"error"})
-				}
-			},
-			checkAll(){
-				var result = false;
-				if(this.checkNickname()&&this.checkEmail()&&this.checkPassword()&&this.checkConfirmPassword()&&this.checkCode()) {
-					result = true;
-				}
-				return result;
-			},
-			//校验所有但是不包括验证码
-			checkAllNullCode(){
-				var result = false;
-				if(this.checkNickname()&&this.checkEmail()&&this.checkPassword()&&this.checkConfirmPassword()){
-					result = true
-				}
-				return result;
-			},
-
-			checkNickname(){
-				if(this.nickname.trim().length===0){
-					this.$refs.usernameinput.placeholder = "昵称不能为空"
-					this.$refs.usernameinput.style.border = '1px solid red';
-					return false;
-				}else{
-					this.$refs.usernameinput.style.border= '1px solid #dee2e6';
-					return true;
-				}
-			},
-			checkEmail(){
-				var rule = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
-				if(!rule.test(this.email)) {
-					this.$refs.emailinput.placeholder = "请输入格式正确的邮箱"
-					this.$refs.emailinput.style.border = '1px solid red';
-					return false;
-				}else{
-					this.$refs.emailinput.style.border= '1px solid #dee2e6';
-					return true;
-				}
-			},
-			checkPassword(){
-				if(this.password.length < 6) {
-					this.$refs.passwordinput.placeholder = "密码长度不能小于6位"
-					this.$refs.passwordinput.style.border = '1px solid red';
-					return false;
-				}else{
-					this.$refs.passwordinput.style.border= '1px solid #dee2e6';
-					return true;
-				}
-			},
-			checkConfirmPassword(){
-				if(!(this.password.trim()===this.confirmPassword.trim()) || this.confirmPassword.trim().length === 0){
-					this.$refs.confirmPasswordinput.placeholder = "两次密码必须相同，且不能为空，请检查重新输入"
-					this.$refs.confirmPasswordinput.style.border = '1px solid red';
-					return false;
-				}else{
-					this.$refs.confirmPasswordinput.style.border= '1px solid #dee2e6';
-					return true;
-				}
-			},
-			checkCode(){
-				if(this.code.trim().length===0){
-					this.$refs.codeinput.placeholder = "验证码不能为空"
-					this.$refs.codeinput.style.border = '1px solid red';
-					return false;
-				}else{
-					this.$refs.codeinput.style.border= '1px solid #dee2e6';
-					return true;
-				}
+							}
+						})
+					}
+				})
 			},
 			getEmailCode() {
-				if(this.checkAllNullCode()){
+				let validateList = [];
+				this.$refs['ruleForm'].validateField(['email','nickname','password','confirmPassword'],(message)=>{
+					validateList.push(message)
+				});
+				if(validateList.every(item =>item ==='')){
+					this.initPublicKey();
 					service({
 						method: 'post',
 						url: '/user/email/check',
 						data:{
-							nickname: this.nickname,
-							email: this.email,
-							password: encrypt.encrypt(this.password)
+							nickname: this.registerForm.nickname,
+							email: this.registerForm.email,
+							password: this.encrypt.encrypt(this.registerForm.password)
 						}
 					}).then(response=>{
 						if(response.data){
@@ -286,12 +270,18 @@
 							}
 						}
 					})
-
-				}else{
-					this.$message({message:"请填写正确得数据",type:"error"})
 				}
+			},
+			initPublicKey(){
+				this.encrypt = new JSEncrypt();
+				this.encrypt.setPublicKey(storage.getItem("publicKey"))
 			}
 
+		},
+
+		created(){
+			//请求公钥
+			getPublicKey();
 		},
 		mounted() {
 			intThisPoint(this);
